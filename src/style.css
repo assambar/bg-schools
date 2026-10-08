@@ -1,0 +1,53 @@
+:root {
+  font-family: system-ui, sans-serif;
+  line-height: 1.45;
+  color: #1f2328;
+  background: #fff;
+  --muted: #59636e;
+  --border: #d1d9e0;
+  --accent: #0969da;
+  --bad: #cf222e;
+  --ok: #1a7f37;
+}
+body { margin: 0; }
+header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border);
+}
+.brand { font-weight: 600; color: inherit; text-decoration: none; }
+main { padding: 1rem 1.25rem 3rem; max-width: 72rem; margin: 0 auto; }
+a { color: var(--accent); }
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1rem; margin: 1rem 0 0.5rem; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-size: 0.85rem; color: var(--muted); }
+td.notes { color: var(--muted); font-size: 0.9rem; }
+.status { font-size: 0.8rem; padding: 0.1rem 0.45rem; border-radius: 1rem; background: #eef1f4; white-space: nowrap; }
+.status-to-visit, .status-shortlisted { background: #dafbe1; }
+.status-call-needed, .status-check { background: #fff8c5; }
+.status-rejected { background: #ffebe9; }
+
+.button, button {
+  display: inline-block; font: inherit; font-size: 0.9rem; padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border); border-radius: 6px; background: #f6f8fa;
+  color: inherit; text-decoration: none; cursor: pointer;
+}
+button:disabled, .button[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
+
+.editor-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; }
+@media (max-width: 50rem) { .editor-grid { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; margin-bottom: 0.8rem; }
+label { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+input, select, textarea { font: inherit; padding: 0.35rem 0.5rem; border: 1px solid var(--border); border-radius: 6px; }
+input[readonly] { background: #f6f8fa; }
+[aria-invalid='true'] { border-color: var(--bad); }
+.hint { color: var(--muted); font-size: 0.85rem; }
+.error { color: var(--bad); font-size: 0.85rem; }
+.error:empty { display: none; }
+.summary { padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.9rem; }
+.summary.ok { background: #dafbe1; color: var(--ok); }
+.summary.bad { background: #ffebe9; color: var(--bad); }
+pre.yaml { background: #f6f8fa; border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem; overflow-x: auto; white-space: pre-wrap; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
