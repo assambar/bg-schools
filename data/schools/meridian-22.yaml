@@ -1,0 +1,14 @@
+id: meridian-22
+name: ЧДГ „Меридиан 22“
+sites:
+  - id: main
+    address: near bl. 227
+    neighborhood: mladost-2
+    src: { source_ref: src-114, verified: false, check: manual, note: The website returned an error (502) on 2026-10-08. Call. }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: http://meridian22-bg.com
+    src: { source_ref: src-115, verified: false, check: manual, note: The website returned an error (502) on 2026-10-08. Call. }
+    note: No public data found yet; site may be down. Call.

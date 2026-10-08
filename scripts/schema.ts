@@ -1,9 +1,9 @@
 // One Ajv setup and one catalog loader shared by the CLI validator, the Vite build
 // and the browser (via a precompiled standalone validator), so all agree on what's valid.
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import { parse } from 'yaml';
-import { buildCatalog, checkCatalog, type Catalog, type Grade, type Neighborhood, type RawCatalog } from '../src/lib/catalog.ts';
+import { buildCatalog, checkCatalog, mergeRetrieval, type Catalog, type RetrievalOverlay, type Grade, type Neighborhood, type RawCatalog } from '../src/lib/catalog.ts';
 import { buildSchoolSchema } from '../src/lib/schema-gen.ts';
 
 export const CATALOG_DIR = new URL('../data/catalog/', import.meta.url);
@@ -35,6 +35,10 @@ export function loadCatalog(): { raw: RawCatalog; catalog: Catalog } {
   const neighborhoods = (readYaml('neighborhoods.yaml') as { neighborhoods: Neighborhood[] }).neighborhoods;
   const catalog = buildCatalog(raw, grades, neighborhoods);
   const errors = checkCatalog(raw, catalog);
+  // Optional retrieval overlays: data/catalog/retrieval.<name>.yaml (same shape as the catalog).
+  for (const f of readdirSync(CATALOG_DIR).filter((f) => /^retrieval\..+\.ya?ml$/.test(f)).sort()) {
+    errors.push(...mergeRetrieval(catalog, readYaml(f) as RetrievalOverlay, `data/catalog/${f}`));
+  }
   if (errors.length > 0) throw new Error(errors.join('\n'));
   return { raw, catalog };
 }

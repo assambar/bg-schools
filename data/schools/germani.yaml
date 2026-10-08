@@ -3,8 +3,34 @@ name: Germani
 sites:
   - id: main
     neighborhood: malinova-dolina
-    src: { source_ref: src-008, verified: true }
+    src: { kind: extracted, source_ref: src-008, date: 2026-10-08, url: https://www.germani.bg/contact/, verified: true }
+    address: ul. Shiroki pat 6B, Malinova dolina
 defaults:
   src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
 values:
-  {}
+  website:
+    v: https://www.germani.bg
+    src: { kind: extracted, source_ref: src-407, date: 2026-10-08, url: https://www.germani.bg/contact/, verified: true }
+  phone:
+    v: [ 0884 735 954, 0887 094 820 ]
+    src: { kind: extracted, source_ref: src-408, date: 2026-10-08, url: https://www.germani.bg/contact/, verified: true }
+    note: Office / director.
+  email:
+    v: [ office@germani.bg ]
+    src: { kind: extracted, source_ref: src-409, date: 2026-10-08, url: https://www.germani.bg/contact/, verified: true }
+  license_type:
+    v: [ mon ]
+    src: { kind: extracted, source_ref: src-412, date: 2026-10-08, url: https://www.germani.bg/faq/, verified: true }
+  mon_license_no:
+    v: RD 14-64 of 10.06.2010
+    src: { kind: extracted, source_ref: src-413, date: 2026-10-08, url: https://www.germani.bg/faq/, verified: true }
+  instruction_languages:
+    v: [ de, bg ]
+    src: { kind: extracted, source_ref: src-414, date: 2026-10-08, url: https://www.germani.bg/, verified: true }
+    note: German kindergarten.
+  full_day:
+    v: true
+    src: { kind: extracted, source_ref: src-411, date: 2026-10-08, url: https://www.germani.bg/contact/, verified: true }
+  hours:
+    v: 08:00-19:00
+    src: { kind: extracted, source_ref: src-410, date: 2026-10-08, url: https://www.germani.bg/contact/, verified: true }

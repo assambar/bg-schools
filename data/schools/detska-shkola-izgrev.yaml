@@ -1,0 +1,93 @@
+id: detska-shkola-izgrev
+name: Детска школа „Изгрев“
+sites:
+  - id: main
+    address: ul. Henrik Ibsen 5 (near Paradise Mall)
+    neighborhood: izgrev
+    src: { source_ref: src-142, verified: false, check: unconfirmed, note: The contacts page shows only a form and a map in its static HTML. }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://detska-shkola-izgrev.com
+    src: { kind: extracted, source_ref: src-143, date: 2026-10-08, url: https://detska-shkola-izgrev.com/такси/, verified: true }
+  phone:
+    v: [ 0882 369 240, 0896 669 767 ]
+    src: { source_ref: src-144, verified: false, check: unconfirmed, note: The contacts page shows only a form and a map in its static HTML. }
+  email:
+    v: [ dshizgrev@gmail.com ]
+    src: { source_ref: src-145, verified: false, check: unconfirmed, note: The contacts page shows only a form and a map in its static HTML. }
+  ages_accepted:
+    v: { min: 2, max: 6 }
+    src: { kind: extracted, source_ref: src-146, date: 2026-10-08, url: https://detska-shkola-izgrev.com/прием/, verified: true }
+    note: Ages 2–6; may not cover the final preschool year (age 6–7).
+  license_type:
+    v: [ mon ]
+    src: { source_ref: src-147, verified: false, check: unconfirmed, note: No ministry licence is shown on the website; check the official register before relying on it for the compulsory preschool years. }
+  sibling_discount_pct:
+    v: 20
+    src: { source_ref: src-148, verified: false, check: unconfirmed, note: Not on the fees page. }
+  fee.meals:
+    v: { included: true }
+    src: { source_ref: src-151, verified: false, check: unconfirmed, note: Meals are part of the full-day rhythm but not listed as included in the monthly fee. }
+    note: Fruit breakfast, lunch, snack.
+  fee.activities:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-339, date: 2026-10-08, url: https://detska-shkola-izgrev.com/такси/, verified: true }
+    note: Programme activities and materials are included; some additional activities are paid.
+  fee.materials:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-340, date: 2026-10-08, url: https://detska-shkola-izgrev.com/такси/, verified: true }
+  tuition:
+    v: { min: 307, max: 588, currency: EUR, per: month }
+    src: { kind: extracted, source_ref: src-149, date: 2026-10-08, url: https://detska-shkola-izgrev.com/такси/, verified: true }
+    note: Full day €475–557/month on season contracts (longer is cheaper), €588 for a single month; half day €307–409.
+  prepay_discount_pct:
+    v: 10
+    src: { source_ref: src-150, verified: false, check: unconfirmed, note: Not on the fees page; longer season contracts are cheaper. }
+  pedagogy:
+    v: [ nature ]
+    src: { kind: extracted, source_ref: src-152, date: 2026-10-08, url: https://detska-shkola-izgrev.com/детска-школа-изгрев/, verified: true }
+    note: Self-described "Solar Pedagogy" (pan-eurhythmy tradition), not Waldorf.
+  activity.gymnastics:
+    v: { offered: true, location: on_site, frequency: daily }
+    src: { kind: extracted, source_ref: src-153, date: 2026-10-08, url: https://detska-shkola-izgrev.com/ежедневни-дейности/, verified: true }
+  activity.ballet:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-342, date: 2026-10-08, url: https://detska-shkola-izgrev.com/допълнителни-дейности/, verified: true }
+  activity.folk_dance:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-343, date: 2026-10-08, url: https://detska-shkola-izgrev.com/допълнителни-дейности/, verified: true }
+  activity.music:
+    v: { offered: true, location: on_site, included: true, frequency: daily }
+    src: { kind: extracted, source_ref: src-154, date: 2026-10-08, url: https://detska-shkola-izgrev.com/ежедневни-дейности/, verified: true }
+  activity.theater:
+    v: { offered: true, location: on_site, included: true }
+    src: { source_ref: src-155, verified: false, check: conflict, note: Puppet theatre is part of an emotional-intelligence course listed under additional (possibly paid) activities. }
+    note: Source says these "appear included".
+  sports_frequency:
+    v: Daily gymnastics and walks
+    src: { kind: extracted, source_ref: src-156, date: 2026-10-08, url: https://detska-shkola-izgrev.com/ежедневни-дейности/, verified: true }
+  full_day:
+    v: true
+    src: { kind: extracted, source_ref: src-337, date: 2026-10-08, url: https://detska-shkola-izgrev.com/общи-правила/, verified: true }
+  hours:
+    v: 08:00-18:00
+    src: { kind: extracted, source_ref: src-336, date: 2026-10-08, url: https://detska-shkola-izgrev.com/общи-правила/, verified: true }
+  half_day_option:
+    v: true
+    src: { kind: extracted, source_ref: src-338, date: 2026-10-08, url: https://detska-shkola-izgrev.com/такси/, verified: true }
+  meals_per_day:
+    v: 3
+    src: { kind: extracted, source_ref: src-157, date: 2026-10-08, url: https://detska-shkola-izgrev.com/общи-правила/, verified: true }
+    note: Fruit breakfast, lunch, snack.
+  parent_app:
+    v: true
+    src: { kind: extracted, source_ref: src-158, date: 2026-10-08, url: https://detska-shkola-izgrev.com/детска-школа-изгрев/, verified: true }
+  support.adaptation:
+    v:
+      available: true
+      included: false
+      price: { amount: 153, currency: EUR, per: once }
+    src: { kind: extracted, source_ref: src-341, date: 2026-10-08, url: https://detska-shkola-izgrev.com/такси/, verified: true }
+    note: Structured two-week adaptation programme.

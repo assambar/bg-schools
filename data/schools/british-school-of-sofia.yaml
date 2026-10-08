@@ -3,11 +3,30 @@ name: British School of Sofia
 sites:
   - id: main
     neighborhood: vitosha
-    src: { source_ref: src-003, verified: true }
+    src: { kind: extracted, source_ref: src-003, date: 2026-10-08, url: https://www.bssofia.bg/book-a-visit/, verified: true }
+    address: 15 Ivan Radoev St. (WonderWorld kindergarten)
 defaults:
   src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
 values:
+  website:
+    v: https://www.bssofia.bg
+    src: { kind: extracted, source_ref: src-222, date: 2026-10-08, url: https://www.bssofia.bg/book-a-visit/, verified: true }
+  phone:
+    v: [ +359 886 510 510, +359 882 475 495 ]
+    src: { kind: extracted, source_ref: src-223, date: 2026-10-08, url: https://www.bssofia.bg/book-a-visit/, verified: true }
+    note: Admissions / kindergarten.
+  email:
+    v: [ office@bssofia.bg ]
+    src: { kind: extracted, source_ref: src-224, date: 2026-10-08, url: https://www.bssofia.bg/book-a-visit/, verified: true }
   open_days:
     v: [ 2027-02-07 ]
     scope: { year: 2027/2028 }
-    src: { source_ref: src-004, verified: true }
+    src: { source_ref: src-004, verified: false, check: conflict, note: "The school blog (August 2025) announced a 7 February open house, which was in 2026; the latest listed open house was 31 March 2026. No 2027 date is published yet." }
+  application_deadline:
+    v: 2027-06-30
+    scope: { year: 2027/2028 }
+    src: { kind: extracted, source_ref: src-226, date: 2026-10-08, url: https://www.bssofia.bg/faq/, verified: true }
+    note: Applications run January to end of June; later applications until 31 August if places remain.
+  curriculum:
+    v: [ ieyc ]
+    src: { kind: extracted, source_ref: src-225, date: 2026-10-08, url: https://www.bssofia.bg/faq/, verified: true }

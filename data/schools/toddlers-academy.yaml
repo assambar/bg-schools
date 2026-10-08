@@ -1,0 +1,119 @@
+id: toddlers-academy
+name: Детска академия
+name_en: Toddlers Academy
+sites:
+  - id: q-centre
+    address: Tsarigradsko Shosse 32 (Q-Centre)
+    neighborhood: izgrev
+    src: { kind: extracted, source_ref: src-009, date: 2026-10-08, url: https://toddlersacademy.eu/bg/q-center.html, verified: true }
+  - id: kambanite
+    address: Vitoshki Kambani 9 (Sofia Kambanite Green Offices)
+    neighborhood: kambanite
+    src: { kind: extracted, source_ref: src-010, date: 2026-10-08, url: https://toddlersacademy.eu/bg/the-bells.html, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://toddlersacademy.eu/bg
+    src: { kind: extracted, source_ref: src-011, date: 2026-10-08, url: https://toddlersacademy.eu/bg/, verified: true }
+  phone:
+    v: [ 02 495 00 40, 0898 455 375 ]
+    src: { source_ref: src-012, verified: false, check: unconfirmed, note: Phone numbers are not in the static pages of the school website. }
+  email:
+    v: [ info@toddlersacademy.eu ]
+    src: { source_ref: src-013, verified: false, check: conflict, note: The school website lists toddlersacademykindergarten@gmail.com. }
+  ages_accepted:
+    v: { min: 1, max: 7 }
+    src: { kind: extracted, source_ref: src-014, date: 2026-10-08, url: https://toddlersacademy.eu/bg/admission.html, verified: true }
+    note: From 15 months to 7 years.
+  fee.enrollment:
+    v:
+      included: false
+      price: { amount: 200, currency: EUR, per: once }
+    src: { kind: extracted, source_ref: src-229, date: 2026-10-08, url: https://toddlersacademy.eu/bg/admission.html, verified: true }
+    note: One-time registration fee; plus a €770 refundable deposit.
+  fee.meals:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-231, date: 2026-10-08, url: https://toddlersacademy.eu/bg/admission.html, verified: true }
+    note: All meals, from an external caterer.
+  fee.activities:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-232, date: 2026-10-08, url: https://toddlersacademy.eu/bg/admission.html, verified: true }
+    note: Yoga, dance, sport and art are part of the daily timetable.
+  fee.materials:
+    v:
+      included: false
+      price: { amount: 150, currency: EUR, per: year }
+    src: { kind: extracted, source_ref: src-230, date: 2026-10-08, url: https://toddlersacademy.eu/bg/admission.html, verified: true }
+    note: Books and notebooks; art materials are included.
+  tuition:
+    v: { amount: 780, currency: EUR, per: month, months: 11 }
+    src: { kind: extracted, source_ref: src-015, date: 2026-10-08, url: https://toddlersacademy.eu/bg/admission.html, verified: true }
+    note: €8,580 per year (11 × €780); €8,470 if paid quarterly, €8,330 if paid at once.
+  instruction_languages:
+    v: [ bg, en ]
+    src: { kind: extracted, source_ref: src-016, date: 2026-10-08, url: https://toddlersacademy.eu/bg/, verified: true }
+  bilingual_model:
+    v: immersion
+    src: { kind: extracted, source_ref: src-017, date: 2026-10-08, url: https://toddlersacademy.eu/bg/, verified: true }
+  curriculum:
+    v: [ english_early_years, mon ]
+    src: { kind: extracted, source_ref: src-018, date: 2026-10-08, url: https://toddlersacademy.eu/bg/academic-approach.html, verified: true }
+    note: Oxford International Early Years Programme plus the national programme.
+  activity.gymnastics:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-240, date: 2026-10-08, url: https://toddlersacademy.eu/bg/academic-approach.html, verified: true }
+    note: Corrective gymnastics.
+  activity.football:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-238, date: 2026-10-08, url: https://toddlersacademy.eu/bg/academic-approach.html, verified: true }
+    note: External sports instructors come in.
+  activity.basketball:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-239, date: 2026-10-08, url: https://toddlersacademy.eu/bg/academic-approach.html, verified: true }
+  activity.yoga:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-241, date: 2026-10-08, url: https://toddlersacademy.eu/bg/student-life.html, verified: true }
+  activity.climbing:
+    v: { offered: true }
+    src: { source_ref: src-019, verified: false, check: conflict, note: No climbing wall is mentioned on the school website; possibly a shifted cell in the source table. Ask on a visit. }
+  activity.visual_arts:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-242, date: 2026-10-08, url: https://toddlersacademy.eu/bg/student-life.html, verified: true }
+  facility.own_pool:
+    v: true
+    src: { source_ref: src-020, verified: false, check: conflict, note: No pool or swimming is mentioned on the school website; possibly a shifted cell in the source table. Ask on a visit. }
+  facility.outdoor_playground:
+    v: true
+    src: { kind: extracted, source_ref: src-021, date: 2026-10-08, url: https://toddlersacademy.eu/bg/student-life.html, verified: true }
+  full_day:
+    v: true
+    src: { kind: extracted, source_ref: src-023, date: 2026-10-08, url: https://toddlersacademy.eu/bg/q-center.html, verified: true }
+    note: from opening hours 08:00–18:30
+  hours:
+    v: 08:00-18:30
+    src: { kind: extracted, source_ref: src-022, date: 2026-10-08, url: https://toddlersacademy.eu/bg/q-center.html, verified: true }
+  after_hours_care:
+    v: { available: true, included: true, hours: 15:30-18:30 }
+    src: { kind: extracted, source_ref: src-233, date: 2026-10-08, url: https://toddlersacademy.eu/bg/admission.html, verified: true }
+    note: Afternoon academic sessions 15:30–17:00, then supervised play until 18:30.
+  kitchen:
+    v: external_caterer
+    src: { kind: extracted, source_ref: src-235, date: 2026-10-08, url: https://toddlersacademy.eu/bg/student-life.html, verified: true }
+  class_size_avg:
+    v: 13
+    src: { kind: extracted, source_ref: src-236, date: 2026-10-08, url: https://toddlersacademy.eu/bg/, verified: true }
+  summer_care:
+    v: true
+    src: { kind: extracted, source_ref: src-234, date: 2026-10-08, url: https://toddlersacademy.eu/bg/admission.html, verified: true }
+    note: August summer school, paid weekly.
+  support.medical_staff:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-237, date: 2026-10-08, url: https://toddlersacademy.eu/bg/admission.html, verified: true }
+    note: Nurse on site.
+  continuity.own_primary:
+    v: { exists: false }
+    src: { kind: extracted, source_ref: src-024, date: 2026-10-08, url: https://toddlersacademy.eu/bg/, verified: true }
+  rating:
+    v: { score: 4.9, max: 5, count: 27, site: oink }
+    src: { source_ref: src-025, verified: false, check: unconfirmed, note: Review sites could not be read automatically; check by hand. }

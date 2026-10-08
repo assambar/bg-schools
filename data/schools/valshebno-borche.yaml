@@ -1,0 +1,30 @@
+id: valshebno-borche
+name: ЧДГ „Вълшебно борче“
+sites:
+  - id: main
+    address: bl. 40
+    neighborhood: poligona
+    src: { source_ref: src-116, verified: false, check: unconfirmed, note: The address is not on the website home page. }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: http://borche.org
+    src: { kind: extracted, source_ref: src-117, date: 2026-10-08, url: http://borche.org, verified: true }
+  phone:
+    v: [ 0899 709 737 ]
+    src: { kind: extracted, source_ref: src-291, date: 2026-10-08, url: http://borche.org, verified: true }
+  email:
+    v: [ team@borche.org ]
+    src: { kind: extracted, source_ref: src-292, date: 2026-10-08, url: http://borche.org, verified: true }
+  ages_accepted:
+    v: { min: 1, max: 7 }
+    src: { kind: extracted, source_ref: src-293, date: 2026-10-08, url: http://borche.org, verified: true }
+  license_type:
+    v: [ mon ]
+    src: { kind: extracted, source_ref: src-294, date: 2026-10-08, url: http://borche.org, verified: true }
+    note: Licensed; issues preschool-group certificates.
+  languages_taught:
+    v: [ en ]
+    src: { kind: extracted, source_ref: src-295, date: 2026-10-08, url: http://borche.org, verified: true }
+    note: Early English.

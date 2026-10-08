@@ -1,0 +1,110 @@
+id: quest-junior
+name: ЧДГ „Куест“
+name_en: Quest Junior
+sites:
+  - id: main
+    address: ul. Tirana 63
+    neighborhood: druzhba-1
+    src: { kind: extracted, source_ref: src-124, date: 2026-10-08, url: https://questjunior.bg/za-nas/chesto-zadavani-vprosi, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://questschool.bg
+    src: { kind: extracted, source_ref: src-125, date: 2026-10-08, url: https://questschool.bg/priem-i-taksi, verified: true }
+    note: The kindergarten has its own site at questjunior.bg.
+  phone:
+    v: [ 0897 881 359, 0895 100 502 ]
+    src: { kind: extracted, source_ref: src-126, date: 2026-10-08, url: https://questjunior.bg/za-nas/chesto-zadavani-vprosi, verified: true }
+    note: School / kindergarten.
+  email:
+    v: [ office@questschool.bg, office@questjunior.bg ]
+    src: { source_ref: src-127, verified: false, check: unconfirmed, note: office@questschool.bg is confirmed; office@questjunior.bg was not found. }
+  ages_accepted:
+    v: { min: 1, max: 7 }
+    src: { kind: extracted, source_ref: src-128, date: 2026-10-08, url: https://questjunior.bg/priem/proczes-na-kandidatstvane, verified: true }
+    note: From 12 months to 6–7 years.
+  admission_process:
+    v: [ orientation, trial_day ]
+    src: { kind: extracted, source_ref: src-129, date: 2026-10-08, url: https://questjunior.bg/priem/proczes-na-kandidatstvane, verified: true }
+    note: Trial day for the preparatory group only; the diagnostic test is for school admission.
+  sibling_discount_pct:
+    v: 5
+    src: { kind: extracted, source_ref: src-130, date: 2026-10-08, url: https://questschool.bg/priem-i-taksi, verified: true }
+    note: 5% for the second child and 10% for the third, across the kindergarten and the school.
+  fee.meals:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-320, date: 2026-10-08, url: https://questjunior.bg/priem/taksi, verified: true }
+  fee.activities:
+    v: { included: false }
+    src: { kind: extracted, source_ref: src-321, date: 2026-10-08, url: https://questjunior.bg/priem/taksi, verified: true }
+    note: All additional activities, events, camps and trips are extra.
+  fee.materials:
+    v:
+      included: false
+      price: { amount: 150, currency: EUR, per: year }
+    src: { kind: extracted, source_ref: src-319, date: 2026-10-08, url: https://questjunior.bg/priem/taksi, verified: true }
+    note: Due on 1 September.
+  fee.trips:
+    v: { included: false }
+    src: { kind: extracted, source_ref: src-322, date: 2026-10-08, url: https://questjunior.bg/priem/taksi, verified: true }
+  fee.after_hours:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-325, date: 2026-10-08, url: https://questjunior.bg/za-nas/chesto-zadavani-vprosi, verified: true }
+    note: The whole day 07:30–18:30 is in the monthly fee.
+  tuition:
+    v: { amount: 800, currency: EUR, per: month }
+    src: { kind: extracted, source_ref: src-318, date: 2026-10-08, url: https://questjunior.bg/priem/taksi, verified: true }
+    note: €7 a day refunded for a medically certified absence.
+  english_per_week:
+    v: 2
+    src: { kind: extracted, source_ref: src-131, date: 2026-10-08, url: https://questjunior.bg/detska-gradina/predstavyane, verified: true }
+    note: Included in the fee.
+  activity.football:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-326, date: 2026-10-08, url: https://questjunior.bg/detska-gradina/programa-i-kalendar, verified: true }
+  activity.martial_arts:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-327, date: 2026-10-08, url: https://questschool.bg/preduchilishtna-podgotovka, verified: true }
+    note: Taekwondo.
+  activity.modern_dance:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-328, date: 2026-10-08, url: https://questjunior.bg/detska-gradina/programa-i-kalendar, verified: true }
+  activity.robotics:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-329, date: 2026-10-08, url: https://questjunior.bg/detska-gradina/programa-i-kalendar, verified: true }
+  activity.music:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-331, date: 2026-10-08, url: https://questjunior.bg/detska-gradina/programa-i-kalendar, verified: true }
+    note: Piano and music.
+  activity.theater:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-330, date: 2026-10-08, url: https://questjunior.bg/detska-gradina/programa-i-kalendar, verified: true }
+  full_day:
+    v: true
+    src: { kind: extracted, source_ref: src-324, date: 2026-10-08, url: https://questjunior.bg/za-nas/chesto-zadavani-vprosi, verified: true }
+  hours:
+    v: 07:30-18:30
+    src: { kind: extracted, source_ref: src-323, date: 2026-10-08, url: https://questjunior.bg/za-nas/chesto-zadavani-vprosi, verified: true }
+  kitchen:
+    v: on_site
+    src: { kind: extracted, source_ref: src-132, date: 2026-10-08, url: https://questjunior.bg/za-nas/materialna-baza, verified: true }
+    note: All meals including breakfast are cooked on site.
+  metro_walk_min:
+    v: 12
+    src: { kind: extracted, source_ref: src-133, date: 2026-10-08, url: https://questjunior.bg/za-nas/chesto-zadavani-vprosi, verified: true }
+    note: Metro M4 Druzhba.
+  support.medical_staff:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-332, date: 2026-10-08, url: https://questjunior.bg/za-nas/chesto-zadavani-vprosi, verified: true }
+    note: Morning medical check.
+  continuity.own_primary:
+    v:
+      exists: true
+      name: ЧОУ „Куест“
+      grades: 1-7
+      same_campus: true
+      curriculum: Cambridge-aligned
+      tuition: { min: 6750, max: 7500, currency: EUR, per: year }
+    src: { kind: extracted, source_ref: src-134, date: 2026-10-08, url: https://questschool.bg/priem-i-taksi, verified: true }
+    note: Grades 1–3 €6,750/year, grades 4–7 €7,500/year; meals €9/day and materials €300/year extra; 10% off if paid upfront.

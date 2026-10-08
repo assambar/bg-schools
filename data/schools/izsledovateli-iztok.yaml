@@ -1,0 +1,69 @@
+id: izsledovateli-iztok
+name: ЧДЯ „Изследователи“ – Изток
+sites:
+  - id: main
+    address: ul. Tintyava 1A (Videlina building)
+    neighborhood: iztok
+    src: { kind: extracted, source_ref: src-159, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://explorers.bg/iztok
+    src: { kind: extracted, source_ref: src-160, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  phone:
+    v: [ 0885 846 554, 0885 391 111 ]
+    src: { kind: extracted, source_ref: src-161, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  email:
+    v: [ iztok@explorers.bg ]
+    src: { kind: extracted, source_ref: src-162, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  ages_accepted:
+    v: { min: 1, max: 4 }
+    src: { kind: extracted, source_ref: src-163, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  school_type:
+    v: nursery
+    src: { kind: extracted, source_ref: src-164, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  instruction_languages:
+    v: [ bg, en ]
+    src: { kind: extracted, source_ref: src-165, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  activity.ergotherapy:
+    v: { offered: true, location: on_site, included: false }
+    src: { kind: extracted, source_ref: src-166, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+    note: Extra for older children; price not published.
+  facility.own_gym:
+    v: true
+    src: { kind: extracted, source_ref: src-167, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  facility.salt_room:
+    v: true
+    src: { kind: extracted, source_ref: src-168, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  garden_area_m2:
+    v: 350
+    src: { kind: extracted, source_ref: src-169, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  meals_per_day:
+    v: 4
+    src: { kind: extracted, source_ref: src-344, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+    note: Breakfast, fruit, lunch and afternoon snack.
+  kitchen:
+    v: external_caterer
+    src: { kind: extracted, source_ref: src-170, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  class_size_max:
+    v: 15
+    src: { kind: extracted, source_ref: src-171, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+    note: About 15.
+  child_teacher_ratio:
+    v: 5
+    src: { kind: extracted, source_ref: src-345, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+    note: About 15 children with two teachers and an assistant.
+  access_control:
+    v: true
+    src: { source_ref: src-172, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+  cctv:
+    v: true
+    src: { source_ref: src-173, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+  support.adaptation:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-175, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+  support.medical_staff:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-174, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
+    note: Nurse on site.

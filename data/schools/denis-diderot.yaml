@@ -3,12 +3,77 @@ name: Denis Diderot
 sites:
   - id: main
     neighborhood: bankya
-    src: { source_ref: src-001, verified: true }
+    src: { kind: extracted, source_ref: src-001, date: 2026-10-08, url: https://denisdiderot.bg/Portals/0/Правилник%20за%20дейността%20на%20Училище%20Дени%20Дидро.pdf, verified: true }
+    address: ul. Tenev bair 2, Bankya
 defaults:
   src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
 values:
+  license_type:
+    v: [ mon ]
+    src: { kind: extracted, source_ref: src-205, date: 2026-10-08, url: https://denisdiderot.bg/Portals/0/Правилник%20за%20дейността%20на%20Училище%20Дени%20Дидро.pdf, verified: true }
+  mon_license_no:
+    v: Certificate No. 284 of 19.04.2021
+    src: { kind: extracted, source_ref: src-206, date: 2026-10-08, url: https://denisdiderot.bg/Portals/0/Правилник%20за%20дейността%20на%20Училище%20Дени%20Дидро.pdf, verified: true }
   open_days:
     v: [ 2026-11-18, 2026-11-19, 2026-11-20, 2026-12-02, 2026-12-04 ]
     scope: { year: 2026/2027 }
-    src: { source_ref: src-002, verified: false, check: manual }
+    src: { source_ref: src-002, verified: false, check: manual, note: "Open-day dates are rendered by script on the school website and could not be read automatically. The website says admissions are open for 2027/2028 (preschool group, children born 2021). Call to confirm which intake these dates are for." }
     note: Listed as 2026/27 dates. Confirm which admission year and group they are for.
+  fee.meals:
+    v: { included: false }
+    src: { kind: extracted, source_ref: src-216, date: 2026-10-08, url: https://denisdiderot.bg/Portals/0/Правилник%20за%20дейността%20на%20Училище%20Дени%20Дидро.pdf, verified: true }
+    note: Food is paid at cost.
+  fee.transport:
+    v: { included: false }
+    src: { kind: extracted, source_ref: src-217, date: 2026-10-08, url: https://denisdiderot.bg/en-us/education/school-transport, verified: true }
+  fee.materials:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-215, date: 2026-10-08, url: https://denisdiderot.bg/Portals/0/Правилник%20за%20дейността%20на%20Училище%20Дени%20Дидро.pdf, verified: true }
+    note: Textbooks and materials are in the annual fee. The fee itself is announced by the end of March for the next year.
+  fee.trips:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-218, date: 2026-10-08, url: https://denisdiderot.bg/Portals/0/Правилник%20за%20дейността%20на%20Училище%20Дени%20Дидро.pdf, verified: true }
+    note: Educational visits in Sofia.
+  english_per_week:
+    v: 5
+    src: { kind: extracted, source_ref: src-214, date: 2026-10-08, url: https://denisdiderot.bg/en-us/education/foreign-language-education, verified: true }
+    note: Daily English lessons.
+  activity.swimming:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-207, date: 2026-10-08, url: https://denisdiderot.bg/en-us/education/sports, verified: true }
+    note: Two pools on campus.
+  activity.ballet:
+    v: { offered: true, location: on_site, included: true, frequency: twice a week }
+    src: { kind: extracted, source_ref: src-208, date: 2026-10-08, url: https://denisdiderot.bg/en-us/education/sports, verified: true }
+    note: Classical and modern ballet.
+  activity.folk_dance:
+    v: { offered: true, location: on_site, included: true, frequency: twice a week }
+    src: { kind: extracted, source_ref: src-209, date: 2026-10-08, url: https://denisdiderot.bg/en-us/education/sports, verified: true }
+  facility.own_gym:
+    v: true
+    src: { kind: extracted, source_ref: src-211, date: 2026-10-08, url: https://denisdiderot.bg/en-us/school-environment, verified: true }
+    note: Two gyms.
+  facility.own_pool:
+    v: true
+    src: { kind: extracted, source_ref: src-210, date: 2026-10-08, url: https://denisdiderot.bg/en-us/school-environment, verified: true }
+    note: Two pools.
+  facility.sports_courts:
+    v: true
+    src: { kind: extracted, source_ref: src-212, date: 2026-10-08, url: https://denisdiderot.bg/en-us/school-environment, verified: true }
+    note: Outdoor fields and a running track.
+  homework_support:
+    v: { available: true, included: true }
+    src: { kind: extracted, source_ref: src-213, date: 2026-10-08, url: https://denisdiderot.bg/Portals/0/Правилник%20за%20дейността%20на%20Училище%20Дени%20Дидро.pdf, verified: true }
+    note: Self-study and clubs are part of the full-day programme (09:00–16:30); staff on site 08:00–18:00. No paid late care found.
+  transport:
+    v: true
+    src: { kind: extracted, source_ref: src-219, date: 2026-10-08, url: https://denisdiderot.bg/en-us/education/school-transport, verified: true }
+    note: 2 bus routes (5 buses) from Sofia.
+  support.psychologist:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-220, date: 2026-10-08, url: https://denisdiderot.bg/en-us/education/academic-programme, verified: true }
+    note: Psychologist / pedagogical counsellor.
+  support.medical_staff:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-221, date: 2026-10-08, url: https://denisdiderot.bg/en-us/education/academic-programme, verified: true }
+    note: Nurse and a medical-centre contract.

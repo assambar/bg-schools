@@ -1,0 +1,37 @@
+id: american-english-academy
+name: American English Academy
+sites:
+  - id: main
+    address: ул. „Орлова круша“ 1
+    neighborhood: lozen
+    src: { kind: extracted, source_ref: src-199, date: 2026-10-08, url: https://aeasofia.com/contact-us/, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://aeasofia.com
+    src: { kind: extracted, source_ref: src-375, date: 2026-10-08, url: https://aeasofia.com/, verified: true }
+  phone:
+    v: [ +359 2 973 12 22, +359 886 85 02 55 ]
+    src: { kind: extracted, source_ref: src-376, date: 2026-10-08, url: https://aeasofia.com/contact-us/, verified: true }
+  email:
+    v: [ office@aeasofia.com ]
+    src: { kind: extracted, source_ref: src-377, date: 2026-10-08, url: https://aeasofia.com/contact-us/, verified: true }
+  ages_accepted:
+    v: { min: 3, max: 18 }
+    src: { kind: extracted, source_ref: src-201, date: 2026-10-08, url: http://aeasofia.com/upload/ENG_Admissions_Policy.pdf, verified: true }
+    note: Pre-K (age 3) to grade 12.
+  school_type:
+    v: combined
+    src: { kind: extracted, source_ref: src-202, date: 2026-10-08, url: http://aeasofia.com/upload/ENG_Admissions_Policy.pdf, verified: true }
+  instruction_languages:
+    v: [ en, bg ]
+    src: { kind: extracted, source_ref: src-378, date: 2026-10-08, url: https://aeasofia.com/academics/, verified: true }
+    note: English programme; optional Bulgarian–English dual-language programme licensed by the ministry.
+  international_intake:
+    v: true
+    src: { source_ref: src-203, verified: false, check: unconfirmed, note: The website says international school but gives no student numbers. }
+    note: About 200 students from 35+ countries.
+  curriculum:
+    v: [ us_common_core ]
+    src: { kind: extracted, source_ref: src-200, date: 2026-10-08, url: https://aeasofia.com/academics/, verified: true }

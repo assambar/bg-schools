@@ -1,0 +1,41 @@
+id: ruska-shkola
+name: ЧДГ „Руска школа“
+sites:
+  - id: main
+    address: Frederic Joliot-Curie 23
+    neighborhood: izgrev
+    src: { kind: extracted, source_ref: src-135, date: 2026-10-08, url: http://www.ruskashkola.com, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: http://www.ruskashkola.com
+    src: { kind: extracted, source_ref: src-136, date: 2026-10-08, url: http://www.ruskashkola.com, verified: true }
+  phone:
+    v: [ 0988 215 956, 0888 677 715 ]
+    src: { kind: extracted, source_ref: src-137, date: 2026-10-08, url: http://www.ruskashkola.com, verified: true }
+    note: School / kindergarten.
+  email:
+    v: [ russkaya_shkola@abv.bg ]
+    src: { kind: extracted, source_ref: src-333, date: 2026-10-08, url: http://www.ruskashkola.com, verified: true }
+  license_type:
+    v: [ mon ]
+    src: { source_ref: src-138, verified: false, check: unconfirmed, note: The website mentions state licences but no Bulgarian ministry licence number. }
+  instruction_languages:
+    v: [ ru, en ]
+    src: { source_ref: src-139, verified: false, check: unconfirmed, note: The Russian-language programme is confirmed; English instruction is not stated (Cambridge courses run with a partner centre). }
+  full_day:
+    v: true
+    src: { kind: derived, source_ref: src-141, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+    note: from opening hours 08:00–18:00
+  hours:
+    v: 08:00-18:00
+    src: { source_ref: src-140, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+  support.speech_therapist:
+    v: { available: true, included: false }
+    src: { kind: extracted, source_ref: src-334, date: 2026-10-08, url: http://www.ruskashkola.com, verified: true }
+    note: Extra sessions with a speech therapist.
+  continuity.own_primary:
+    v: { exists: true, name: Русская школа, grades: 1-11, same_campus: true }
+    src: { kind: extracted, source_ref: src-335, date: 2026-10-08, url: http://www.ruskashkola.com, verified: true }
+    note: Russian general-education programme, grades 1–11.

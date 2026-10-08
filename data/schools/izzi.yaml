@@ -1,0 +1,121 @@
+id: izzi
+name: Izzi
+name_en: Izzi Start / Izzi ПУК / Izzi Science
+sites:
+  - id: vitosha
+    address: ul. „Angel Karaliychev“ 10
+    neighborhood: vitosha
+    src: { kind: extracted, source_ref: src-185, date: 2026-10-08, url: https://izzi.academy/about-us/contacts/, verified: true }
+  - id: tsarigradsko
+    address: Sofia Tech Park, bul. Tsarigradsko shosse 111
+    src: { kind: extracted, source_ref: src-186, date: 2026-10-08, url: https://izzi.academy/about-us/contacts/, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://izzi.academy
+    src: { kind: extracted, source_ref: src-356, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  phone:
+    v: [ 0885 693 415, 0885 500 375 ]
+    src: { kind: extracted, source_ref: src-187, date: 2026-10-08, url: https://izzi.academy/about-us/contacts/, verified: true }
+  email:
+    v: [ info@izzi.academy ]
+    src: { kind: extracted, source_ref: src-188, date: 2026-10-08, url: https://izzi.academy/about-us/contacts/, verified: true }
+  ages_accepted:
+    v: { min: 2, max: 19 }
+    src: { kind: extracted, source_ref: src-189, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  school_type:
+    v: combined
+    src: { kind: extracted, source_ref: src-190, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  state_compensation:
+    v: true
+    src: { kind: extracted, source_ref: src-360, date: 2026-10-08, url: https://izzi.academy/admissions/darjavnofinansirane/, verified: true }
+    note: 10 state-funded free preschool places for 5-year-olds in 2026/27.
+  fee.meals:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-196, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  fee.transport:
+    v:
+      included: false
+      price: { amount: 230, currency: EUR, per: month }
+    src: { kind: extracted, source_ref: src-358, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  fee.activities:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-197, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+    note: Integrated activities are included; after-school clubs are extra.
+  fee.materials:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-195, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  fee.trips:
+    v: { included: false }
+    src: { kind: extracted, source_ref: src-359, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+    note: Camps and trips are extra.
+  tuition:
+    - v: { amount: 9900, currency: EUR, per: year }
+      scope:
+        grade: [ pg1, pg2 ]
+      src: { kind: extracted, source_ref: src-194, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+      note: Preschool (ages 5–6), September–July; or €900 a month. The page sits next to the 2026/27 and 2027/28 application call.
+    - v: { amount: 8800, currency: EUR, per: year }
+      scope:
+        grade: [ nursery, group1, group2 ]
+      src: { kind: extracted, source_ref: src-357, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+      note: Day-care centre (ages 2–4); or €800 a month.
+  instruction_languages:
+    v: [ bg, en ]
+    src: { source_ref: src-192, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+  curriculum:
+    v: [ stream, mon, cambridge ]
+    src: { kind: extracted, source_ref: src-191, date: 2026-10-08, url: https://izzi.academy/school/izzi-science-for-kids/curriculum/, verified: true }
+  stem_focus:
+    v: true
+    src: { kind: extracted, source_ref: src-193, date: 2026-10-08, url: https://izzi.academy/school/izzi-science-for-kids/curriculum/, verified: true }
+  activity.gymnastics:
+    v: { offered: true, included: true }
+    src: { kind: extracted, source_ref: src-367, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+    note: Rhythmic gymnastics is a paid extra.
+  activity.football:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-373, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  activity.basketball:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-371, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  activity.volleyball:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-370, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  activity.tennis:
+    v: { offered: true, included: true }
+    src: { kind: extracted, source_ref: src-368, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  activity.table_tennis:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-372, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  activity.martial_arts:
+    v: { offered: true, included: true }
+    src: { kind: extracted, source_ref: src-364, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+    note: Aikido.
+  activity.yoga:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-374, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  activity.ballet:
+    v: { offered: true, included: true }
+    src: { kind: extracted, source_ref: src-365, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  activity.folk_dance:
+    v: { offered: true, included: true }
+    src: { kind: extracted, source_ref: src-366, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  activity.modern_dance:
+    v: { offered: true, included: true }
+    src: { kind: extracted, source_ref: src-369, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+    note: Hip-hop.
+  full_day:
+    v: true
+    src: { kind: extracted, source_ref: src-362, date: 2026-10-08, url: https://izzi.academy/school/izzi-science-for-kids/, verified: true }
+  hours:
+    v: 08:00-18:30
+    src: { kind: extracted, source_ref: src-361, date: 2026-10-08, url: https://izzi.academy/school/izzi-science-for-kids/, verified: true }
+  after_hours_care:
+    v: { available: true, included: true, hours: 16:30-18:30 }
+    src: { kind: extracted, source_ref: src-363, date: 2026-10-08, url: https://izzi.academy/school/izzi-science-for-kids/, verified: true }
+    note: Lessons end at 16:30, then care until 18:30; paid clubs are extra.
+  continuity.own_primary:
+    v: { exists: true, name: Izzi Science / SMART Science, grades: 1-12 }
+    src: { kind: extracted, source_ref: src-198, date: 2026-10-08, url: https://izzi.academy/school/izzi-science-for-kids/, verified: true }

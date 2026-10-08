@@ -1,0 +1,127 @@
+id: drujba
+name: ЧДГ „Дружба“
+sites:
+  - id: main
+    address: ul. 106-ta 3
+    neighborhood: obelya-2
+    src: { kind: extracted, source_ref: src-026, date: 2026-10-08, url: https://drujba.org/kontakti/, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://drujba.org
+    src: { kind: extracted, source_ref: src-027, date: 2026-10-08, url: https://drujba.org/, verified: true }
+    note: The kindergarten has its own site at dgs.drujba.org.
+  phone:
+    v: [ 02/934 55 55, 0893 372 452 ]
+    src: { kind: extracted, source_ref: src-028, date: 2026-10-08, url: https://drujba.org/kontakti/, verified: true }
+  email:
+    v: [ dgsofia@drujba.org ]
+    src: { source_ref: src-029, verified: false, check: unconfirmed, note: "Not visible on the school website, which lists info@drujba.org." }
+  ages_accepted:
+    v: { min: 2, max: 7 }
+    src: { kind: extracted, source_ref: src-030, date: 2026-10-08, url: https://dgs.drujba.org/enrollment-now/, verified: true }
+  admission_process:
+    v: [ interview, diagnostic_test ]
+    src: { kind: extracted, source_ref: src-251, date: 2026-10-08, url: https://dgs.drujba.org/enrollment-now/, verified: true }
+    note: For the 5- and 6-year-old preparatory groups.
+  sibling_discount_pct:
+    v: 10
+    src: { kind: extracted, source_ref: src-250, date: 2026-10-08, url: https://drujba.org/finansovi-usloviya/, verified: true }
+    note: Second and each further child.
+  fee.meals:
+    v: { included: true }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-246, date: 2026-10-08, url: https://dgs.drujba.org/pricing/, verified: true }
+  fee.transport:
+    v: { included: false }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-249, date: 2026-10-08, url: https://drujba.org/finansovi-usloviya/, verified: true }
+  fee.activities:
+    v: { included: false }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-248, date: 2026-10-08, url: https://drujba.org/finansovi-usloviya/, verified: true }
+    note: Interest clubs are extra (listed under the school section; most likely the same for the kindergarten).
+  fee.materials:
+    v: { included: true }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-247, date: 2026-10-08, url: https://dgs.drujba.org/pricing/, verified: true }
+    note: Textbooks and learning aids.
+  tuition:
+    - v: { amount: 418, currency: EUR, per: month }
+      scope:
+        year: 2026/2027
+        grade: [ group1, group2 ]
+      src: { kind: extracted, source_ref: src-031, date: 2026-10-08, url: https://drujba.org/finansovi-usloviya/, verified: true }
+      note: Partial programme (ages 3–4).
+    - v: { amount: 572, currency: EUR, per: month }
+      scope:
+        year: 2026/2027
+        grade: [ group1, group2 ]
+      src: { kind: extracted, source_ref: src-032, date: 2026-10-08, url: https://drujba.org/finansovi-usloviya/, verified: true }
+      note: Main programme (ages 3–4).
+    - v: { amount: 638, currency: EUR, per: month }
+      scope:
+        year: 2026/2027
+        grade: [ group1, group2 ]
+      src: { kind: extracted, source_ref: src-033, date: 2026-10-08, url: https://drujba.org/finansovi-usloviya/, verified: true }
+      note: Extended programme (ages 3–4).
+    - v: { amount: 7865, currency: EUR, per: year }
+      scope:
+        year: 2026/2027
+        grade: [ pg1, pg2 ]
+      src: { kind: extracted, source_ref: src-034, date: 2026-10-08, url: https://drujba.org/finansovi-usloviya/, verified: true }
+      note: Extended day (08:00–18:30), the only option for ages 5–6.
+  english_per_week:
+    v: 5
+    src: { kind: extracted, source_ref: src-244, date: 2026-10-08, url: https://dgs.drujba.org/programs/, verified: true }
+    note: 5 × 30 minutes a week.
+  curriculum:
+    v: [ mon ]
+    src: { kind: extracted, source_ref: src-035, date: 2026-10-08, url: https://dgs.drujba.org/programs/, verified: true }
+    note: National programme; Cambridge English clubs and exams are run by the school (grade 1 and up).
+  activity.gymnastics:
+    v: { offered: true, location: on_site, included: true, frequency: daily }
+    src: { kind: extracted, source_ref: src-036, date: 2026-10-08, url: https://dgs.drujba.org/, verified: true }
+    note: Morning gymnastics.
+  activity.football:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-254, date: 2026-10-08, url: https://dgs.drujba.org/classes-page/, verified: true }
+  activity.martial_arts:
+    v: { offered: true, included: false, partner: partner taekwondo club }
+    src: { kind: extracted, source_ref: src-255, date: 2026-10-08, url: https://dgs.drujba.org/classes/taekwondo/, verified: true }
+    note: Taekwondo, 15:00–16:00 during the kindergarten day.
+  activity.ballet:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-253, date: 2026-10-08, url: https://dgs.drujba.org/classes/ballet/, verified: true }
+  activity.folk_dance:
+    v: { offered: true }
+    src: { source_ref: src-037, verified: false, check: unconfirmed, note: Not listed on the kindergarten site (only on the school site). }
+  facility.outdoor_playground:
+    v: true
+    src: { kind: extracted, source_ref: src-038, date: 2026-10-08, url: https://dgs.drujba.org/, verified: true }
+  hours:
+    v: 08:00-18:30
+    src: { kind: extracted, source_ref: src-243, date: 2026-10-08, url: https://dgs.drujba.org/daily-routine/, verified: true }
+  half_day_option:
+    v: true
+    src: { kind: extracted, source_ref: src-039, date: 2026-10-08, url: https://dgs.drujba.org/daily-routine/, verified: true }
+    note: Ages 3–4 only (to 13:00); ages 5–6 have the extended day only.
+  meals_per_day:
+    v: 4
+    src: { kind: extracted, source_ref: src-245, date: 2026-10-08, url: https://dgs.drujba.org/pricing/, verified: true }
+  kitchen:
+    v: on_site
+    src: { kind: extracted, source_ref: src-040, date: 2026-10-08, url: https://dgs.drujba.org/, verified: true }
+  parent_app:
+    v: true
+    src: { source_ref: src-041, verified: false, check: unconfirmed, note: The e-diary is not mentioned on the kindergarten site. }
+    note: e-diary
+  continuity.own_primary:
+    v:
+      exists: true
+      name: ЧСУ „Дружба“
+      grades: 1-12
+      tuition: { amount: 7865, currency: EUR, per: year }
+    src: { kind: extracted, source_ref: src-252, date: 2026-10-08, url: https://drujba.org/finansovi-usloviya/, verified: true }
+    note: 2026/27 fee; 10% discount when moving from the kindergarten to the school.
