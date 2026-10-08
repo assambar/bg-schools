@@ -69,6 +69,7 @@ table.values th { width: 16rem; color: inherit; font-size: 0.95rem; font-weight:
 .badge.kind-imported { background: #f6f0ff; color: #6639ba; }
 .badge.ok { background: #dafbe1; color: var(--ok); }
 .badge.warn { background: #fff8c5; color: #7d4e00; }
+.badge.bad { background: #ffebe9; color: #a40e26; }
 .badge.ref { font-family: ui-monospace, monospace; }
 details.howto { margin-top: 0.2rem; font-size: 0.85rem; }
 details.howto summary { color: var(--accent); cursor: pointer; }
@@ -80,3 +81,14 @@ textarea.yaml { width: 100%; font-family: ui-monospace, monospace; font-size: 0.
 .summary.ok { background: #dafbe1; }
 .summary.bad { background: #ffebe9; }
 .actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+
+/* Criteria page */
+.criteria-controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin: 0.75rem 0; }
+.places-editor { margin: 0.5rem 0; }
+.places { display: inline-block; vertical-align: top; border: 1px solid #e5e7eb; border-radius: 6px; margin: 0.25rem; padding: 0.25rem 0.5rem; }
+.places label { display: block; font-size: 0.9rem; }
+.rules { font-size: 0.9rem; }
+td.chips { max-width: 32rem; }
+td.chips .badge { white-space: normal; display: inline-block; margin: 0.1rem; }
+.unknown-rules { display: inline-block; font-size: 0.8rem; color: var(--muted); }
+.unknown-rules[open] { display: block; }

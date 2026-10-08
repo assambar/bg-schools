@@ -138,3 +138,33 @@ export function buildSchoolSchema(cat: Catalog): Schema {
     $defs: defs,
   };
 }
+
+/** JSON Schema for data/criteria/*.yaml. Meaning (dimension ids, value types) is checked by checkCriteria. */
+export function buildCriteriaSchema(): Schema {
+  const anyValue: Schema = { anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }] };
+  const bound: Schema = { anyOf: [{ type: 'number' }, money] };
+  const dimRule = obj({
+    dim: { type: 'string', pattern: '^[a-z0-9_]+(\\.[a-z0-9_]+)?$' },
+    is: anyValue,
+    in: { type: 'array', minItems: 1, items: anyValue },
+    has: { anyOf: [{ type: 'string' }, { type: 'array', minItems: 1, items: { type: 'string' } }] },
+    gte: bound,
+    lte: bound,
+    exists: { type: 'boolean' },
+    where: { type: 'object', minProperties: 1, additionalProperties: anyValue },
+    covers: { enum: ['context'] },
+    weight: { type: 'number', exclusiveMinimum: 0 },
+  }, ['dim']);
+  dimRule.minProperties = 2;
+  const areaRule = obj({
+    neighborhood: obj({ in: { type: 'array', items: { type: 'string', pattern: ID } }, editable: { type: 'boolean' } }, ['in']),
+    weight: { type: 'number', exclusiveMinimum: 0 },
+  }, ['neighborhood']);
+  const distanceRule = obj({ within_km: obj({ km: { type: 'number', exclusiveMinimum: 0 } }, ['km']), weight: { type: 'number', exclusiveMinimum: 0 } }, ['within_km']);
+  const rules: Schema = { type: 'array', items: { oneOf: [dimRule, areaRule, distanceRule] } };
+  return {
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    title: 'Criteria set',
+    ...obj({ id: { type: 'string', pattern: ID }, kind: { enum: ['basics', 'budget', 'location', 'custom'] }, require: rules, prefer: rules }, ['id', 'kind']),
+  };
+}

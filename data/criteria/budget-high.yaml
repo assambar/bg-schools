@@ -1,0 +1,7 @@
+id: budget-high
+kind: budget
+require:
+  - { dim: tuition, lte: { amount: 25000, currency: EUR, per: year } }  # includes international schools
+prefer:
+  - { dim: fee.meals, where: { included: true } }
+  - { dim: transport, is: true }

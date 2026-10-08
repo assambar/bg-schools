@@ -49,6 +49,9 @@ export interface School {
   retrieval?: Record<string, Retrieval & { replace?: boolean }>;
 }
 
+/** A money value (see schema-gen): an amount or a min–max range. */
+export interface Money { amount?: number; min?: number; max?: number; currency: string; per: string; months?: number }
+
 export interface Context {
   year: string;
   grade: string;

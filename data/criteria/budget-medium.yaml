@@ -1,0 +1,8 @@
+id: budget-medium
+kind: budget
+require:
+  - { dim: tuition, lte: { amount: 9000, currency: EUR, per: year } }   # about €750 a month
+prefer:
+  - { dim: fee.meals, where: { included: true } }
+  - { dim: fee.after_hours, where: { included: true } }
+  - { dim: fee.activities, where: { included: true } }

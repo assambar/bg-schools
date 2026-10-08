@@ -3,22 +3,24 @@ import { fileURLToPath } from 'node:url';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import standaloneCode from 'ajv/dist/standalone/index.js';
-import { checkDataDir } from './scripts/check-data.ts';
+import { checkCriteriaDir, checkDataDir } from './scripts/check-data.ts';
 import { CATALOG_DIR, createAjv, loadCatalog } from './scripts/schema.ts';
 import { buildSchoolSchema } from './src/lib/schema-gen.ts';
 
 const DATA_DIR = resolve(import.meta.dirname, 'data');
 const SCHOOLS_DIR = resolve(DATA_DIR, 'schools');
+const CRITERIA_DIR = resolve(DATA_DIR, 'criteria');
 
 /**
  * Build-time data, no runtime fetches:
  * - `virtual:catalog`: data/catalog/*.yaml, checked. A broken catalog fails the build.
  * - `virtual:schools`: every data/schools/*.yaml, validated. Invalid data fails the build.
+ * - `virtual:criteria`: every data/criteria/*.yaml, checked against the catalog.
  * - `virtual:school-validator`: Ajv validator precompiled from the generated schema (CSP-safe).
  */
 function schoolsData(): Plugin {
-  const ids = { schools: '\0virtual:schools', catalog: '\0virtual:catalog', validator: '\0virtual:school-validator' };
-  const names: Record<string, string> = { 'virtual:schools': ids.schools, 'virtual:catalog': ids.catalog, 'virtual:school-validator': ids.validator };
+  const ids = { schools: '\0virtual:schools', catalog: '\0virtual:catalog', validator: '\0virtual:school-validator', criteria: '\0virtual:criteria' };
+  const names: Record<string, string> = { 'virtual:schools': ids.schools, 'virtual:catalog': ids.catalog, 'virtual:school-validator': ids.validator, 'virtual:criteria': ids.criteria };
   return {
     name: 'schools-data',
     resolveId(id) {
@@ -48,6 +50,11 @@ function schoolsData(): Plugin {
         if (errors.length > 0) this.error(`Invalid data:\n${errors.join('\n')}`);
         schools.sort((a, b) => a.name.localeCompare(b.name, 'bg'));
         return `export default ${JSON.stringify(schools)};`;
+      }
+      if (id === ids.criteria) {
+        const { sets, errors } = checkCriteriaDir(CRITERIA_DIR);
+        if (errors.length > 0) this.error(`Invalid criteria:\n${errors.join('\n')}`);
+        return `export default ${JSON.stringify(sets)};`;
       }
       if (id === ids.validator) {
         const ajv = createAjv({ standalone: true });

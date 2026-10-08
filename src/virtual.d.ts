@@ -15,3 +15,8 @@ declare module 'virtual:school-validator' {
   const validate: ValidateFunction;
   export default validate;
 }
+
+declare module 'virtual:criteria' {
+  const sets: import('./lib/criteria.ts').CriteriaSet[];
+  export default sets;
+}
