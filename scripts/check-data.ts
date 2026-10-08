@@ -1,9 +1,13 @@
-// Reads every data/schools/*.yaml file and reports anything that would break
-// the site: malformed YAML, schema violations, id/filename mismatch, duplicates.
+// Reads every data/schools/*.yaml file and reports anything that would break the
+// site: malformed YAML, schema violations, id/filename mismatch, duplicates, and the
+// cross-file rules in src/lib/school.ts (scope, provenance, unique source_refs).
 import { readdirSync, readFileSync } from 'node:fs';
 import { basename, join, relative } from 'node:path';
 import { parseDocument } from 'yaml';
-import { createAjv, loadSchema } from './schema.ts';
+import type { Catalog } from '../src/lib/catalog.ts';
+import { buildSchoolSchema } from '../src/lib/schema-gen.ts';
+import { checkSchool, type School } from '../src/lib/school.ts';
+import { createAjv, loadCatalog } from './schema.ts';
 
 export interface DataFile {
   path: string; // used in error messages
@@ -11,7 +15,7 @@ export interface DataFile {
 }
 
 export interface CheckResult {
-  schools: Record<string, unknown>[];
+  schools: School[];
   errors: string[];
 }
 
@@ -25,11 +29,12 @@ export function readDataDir(dir: string): DataFile[] {
     }));
 }
 
-export function checkFiles(files: DataFile[]): CheckResult {
-  const validate = createAjv().compile(loadSchema());
+export function checkFiles(files: DataFile[], catalog: Catalog = loadCatalog().catalog): CheckResult {
+  const validate = createAjv().compile(buildSchoolSchema(catalog));
   const errors: string[] = [];
-  const schools: Record<string, unknown>[] = [];
+  const schools: School[] = [];
   const seen = new Map<string, string>();
+  const refs = new Map<string, string>();
 
   for (const file of files) {
     if (file.path.endsWith('.yml')) {
@@ -44,25 +49,26 @@ export function checkFiles(files: DataFile[]): CheckResult {
     const data = doc.toJS();
     if (!validate(data)) {
       for (const e of validate.errors ?? []) {
-        const where = e.instancePath || '(root)';
-        errors.push(`${file.path}: ${where} ${e.message}`);
+        const extra = e.keyword === 'additionalProperties' ? ` ("${e.params.additionalProperty}")` : '';
+        errors.push(`${file.path}: ${e.instancePath || '(root)'} ${e.message}${extra}`);
       }
       continue;
     }
-    const school = data as Record<string, unknown>;
-    const id = String(school.id);
+    const school = data as School;
     const expected = basename(file.path, '.yaml');
-    if (id !== expected) {
-      errors.push(`${file.path}: id "${id}" must match the file name "${expected}"`);
+    if (school.id !== expected) {
+      errors.push(`${file.path}: id "${school.id}" must match the file name "${expected}"`);
       continue;
     }
-    const previous = seen.get(id);
+    const previous = seen.get(school.id);
     if (previous) {
-      errors.push(`${file.path}: duplicate id "${id}" (also in ${previous})`);
+      errors.push(`${file.path}: duplicate id "${school.id}" (also in ${previous})`);
       continue;
     }
-    seen.set(id, file.path);
-    schools.push(school);
+    seen.set(school.id, file.path);
+    const problems = checkSchool(school, catalog, refs);
+    for (const p of problems) errors.push(`${file.path}: ${p}`);
+    if (problems.length === 0) schools.push(school);
   }
   return { schools, errors };
 }

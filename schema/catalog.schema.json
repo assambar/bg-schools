@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Dimension catalog",
+  "description": "data/catalog/dimensions.yaml. Cross-field rules (known groups, value sets, methods) are checked in src/lib/catalog.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["groups", "default_context", "retrieval_methods", "value_sets", "families", "dimensions"],
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_]+(\\.[a-z0-9_]+)?$" },
+    "type": { "enum": ["bool", "int", "number", "text", "text_list", "url", "date", "date_list", "enum", "multi_enum", "range", "time_range", "money", "fee_item", "rating", "offering", "service", "link"] },
+    "scopable": { "type": "array", "uniqueItems": true, "items": { "enum": ["year", "grade", "site"] } },
+    "retrieval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["methods", "cadence", "automatable", "steps"],
+      "properties": {
+        "methods": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "cadence": { "enum": ["once", "yearly", "each_term", "monthly"] },
+        "automatable": { "type": "boolean" },
+        "steps": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "\\S" } },
+        "note": { "type": "string" }
+      }
+    }
+  },
+  "properties": {
+    "groups": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+    "default_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["year", "grade"],
+      "properties": { "year": { "type": "string", "pattern": "^[0-9]{4}/[0-9]{4}$" }, "grade": { "type": "string" } }
+    },
+    "retrieval_methods": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["automatable", "steps"],
+        "properties": { "automatable": { "type": "boolean" }, "steps": { "type": "array", "minItems": 1, "items": { "type": "string" } } }
+      }
+    },
+    "value_sets": {
+      "type": "object",
+      "additionalProperties": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z0-9_]+$" } }
+    },
+    "families": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["prefix", "group", "type", "members", "retrieval"],
+        "properties": {
+          "prefix": { "type": "string", "pattern": "^[a-z_]+$" },
+          "group": { "type": "string" },
+          "type": { "$ref": "#/$defs/type" },
+          "scopable": { "$ref": "#/$defs/scopable" },
+          "members": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z0-9_]+$" } },
+          "retrieval": { "$ref": "#/$defs/retrieval" }
+        }
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "group", "type", "retrieval"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "group": { "type": "string" },
+          "type": { "$ref": "#/$defs/type" },
+          "values": { "type": "string" },
+          "unit": { "type": "string" },
+          "scopable": { "$ref": "#/$defs/scopable" },
+          "filter": { "type": "boolean" },
+          "retrieval": { "$ref": "#/$defs/retrieval" }
+        }
+      }
+    }
+  }
+}

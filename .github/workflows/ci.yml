@@ -20,7 +20,9 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - name: Validate YAML data against the schema
+      - name: Repository hygiene (no private tool names)
+        run: npm run hygiene
+      - name: Validate catalog and YAML data
         run: npm run validate
       - name: Tests
         run: npm test

@@ -1,5 +1,10 @@
 id: germani
 name: Germani
-district: Malinova dolina
-status: research
-notes: Open day not found yet.
+sites:
+  - id: main
+    neighborhood: malinova-dolina
+    src: { source_ref: src-008, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  {}

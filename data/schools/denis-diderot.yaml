@@ -1,6 +1,14 @@
 id: denis-diderot
 name: Denis Diderot
-district: Bankya
-status: to-visit
-open_day: 2026-11-18
-notes: Open days Nov 18–20, Dec 2 & 4 (2026/27 dates).
+sites:
+  - id: main
+    neighborhood: bankya
+    src: { source_ref: src-001, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  open_days:
+    v: [ 2026-11-18, 2026-11-19, 2026-11-20, 2026-12-02, 2026-12-04 ]
+    scope: { year: 2026/2027 }
+    src: { source_ref: src-002, verified: false, check: manual }
+    note: Listed as 2026/27 dates. Confirm which admission year and group they are for.

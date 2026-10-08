@@ -1,0 +1,27 @@
+# Neighbourhoods a site can be in. Labels live in src/i18n/<lang>.json (neighborhood.<id>).
+# `district` is the administrative district (район) for grouping. Boundaries and
+# coordinates come later with the map.
+city: sofia
+neighborhoods:
+  - { id: bankya, district: bankya }
+  - { id: boyana, district: vitosha }
+  - { id: dianabad, district: izgrev }
+  - { id: druzhba-1, district: iskar }
+  - { id: druzhba-2, district: iskar }
+  - { id: geo-milev, district: slatina }
+  - { id: izgrev, district: izgrev }
+  - { id: iztok, district: izgrev }
+  - { id: kambanite }
+  - { id: lozen, district: pancharevo }
+  - { id: lyulin, district: lyulin }
+  - { id: malinova-dolina, district: studentski }
+  - { id: mladost, district: mladost } # Mladost, exact part not known
+  - { id: mladost-1, district: mladost }
+  - { id: mladost-2, district: mladost }
+  - { id: mladost-3, district: mladost }
+  - { id: mladost-4, district: mladost }
+  - { id: obelya-2, district: vrabnitsa }
+  - { id: pancharevo, district: pancharevo }
+  - { id: poligona }
+  - { id: studentski-grad, district: studentski }
+  - { id: vitosha, district: vitosha }

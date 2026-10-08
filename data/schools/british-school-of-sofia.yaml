@@ -1,5 +1,13 @@
 id: british-school-of-sofia
 name: British School of Sofia
-district: Vitosha
-status: to-visit
-open_day: 2027-02-07
+sites:
+  - id: main
+    neighborhood: vitosha
+    src: { source_ref: src-003, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  open_days:
+    v: [ 2027-02-07 ]
+    scope: { year: 2027/2028 }
+    src: { source_ref: src-004, verified: true }
