@@ -5,8 +5,8 @@ declare module 'virtual:schools' {
 }
 
 declare module 'virtual:catalog' {
-  import type { Grade, Neighborhood, RawCatalog } from './lib/catalog.ts';
-  const data: { raw: RawCatalog; grades: Grade[]; neighborhoods: Neighborhood[] };
+  import type { Grade, Neighborhood, RawCatalog, RetrievalOverlay } from './lib/catalog.ts';
+  const data: { raw: RawCatalog; grades: Grade[]; neighborhoods: Neighborhood[]; overlays: RetrievalOverlay[] };
   export default data;
 }
 

@@ -24,7 +24,7 @@ export function createAjv(options: { standalone?: boolean } = {}) {
 const readYaml = (name: string) => parse(readFileSync(new URL(name, CATALOG_DIR), 'utf8'));
 
 /** Loads and checks data/catalog/*.yaml. Throws with every problem listed. */
-export function loadCatalog(): { raw: RawCatalog; catalog: Catalog } {
+export function loadCatalog(): { raw: RawCatalog; catalog: Catalog; overlays: RetrievalOverlay[] } {
   const raw = readYaml('dimensions.yaml') as RawCatalog;
   const validate = createAjv().compile(JSON.parse(readFileSync(CATALOG_SCHEMA, 'utf8')));
   if (!validate(raw)) {
@@ -36,11 +36,14 @@ export function loadCatalog(): { raw: RawCatalog; catalog: Catalog } {
   const catalog = buildCatalog(raw, grades, neighborhoods);
   const errors = checkCatalog(raw, catalog);
   // Optional retrieval overlays: data/catalog/retrieval.<name>.yaml (same shape as the catalog).
+  const overlays: RetrievalOverlay[] = [];
   for (const f of readdirSync(CATALOG_DIR).filter((f) => /^retrieval\..+\.ya?ml$/.test(f)).sort()) {
-    errors.push(...mergeRetrieval(catalog, readYaml(f) as RetrievalOverlay, `data/catalog/${f}`));
+    const overlay = readYaml(f) as RetrievalOverlay;
+    overlays.push(overlay);
+    errors.push(...mergeRetrieval(catalog, overlay, `data/catalog/${f}`));
   }
   if (errors.length > 0) throw new Error(errors.join('\n'));
-  return { raw, catalog };
+  return { raw, catalog, overlays };
 }
 
 export function loadSchoolSchema(catalog: Catalog = loadCatalog().catalog): object {
