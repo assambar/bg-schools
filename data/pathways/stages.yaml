@@ -1,0 +1,22 @@
+# Stages of the school pathways (Paths page). Checked by schema/pathways.schema.json and
+# src/pathways/pathways.ts. `school` links a stage to an entity in data/schools when there is one.
+# `context: true` marks a stage that is not part of any path but appears in an association.
+
+- { id: pg-state, sector: state, grades: 'PG2', label: { en: State or municipal kindergarten (PG2), bg: Държавна или общинска детска градина (ПГ2) } }
+- { id: pg-rodari, sector: private, grades: 'PG2', school: djani-rodari, label: { en: Dzhani Rodari (PG2), bg: Джани Родари (ПГ2) } }
+- { id: pg-drujba, sector: private, grades: 'PG2', school: drujba, label: { en: Drujba (PG2), bg: Дружба (ПГ2) } }
+- { id: pg-quest, sector: private, grades: 'PG2', school: quest-junior, label: { en: Quest (PG2), bg: Куест (ПГ2) } }
+- { id: primary-state, sector: state, grades: '1-4', label: { en: State primary school (1-4), bg: Държавно основно училище (1-4) } }
+- { id: state-5-7, sector: state, grades: '5-7', label: { en: State school (5-7), bg: Държавно училище (5-7) } }
+- { id: primary-drujba, sector: private, grades: '1-4', school: drujba, label: { en: Drujba school (1-4), bg: Училище Дружба (1-4) } }
+- { id: drujba-5-12, sector: private, grades: '5-12', school: drujba, label: { en: Drujba school (5-12), bg: Училище Дружба (5-12) } }
+- { id: quest-1-7, sector: private, grades: '1-7', school: quest-junior, label: { en: Quest school (1-7), bg: Училище Куест (1-7) } }
+- { id: smg-5-7, sector: state, grades: '5-7', label: { en: SMG (5-7), bg: СМГ (5-7) } }
+- { id: smg-8-12, sector: state, grades: '8-12', label: { en: SMG (8-12), bg: СМГ (8-12) } }
+- { id: npmg-5-12, sector: state, grades: '5-12', label: { en: NPMG (5-12), bg: НПМГ (5-12) } }
+- { id: elite-hs, sector: state, grades: '8-12', label: { en: 'State language or math high school (91 NEG, 1 and 2 AEG, 9 FEG, 164, TUES, NPMG)', bg: 'Държавна езикова или математическа гимназия (91 НЕГ, 1 и 2 АЕГ, 9 ФЕГ, 164, ТУЕС, НПМГ)' } }
+- { id: acs-8-12, sector: private, grades: '8-12', label: { en: American College of Sofia (8-12), bg: Американски колеж в София (8-12) } }
+- { id: bss, sector: private, grades: 'Year 1-13', school: british-school-of-sofia, label: { en: 'British School of Sofia: primary, IGCSE, IB Diploma', bg: 'Британско училище в София: начален етап, IGCSE, IB диплома' } }
+- { id: aas, sector: private, grades: 'K-12', school: anglo-american-school, label: { en: 'Anglo-American School: K-12, IB Diploma', bg: 'Англо-американско училище: K-12, IB диплома' } }
+- { id: university, sector: other, grades: '19+', label: { en: University, bg: Университет } }
+- { id: sveta-sofia-1-7, sector: private, grades: '1-7', context: true, label: { en: Sveta Sofia private school (1-7), bg: Частно училище „Св. София“ (1-7) } }

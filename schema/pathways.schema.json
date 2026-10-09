@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pathways.schema.json",
+  "title": "Pathways: stages, transitions and paths (data/pathways/*.yaml)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["stages", "transitions", "paths"],
+  "properties": {
+    "stages": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/stage" } },
+    "transitions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/transition" } },
+    "paths": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/path" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "text": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "bg"],
+      "properties": { "en": { "type": "string", "minLength": 1 }, "bg": { "type": "string", "minLength": 1 } }
+    },
+    "url": { "type": "string", "pattern": "^(https://|data/)" },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sector", "grades", "label"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "sector": { "enum": ["state", "private", "other"] },
+        "grades": { "type": "string" },
+        "school": { "$ref": "#/$defs/id" },
+        "context": { "type": "boolean" },
+        "label": { "$ref": "#/$defs/text" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["year", "sample_size", "source_type", "verification", "confidence", "url", "label"],
+      "properties": {
+        "year": { "type": "integer", "minimum": 2000, "maximum": 2100 },
+        "sample_size": { "type": "integer", "minimum": 1 },
+        "source_type": { "enum": ["official", "school_self_report", "crowdsourced", "media"] },
+        "verification": { "enum": ["verified_against_official", "consistent_with_official", "unverified", "contradicted"] },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "caveats": { "type": "array", "uniqueItems": true, "items": { "enum": ["selection", "tutoring", "small_n", "self_reported", "incomplete_coverage", "denominator_unclear"] } },
+        "url": { "$ref": "#/$defs/url" },
+        "label": { "$ref": "#/$defs/text" }
+      }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "from", "label"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["mechanism", "association"], "description": "No causal kind: the data shows rules and associations only." },
+        "from": { "$ref": "#/$defs/id" },
+        "to": { "$ref": "#/$defs/id" },
+        "outcome": { "$ref": "#/$defs/text" },
+        "label": { "$ref": "#/$defs/text" },
+        "gate": { "$ref": "#/$defs/text" },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/url" } },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      },
+      "oneOf": [{ "required": ["to"] }, { "required": ["outcome"] }]
+    },
+    "range": { "type": "array", "prefixItems": [{ "type": "integer", "minimum": 0, "maximum": 12 }, { "type": "integer", "minimum": 0, "maximum": 12 }], "items": false, "minItems": 2 },
+    "path": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "steps", "cost"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "label": { "$ref": "#/$defs/text" },
+        "steps": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/id" } },
+        "cost": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fees", "sources"],
+          "properties": {
+            "fees": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["grades", "eur"],
+                "properties": { "grades": { "$ref": "#/$defs/range" }, "eur": { "type": "number", "minimum": 0 } }
+              }
+            },
+            "tutoring": { "type": "array", "items": { "$ref": "#/$defs/range" } },
+            "sibling_discount": { "type": "number", "minimum": 0, "maximum": 1 },
+            "once": { "type": "number", "minimum": 0 },
+            "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/url" } },
+            "unknowns": { "type": "array", "items": { "$ref": "#/$defs/text" } }
+          }
+        }
+      }
+    }
+  }
+}
