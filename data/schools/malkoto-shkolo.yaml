@@ -1,0 +1,29 @@
+id: malkoto-shkolo
+name: ЧДГ „Малкото школо“
+sites:
+  - id: main
+    address: Gen.-maj. Vasil Delov 10
+    neighborhood: mladost-2
+    src: { kind: extracted, source_ref: src-118, date: 2026-10-08, url: http://bgshkolo.com, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: http://bgshkolo.com
+    src: { kind: extracted, source_ref: src-119, date: 2026-10-08, url: http://bgshkolo.com, verified: true }
+    note: The website belongs to the „Българско школо“ school complex (Montessori kindergarten groups, preschool class and school) at the same address.
+  phone:
+    v: [ +359 889 108 519, +359 884 256 736 ]
+    src: { kind: extracted, source_ref: src-296, date: 2026-10-08, url: http://bgshkolo.com, verified: true }
+    note: Kindergarten / admissions.
+  email:
+    v: [ detska_gradina@bgshkolo.com ]
+    src: { kind: extracted, source_ref: src-297, date: 2026-10-08, url: http://bgshkolo.com, verified: true }
+  curriculum:
+    v: [ montessori ]
+    src: { kind: extracted, source_ref: src-298, date: 2026-10-08, url: http://bgshkolo.com, verified: true }
+    note: Montessori groups.
+  continuity.own_primary:
+    v: { exists: true, name: Българско школо, same_campus: true }
+    src: { kind: extracted, source_ref: src-299, date: 2026-10-08, url: http://bgshkolo.com, verified: true }
+    note: Kindergarten, preschool class and school in one building with a sports complex.

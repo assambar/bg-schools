@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildCatalog, checkCatalog, retrievalFor, type RawCatalog } from '../src/lib/catalog.ts';
+import { buildCatalog, checkCatalog, mergeRetrieval, retrievalFor, type RawCatalog } from '../src/lib/catalog.ts';
 import { loadCatalog } from '../scripts/schema.ts';
 import { hasConflict, pickEntry, type School } from '../src/lib/school.ts';
 
@@ -41,6 +41,24 @@ describe('catalog', () => {
   });
 });
 
+describe('retrieval overlays', () => {
+  it('adds methods and appends steps per dimension, and reports unknown ids', () => {
+    const { catalog: cat } = loadCatalog();
+    const before = retrievalFor(cat, 'activity.swimming').steps.length;
+    const errors = mergeRetrieval(cat, {
+      retrieval_methods: { archive: { automatable: false, steps: ['Look in the archive.'] } },
+      dimensions: { 'activity.swimming': { methods: ['archive'], steps: ['Archive step.'] }, nope: { steps: ['x'] } },
+    }, 'test');
+    expect(errors).toEqual(['test: unknown dimension "nope"']);
+    const r = retrievalFor(cat, 'activity.swimming');
+    expect(r.steps.at(-1)).toBe('Archive step.');
+    expect(r.steps.length).toBe(before + 1);
+    expect(r.methods.map((m) => m.id)).toContain('archive');
+    // other members of the same family are untouched
+    expect(retrievalFor(cat, 'activity.football').steps).not.toContain('Archive step.');
+  });
+});
+
 describe('value resolution', () => {
   const school: School = {
     id: 'x', name: 'X', sites: [{ id: 'main' }],
@@ -65,6 +83,16 @@ describe('value resolution', () => {
 
   it('falls back to another year, marked "other"', () => {
     expect(pickEntry(school, 'open_days', ctx)?.match).toBe('other');
+  });
+
+  it('among other-year entries, prefers the same grade', () => {
+    const last: School = { ...school, values: { tuition: [
+      { v: { amount: 410, currency: 'EUR', per: 'month' }, scope: { year: '2026/2027', grade: ['group1', 'pg1'] } },
+      { v: { amount: 470, currency: 'EUR', per: 'month' }, scope: { year: '2026/2027', grade: 'pg2' } },
+    ] } };
+    const picked = pickEntry(last, 'tuition', ctx);
+    expect(picked?.entry.v).toEqual({ amount: 470, currency: 'EUR', per: 'month' });
+    expect(picked?.match).toBe('other');
   });
 
   it('uses source precedence (visit beats imported) and flags disagreement', () => {

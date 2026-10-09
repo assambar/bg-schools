@@ -1,0 +1,74 @@
+id: anglo-american-school
+name: Anglo-American School
+sites:
+  - id: main
+    neighborhood: pancharevo
+    src: { kind: extracted, source_ref: src-204, date: 2026-10-08, url: https://www.aas-sofia.org/join/admissions-criteria-and-age-and-class-placement, verified: true }
+    address: 1 Siyanie St., Pancharevo
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://www.aas-sofia.org
+    src: { kind: extracted, source_ref: src-379, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+  phone:
+    v: [ +359 2 923 8810 ]
+    src: { kind: extracted, source_ref: src-380, date: 2026-10-08, url: https://www.aas-sofia.org/join/admissions-criteria-and-age-and-class-placement, verified: true }
+  fee.enrollment:
+    v:
+      included: false
+      price: { amount: 2809, currency: EUR, per: once }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-383, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+    note: New-student entrance fee €1,707 plus registration €1,102; also a capital fee of €3,402 a year.
+  fee.transport:
+    v:
+      included: false
+      price: { amount: 2900, currency: EUR, per: year }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-384, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+    note: Part-time bus €1,885.
+  fee.trips:
+    v: { included: true }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-385, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+    note: Day field trips.
+  fee.after_hours:
+    v: { included: false }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-386, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+    note: Elementary after-school activities are extra.
+  tuition:
+    - v: { amount: 12008, currency: EUR, per: year }
+      scope: { year: 2026/2027, grade: group2 }
+      src: { kind: extracted, source_ref: src-381, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+      note: Pre-K tuition; €18,219 in total for a new student.
+    - v: { amount: 22300, currency: EUR, per: year }
+      scope:
+        year: 2026/2027
+        grade: [ pg1, pg2, grade1, grade2, grade3, grade4, grade5 ]
+      src: { kind: extracted, source_ref: src-382, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+      note: Kindergarten to grade 5; €28,511 in total for a new student. A child born in 2021 would most likely start in Grade 1 in 2027/28.
+  hours:
+    v: 08:30-15:30
+    src: { kind: extracted, source_ref: src-387, date: 2026-10-08, url: https://resources.finalsite.net/images/v1755600484/aassofiaorg/maroodn83agufmcllnhu/AASFamilyHandbook2025-2026.pdf, verified: true }
+  after_hours_care:
+    v: { available: true, included: false, hours: 15:30-16:40 }
+    src: { kind: extracted, source_ref: src-388, date: 2026-10-08, url: https://resources.finalsite.net/images/v1755600484/aassofiaorg/maroodn83agufmcllnhu/AASFamilyHandbook2025-2026.pdf, verified: true }
+    note: Vendor-run activities on campus; no late care to 18:00 found.
+  support.psychologist:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-389, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+    note: Elementary school counsellor.
+  support.resource_teacher:
+    v: { available: true, included: false }
+    src: { kind: extracted, source_ref: src-391, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+    note: Tiered learning support (IEP, assistants); levels 2–4 are paid.
+  support.tutoring:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-392, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+    note: English as an additional language.
+  support.medical_staff:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-390, date: 2026-10-08, url: https://www.aas-sofia.org/join/tuition-and-fees, verified: true }
+    note: Two full-time nurses.

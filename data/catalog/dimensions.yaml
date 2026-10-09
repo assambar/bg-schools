@@ -55,7 +55,7 @@ value_sets:
   license_type: [mon, international, bilingual]
   admission_step: [orientation, interview, trial_day, diagnostic_test]
   spots: [open, waitlist, full]
-  language: [bg, en, de, ru, fr, it, es, ja]
+  language: [bg, en, de, ru, fr, it, es, ja, zh, el, tr]
   bilingual_model: [none, partial, 50_50, immersion, clil]
   curriculum: [mon, cambridge, ib_pyp, ieyc, montessori, reggio, waldorf, maple_bear, us_common_core, stream, english_early_years]
   accreditation: [ib, bso, cis, cambridge_school, other]

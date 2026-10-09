@@ -3,12 +3,34 @@ name: Maple Bear
 sites:
   - id: main
     neighborhood: [ kambanite, boyana ]
-    src: { source_ref: src-005, verified: true }
+    src: { kind: extracted, source_ref: src-005, date: 2026-10-08, url: https://sofia-school.maplebear.bg/en/contact/, verified: true, note: "Both campuses take the preschool class (grade 0); the kindergarten is at ul. Yordan Stubel 16, Vitosha." }
+    address: ul. Vitoshki Kambani 9 (Kambanite); ul. Panoramen pat 38 (Boyana)
 defaults:
   src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
 values:
+  website:
+    v: https://maplebear.bg
+    src: { kind: extracted, source_ref: src-227, date: 2026-10-08, url: https://sofia-school.maplebear.bg/en/admissions/, verified: true }
+  phone:
+    v: [ +359 883 700 568 ]
+    src: { kind: extracted, source_ref: src-393, date: 2026-10-08, url: https://sofia-school.maplebear.bg/en/contact/, verified: true }
+  email:
+    v: [ admission@maplebear.bg ]
+    src: { kind: extracted, source_ref: src-394, date: 2026-10-08, url: https://sofia-school.maplebear.bg/en/contact/, verified: true }
   open_days:
     v: [ 2026-10-27 ]
     scope: { year: 2027/2028 }
-    src: { source_ref: src-006, verified: false, check: manual }
+    src: { source_ref: src-006, verified: false, check: manual, note: "Not on the school website, which lists only a past open day (7 March 2026). Call to confirm." }
     note: Source notes this date may have passed.
+  sibling_discount_pct:
+    v: 5
+    src: { kind: extracted, source_ref: src-395, date: 2026-10-08, url: https://sofia-school.maplebear.bg/en/admissions/, verified: true }
+    note: 5% for the second child, 10% for the third.
+  curriculum:
+    v: [ maple_bear, mon ]
+    src: { kind: extracted, source_ref: src-228, date: 2026-10-08, url: https://sofia-school.maplebear.bg/en/admissions/, verified: true }
+    note: Canadian methodology aligned with the Bulgarian national programme.
+  continuity.own_primary:
+    v: { exists: true, name: Maple Bear Sofia, grades: 1-7, same_campus: true }
+    src: { kind: extracted, source_ref: src-396, date: 2026-10-08, url: https://sofia-school.maplebear.bg/en/admissions/, verified: true }
+    note: Boyana to grade 4, Kambanite to grade 7.

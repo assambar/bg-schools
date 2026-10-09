@@ -1,0 +1,216 @@
+id: djani-rodari
+name: ЧДГ „Джани Родари“
+sites:
+  - id: main
+    address: ul. Geo Milev 158 (VTU Todor Kableshkov campus)
+    neighborhood: geo-milev
+    src: { kind: extracted, source_ref: src-042, date: 2026-10-08, url: https://djanirodari.org/gradina/, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://www.djanirodari.org
+    src: { kind: extracted, source_ref: src-043, date: 2026-10-08, url: https://djanirodari.org/gradina/, verified: true }
+  phone:
+    v: [ 0896 769 238, 0896 769 233, 0896 769 239 ]
+    src: { kind: extracted, source_ref: src-044, date: 2026-10-08, url: https://djanirodari.org/контакти/, verified: true }
+    note: Kindergarten lines; 0896 769 230 is the school line.
+  email:
+    v: [ djanirodari_dg@abv.bg ]
+    src: { source_ref: src-045, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+  ages_accepted:
+    v: { min: 1, max: 7 }
+    src: { kind: extracted, source_ref: src-046, date: 2026-10-08, url: https://djanirodari.org/gradina/, verified: true }
+  state_compensation:
+    v: true
+    src: { source_ref: src-047, verified: false, check: unconfirmed, note: Not stated on the school website; check the official compensation list. }
+  sibling_discount_pct:
+    v: 15
+    src: { source_ref: src-048, verified: false, check: conflict, note: No sibling discount on the 2026/27 fee page or the kindergarten pages. Call to confirm. }
+    note: A later table on the same research page says no sibling policy is published on the website.
+  fee.meals:
+    v: { included: true }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-263, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+  fee.transport:
+    v: { included: false }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-267, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+  fee.activities:
+    v: { included: false }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-266, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+    note: Sports and arts clubs are extra; music, English, yoga and ateliers are included.
+  fee.materials:
+    v: { included: false }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-265, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+    note: For the preparatory class only foreign-language notebooks are extra.
+  fee.uniform:
+    v: { included: false }
+    scope: { year: 2026/2027 }
+    src: { kind: extracted, source_ref: src-264, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+    note: The uniform is mandatory.
+  tuition:
+    - v: { min: 410, max: 450, currency: EUR, per: month }
+      scope:
+        year: 2026/2027
+        grade: [ group1, group2, pg1 ]
+      src: { kind: extracted, source_ref: src-049, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+      note: 1st group €450/month (€4,050 paid upfront); 2nd and 3rd group €410/month (€3,700 upfront).
+    - v: { amount: 500, currency: EUR, per: month }
+      scope: { year: 2026/2027, grade: nursery }
+      src: { kind: extracted, source_ref: src-050, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+    - v: { amount: 470, currency: EUR, per: month }
+      scope: { year: 2026/2027, grade: pg2 }
+      src: { kind: extracted, source_ref: src-051, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+      note: "Preparatory class (4th group): €470/month plus a €750 deposit (€5,450 in total), or €4,230 paid upfront, or €4,480 in two instalments."
+  languages_taught:
+    v: [ en, de, ru, it, zh, el, tr, es ]
+    src: { kind: extracted, source_ref: src-052, date: 2026-10-08, url: https://djanirodari.org/учебен-комплекс-джани-родари/, verified: true }
+    note: German or Russian twice a week; Greek and Spanish are paid extras.
+  english_per_week:
+    v: 5
+    src: { kind: extracted, source_ref: src-053, date: 2026-10-08, url: https://djanirodari.org/gradina/detska-gradina/, verified: true }
+    note: Daily (about 2 hours a day), included in the fee.
+  second_language_from_age:
+    v: 4
+    src: { kind: extracted, source_ref: src-054, date: 2026-10-08, url: https://djanirodari.org/gradina/detska-gradina/, verified: true }
+  pedagogy:
+    v: [ montessori, waldorf ]
+    src: { kind: extracted, source_ref: src-270, date: 2026-10-08, url: https://djanirodari.org/gradina/, verified: true }
+    note: Uses Montessori and Waldorf methods plus its own programme.
+  activity.swimming:
+    v: { offered: true, included: false, partner: Swim Club Sotirovi }
+    src: { kind: extracted, source_ref: src-055, date: 2026-10-08, url: https://djanirodari.org/gradina/спортна-академия/, verified: true }
+    note: Where it takes place is not stated; no pool is mentioned on the website.
+  activity.football:
+    v: { offered: true, location: off_site, included: false, partner: Green Sport }
+    src: { kind: extracted, source_ref: src-056, date: 2026-10-08, url: https://djanirodari.org/спорт-и-отдих/, verified: true }
+    note: The football club trains at the Green Sport pitches; the campus also has a court.
+  activity.volleyball:
+    v: { offered: true }
+    src: { source_ref: src-057, verified: false, check: unconfirmed, note: "A volleyball court is on campus, but no volleyball activity is listed." }
+  activity.tennis:
+    v: { offered: true, location: on_site, included: false }
+    src: { kind: extracted, source_ref: src-058, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+    note: Court tennis; tennis court on campus.
+  activity.table_tennis:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-059, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+  activity.badminton:
+    v: { offered: true }
+    src: { source_ref: src-060, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+  activity.martial_arts:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-061, date: 2026-10-08, url: https://djanirodari.org/спорт-и-отдих/, verified: true }
+    note: Taekwondo, listed on the school sport page.
+  activity.fencing:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-062, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+  activity.yoga:
+    v: { offered: true, included: true }
+    src: { kind: extracted, source_ref: src-063, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+    note: Aerial yoga is also offered.
+  activity.climbing:
+    v: { offered: true, location: on_site, included: false }
+    src: { kind: extracted, source_ref: src-064, date: 2026-10-08, url: https://djanirodari.org/спорт-и-отдих/, verified: true }
+    note: Climbing wall in the school building on the same campus; with an instructor.
+  activity.ballet:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-065, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+  activity.folk_dance:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-066, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+  activity.chess:
+    v: { offered: true, location: on_site, included: false, frequency: twice a week }
+    src: { kind: extracted, source_ref: src-067, date: 2026-10-08, url: https://djanirodari.org/спорт-и-отдих/, verified: true }
+  activity.music:
+    v: { offered: true, location: on_site, included: true, frequency: daily }
+    src: { kind: extracted, source_ref: src-068, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+    note: Daily music (Orff Schulwerk); piano and singing lessons are extra.
+  activity.theater:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-271, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+  activity.visual_arts:
+    v: { offered: true, included: true }
+    src: { kind: extracted, source_ref: src-069, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+    note: Ateliers are in the fee; ceramics is extra.
+  facility.own_gym:
+    v: true
+    src: { kind: extracted, source_ref: src-070, date: 2026-10-08, url: https://djanirodari.org/gradina/detska-gradina/, verified: true }
+  facility.own_pool:
+    v: true
+    src: { source_ref: src-072, verified: false, check: conflict, note: No pool is mentioned anywhere on the school website; swimming is run by an outside club. Call to confirm. }
+    note: Summer pool; source asks to check it still operates.
+  facility.pool_seasonal:
+    v: true
+    src: { source_ref: src-073, verified: false, check: conflict, note: No summer pool or beach zone is mentioned on the school website. Call to confirm. }
+  facility.outdoor_playground:
+    v: true
+    src: { kind: extracted, source_ref: src-071, date: 2026-10-08, url: https://djanirodari.org/gradina/detska-gradina/, verified: true }
+    note: Three playgrounds.
+  facility.sports_courts:
+    v: true
+    src: { kind: extracted, source_ref: src-074, date: 2026-10-08, url: https://djanirodari.org/gradina/detska-gradina/, verified: true }
+    note: Tennis court and a volleyball/football court; no badminton court mentioned.
+  garden_area_m2:
+    v: 15000
+    src: { kind: extracted, source_ref: src-075, date: 2026-10-08, url: https://djanirodari.org/gradina/detska-gradina/, verified: true }
+    note: 15 decares of park.
+  full_day:
+    v: true
+    src: { kind: extracted, source_ref: src-257, date: 2026-10-08, url: https://djanirodari.org/gradina/дневен-режим/, verified: true }
+  hours:
+    v: 08:00-18:30
+    src: { kind: extracted, source_ref: src-256, date: 2026-10-08, url: https://djanirodari.org/gradina/дневен-режим/, verified: true }
+  after_hours_care:
+    v: { available: true, included: true, hours: 17:00-18:30 }
+    src: { kind: extracted, source_ref: src-259, date: 2026-10-08, url: https://djanirodari.org/gradina/дневен-режим/, verified: true }
+    note: Pick-up 17:00–18:30, in the fee.
+  homework_support:
+    v: { available: true, included: true }
+    src: { kind: extracted, source_ref: src-260, date: 2026-10-08, url: https://djanirodari.org/подготвителна-група/, verified: true }
+    note: Supervised self-study is in the preparatory-class fee. For grades 1–7 the homework room costs €190–210 a month.
+  meals_per_day:
+    v: 4
+    src: { kind: extracted, source_ref: src-262, date: 2026-10-08, url: https://djanirodari.org/gradina/такси/, verified: true }
+  kitchen:
+    v: on_site
+    src: { kind: extracted, source_ref: src-261, date: 2026-10-08, url: https://djanirodari.org/gradina/прием-в-детската-градина/, verified: true }
+  transport:
+    v: true
+    src: { kind: extracted, source_ref: src-268, date: 2026-10-08, url: https://djanirodari.org/gradina/транспорт/, verified: true }
+    note: Own minibuses with an escort; routes not published.
+  class_size_max:
+    v: 16
+    src: { kind: extracted, source_ref: src-269, date: 2026-10-08, url: https://djanirodari.org/gradina/прием-в-детската-градина/, verified: true }
+  summer_care:
+    v: true
+    src: { kind: extracted, source_ref: src-258, date: 2026-10-08, url: https://djanirodari.org/gradina/дневен-режим/, verified: true }
+    note: Open all year with no holiday closures.
+  support.psychologist:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-273, date: 2026-10-08, url: https://djanirodari.org/gradina/прием-в-детската-градина/, verified: true }
+  support.speech_therapist:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-272, date: 2026-10-08, url: https://djanirodari.org/логопедичен-кабинет/, verified: true }
+    note: Own speech-therapy room.
+  support.resource_teacher:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-274, date: 2026-10-08, url: https://djanirodari.org/ресурсен-учител/, verified: true }
+  support.tutoring:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-276, date: 2026-10-08, url: https://djanirodari.org/gradina/detska-gradina/, verified: true }
+    note: Extra individual work for children with learning difficulties.
+  support.medical_staff:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-275, date: 2026-10-08, url: https://djanirodari.org/gradina/прием-в-детската-градина/, verified: true }
+    note: Nurses; morning health check.
+  continuity.own_primary:
+    v: { exists: true, name: ЧСУ „Джани Родари“, grades: 1-12, same_campus: true }
+    src: { kind: extracted, source_ref: src-076, date: 2026-10-08, url: https://djanirodari.org/priem-2026-2027/, verified: true }
+    note: Now a private secondary school (to grade 12) on the same campus.
+  rating:
+    v: { score: 3.8, max: 5, count: 34 }
+    src: { source_ref: src-077, verified: false, check: unconfirmed, note: Review sites could not be read automatically; check by hand. }

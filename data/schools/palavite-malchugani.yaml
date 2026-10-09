@@ -1,0 +1,30 @@
+id: palavite-malchugani
+name: ЧДГ „Палавите малчугани“
+sites:
+  - id: main
+    address: Andrey Lyapchev 54
+    neighborhood: mladost-2
+    src: { kind: extracted, source_ref: src-120, date: 2026-10-08, url: http://palavitemalchugani.bg, verified: true, note: "Behind Lidl on bul. Andrey Lyapchev, Mladost." }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: http://palavitemalchugani.bg
+    src: { kind: extracted, source_ref: src-121, date: 2026-10-08, url: http://palavitemalchugani.bg, verified: true }
+  license_type:
+    v: [ mon ]
+    src: { kind: extracted, source_ref: src-300, date: 2026-10-08, url: http://palavitemalchugani.bg, verified: true }
+    note: Listed in the official register of preschool institutions.
+  activity.climbing:
+    v: { offered: true, location: on_site }
+    src: { kind: extracted, source_ref: src-304, date: 2026-10-08, url: http://palavitemalchugani.bg, verified: true }
+    note: Climbing wall in the building.
+  facility.own_gym:
+    v: true
+    src: { kind: extracted, source_ref: src-302, date: 2026-10-08, url: http://palavitemalchugani.bg, verified: true }
+  facility.own_pool:
+    v: true
+    src: { kind: extracted, source_ref: src-301, date: 2026-10-08, url: http://palavitemalchugani.bg, verified: true }
+  facility.outdoor_playground:
+    v: true
+    src: { kind: extracted, source_ref: src-303, date: 2026-10-08, url: http://palavitemalchugani.bg, verified: true }

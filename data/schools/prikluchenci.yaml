@@ -1,0 +1,73 @@
+id: prikluchenci
+name: ЧДЯ „Приключенци“
+sites:
+  - id: main
+    address: ul. Dr. Lyuben Rusev 24
+    neighborhood: iztok
+    src: { kind: extracted, source_ref: src-176, date: 2026-10-08, url: https://prikluchenci.bg/контакти/, verified: true, note: Second branch at ul. Tintyava 12A. }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://prikluchenci.bg
+    src: { kind: extracted, source_ref: src-177, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+  phone:
+    v: [ 0888 730 767 ]
+    src: { source_ref: src-178, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+  school_type:
+    v: nursery
+    src: { kind: extracted, source_ref: src-179, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+    note: From 10 months to 3 years.
+  fee.meals:
+    v: { included: false }
+    src: { kind: extracted, source_ref: src-347, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+    note: €6.90 per day from an external licensed kitchen.
+  fee.activities:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-348, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+  tuition:
+    v: { amount: 750, currency: EUR, per: month }
+    src: { kind: extracted, source_ref: src-346, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+    note: Full-day care and all activities; deposit of one month, set against the last month.
+  languages_taught:
+    v: [ en ]
+    src: { kind: extracted, source_ref: src-180, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+    note: Bilingual programme from 2026/27.
+  activity.yoga:
+    v: { offered: true }
+    src: { source_ref: src-181, verified: false, check: conflict, note: Yoga is not mentioned on the website. }
+  activity.music:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-352, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+  activity.theater:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-355, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+    note: Puppet theatre.
+  activity.visual_arts:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-182, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+    note: Creative workshops and art therapy.
+  activity.cooking:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-353, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+  activity.gardening:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-354, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+  full_day:
+    v: true
+    src: { kind: derived, source_ref: src-184, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+    note: from opening hours 07:30–19:00
+  hours:
+    v: 07:30-19:00
+    src: { source_ref: src-183, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
+  kitchen:
+    v: external_caterer
+    src: { kind: extracted, source_ref: src-349, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+  support.psychologist:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-350, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+    note: External psychologist and art therapist.
+  support.medical_staff:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-351, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
+    note: Daily nurse.

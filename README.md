@@ -63,6 +63,18 @@ The app shows the entry that fits the chosen year and group best (exact scope, t
 
 Each catalog dimension has `retrieval: { methods, cadence, automatable, steps }`. `methods` refer to shared procedures in `retrieval_methods` (school website, official register, review sites, call, visit); `steps` are specific to the dimension. A school file can add steps (or replace them with `replace: true`) under `retrieval:`. The detail view shows the merged instructions under "How to update this".
 
+Source-specific steps can live in their own file, `data/catalog/retrieval.<name>.yaml`, with the catalog's shape: `retrieval_methods` to add, and `dimensions: { <id>: { methods, steps, note } }`. Such files are loaded automatically; their methods are added and their steps appended after the catalog's. Adding or removing a source's steps is adding or removing one file.
+
+## Sample data
+
+The 24 files in `data/schools` are sample data (`ref: sample-2026-10`), imported on 2026-10-07 and re-checked against the schools' own websites on 2026-10-08 by following the retrieval instructions:
+
+- `kind: imported`, no `url`: as imported; not re-confirmed.
+- `kind: extracted` with `url` and `verified: true`: confirmed or corrected from that page on that date (new values found during the re-check are also `extracted`).
+- `check: conflict`: a source disagrees (the note says how); `check: unconfirmed`: not found online; `check: manual`: needs a call or visit.
+
+Missing values are unknown, not "no". Free-text notes are in English for now.
+
 ## Adding things
 
 - **A dimension:** add it to `dimensions.yaml` (or to a `families` list) and add `dim.<id>` (plus any new `enum.<set>.<value>`) to every file in `src/i18n/`. Tests fail if a label is missing.

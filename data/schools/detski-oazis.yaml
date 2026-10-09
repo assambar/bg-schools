@@ -1,0 +1,20 @@
+id: detski-oazis
+name: ЧДГ „Детски оазис“
+sites:
+  - id: main
+    address: Dimitar Dospevski 9
+    neighborhood: mladost-1
+    src: { source_ref: src-112, verified: false, check: unconfirmed, note: The address is not on the website home page. }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: http://kinderoase.eu
+    src: { kind: extracted, source_ref: src-113, date: 2026-10-08, url: http://kinderoase.eu, verified: true }
+  instruction_languages:
+    v: [ de ]
+    src: { kind: extracted, source_ref: src-289, date: 2026-10-08, url: http://kinderoase.eu, verified: true }
+    note: German-language full-day kindergarten.
+  full_day:
+    v: true
+    src: { kind: extracted, source_ref: src-290, date: 2026-10-08, url: http://kinderoase.eu, verified: true }

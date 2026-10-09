@@ -1,0 +1,56 @@
+id: shtastlivi-detsa
+name: ЧДГ „Щастливи деца“
+sites:
+  - id: main
+    address: Dimitar Dospevski 9
+    neighborhood: mladost-1
+    src: { kind: extracted, source_ref: src-122, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: http://dvorec.bg/kids
+    src: { kind: extracted, source_ref: src-123, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  license_type:
+    v: [ mon ]
+    src: { kind: extracted, source_ref: src-305, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  mon_license_no:
+    v: Certificate No. 412
+    src: { kind: extracted, source_ref: src-306, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  activity.ballet:
+    v: { offered: true, location: on_site }
+    src: { kind: extracted, source_ref: src-311, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  activity.folk_dance:
+    v: { offered: true, location: on_site }
+    src: { kind: extracted, source_ref: src-312, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  activity.music:
+    v: { offered: true, location: on_site }
+    src: { kind: extracted, source_ref: src-313, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  activity.theater:
+    v: { offered: true, location: on_site }
+    src: { kind: extracted, source_ref: src-314, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  activity.visual_arts:
+    v: { offered: true, location: on_site }
+    src: { kind: extracted, source_ref: src-315, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  kitchen:
+    v: on_site
+    src: { kind: extracted, source_ref: src-307, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+    note: Own licensed kitchen.
+  summer_care:
+    v: true
+    src: { kind: extracted, source_ref: src-316, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+    note: Summer school.
+  support.psychologist:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-308, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+    note: Consulting room with nurses, a psychologist, a speech therapist and a family counsellor.
+  support.speech_therapist:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-309, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  support.medical_staff:
+    v: { available: true }
+    src: { kind: extracted, source_ref: src-310, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+  continuity.own_primary:
+    v: { exists: true, name: ЧНУ „Светилник“ }
+    src: { kind: extracted, source_ref: src-317, date: 2026-10-08, url: http://dvorec.bg/kids, verified: true }
+    note: Children can continue at the operator's own primary school.

@@ -2,9 +2,41 @@ id: nikator
 name: Nikator
 sites:
   - id: main
-    neighborhood: [ studentski-grad, malinova-dolina ]
-    src: { source_ref: src-007, verified: true }
+    neighborhood: studentski-grad
+    src: { kind: extracted, source_ref: src-007, date: 2026-10-08, url: https://ruliceum.org/bg/, verified: true, note: Address in Studentski grad. }
+    address: ul. Prof. Ivan Stranski 15
 defaults:
   src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
 values:
-  {}
+  website:
+    v: https://ruliceum.org/bg/
+    src: { kind: extracted, source_ref: src-397, date: 2026-10-08, url: https://ruliceum.org/bg/, verified: true }
+  phone:
+    v: [ 0888 721 101, 0877 791 142 ]
+    src: { kind: extracted, source_ref: src-398, date: 2026-10-08, url: https://ruliceum.org/bg/, verified: true }
+  email:
+    v: [ office@ruliceum.org ]
+    src: { kind: extracted, source_ref: src-399, date: 2026-10-08, url: https://ruliceum.org/bg/, verified: true }
+  license_type:
+    v: [ mon ]
+    src: { kind: extracted, source_ref: src-403, date: 2026-10-08, url: https://zadeteto.bg/directory-nursery/listing/chdg-nikator/, verified: true }
+  mon_license_no:
+    v: RD14-89 of 29.11.2024
+    src: { kind: extracted, source_ref: src-404, date: 2026-10-08, url: https://zadeteto.bg/directory-nursery/listing/chdg-nikator/, verified: true }
+  tuition:
+    v: { amount: 6760, currency: EUR, per: year }
+    src: { kind: extracted, source_ref: src-405, date: 2026-10-08, url: https://e-xplore.education/portfolio/nikator/, verified: true }
+    note: From a schools directory, not the school site; includes meals, materials and some activities. Extra clubs €35–125 a month.
+  languages_taught:
+    v: [ en, ru ]
+    src: { kind: extracted, source_ref: src-402, date: 2026-10-08, url: https://ruliceum.org/bg/, verified: true }
+    note: Early English and Russian.
+  full_day:
+    v: true
+    src: { kind: extracted, source_ref: src-401, date: 2026-10-08, url: https://ruliceum.org/bg/, verified: true }
+  hours:
+    v: 08:00-18:00
+    src: { kind: extracted, source_ref: src-400, date: 2026-10-08, url: https://ruliceum.org/bg/, verified: true }
+  continuity.own_primary:
+    v: { exists: true, name: ЧСУ „Никатор“, grades: 1-12, same_campus: true }
+    src: { kind: extracted, source_ref: src-406, date: 2026-10-08, url: https://ruliceum.org/bg/, verified: true }

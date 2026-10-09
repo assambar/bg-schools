@@ -1,0 +1,93 @@
+id: anika
+name: ЧДГ „Аника“
+sites:
+  - id: main
+    address: Al. Malinov 79B
+    neighborhood: mladost-4
+    src: { kind: extracted, source_ref: src-100, date: 2026-10-08, url: https://novigradini.com/anika/kontakti/, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://novigradini.com/anika/
+    src: { kind: extracted, source_ref: src-101, date: 2026-10-08, url: https://novigradini.com/anika/ceni/, verified: true }
+    note: The old address redirects here (the operator's site).
+  phone:
+    v: [ 0888 387 436 ]
+    src: { kind: extracted, source_ref: src-102, date: 2026-10-08, url: https://novigradini.com/anika/kontakti/, verified: true }
+  email:
+    v: [ gradina.anika@gmail.com ]
+    src: { kind: extracted, source_ref: src-103, date: 2026-10-08, url: https://novigradini.com/anika/kontakti/, verified: true }
+  ages_accepted:
+    v: { min: 1, max: 6 }
+    src: { kind: extracted, source_ref: src-104, date: 2026-10-08, url: https://novigradini.com/anika/, verified: true }
+  license_type:
+    v: [ mon ]
+    src: { kind: extracted, source_ref: src-105, date: 2026-10-08, url: https://novigradini.com/anika/, verified: true }
+  mon_license_no:
+    v: RD 14-55/17.07.2024
+    src: { kind: extracted, source_ref: src-106, date: 2026-10-08, url: https://novigradini.com/anika/, verified: true }
+  state_compensation:
+    v: true
+    src: { kind: extracted, source_ref: src-279, date: 2026-10-08, url: https://novigradini.com/faq/, verified: true }
+    note: Municipal compensation of up to €281.21 a month for ages 3–6.
+  sibling_discount_pct:
+    v: 5
+    src: { kind: extracted, source_ref: src-278, date: 2026-10-08, url: https://novigradini.com/anika/ceni/, verified: true }
+  fee.meals:
+    v: { included: false }
+    src: { kind: extracted, source_ref: src-280, date: 2026-10-08, url: https://novigradini.com/anika/hrana/, verified: true }
+    note: Paid per attended day; price not published.
+  fee.activities:
+    v: { included: false }
+    src: { kind: extracted, source_ref: src-281, date: 2026-10-08, url: https://novigradini.com/anika/ceni/, verified: true }
+    note: English, arts, dance, swimming, robotics, yoga and sports are extra; piano and singing are included.
+  fee.after_hours:
+    v: { included: true }
+    src: { kind: extracted, source_ref: src-282, date: 2026-10-08, url: https://novigradini.com/anika/ceni/, verified: true }
+    note: Full-day care to 18:30 is in the fee.
+  tuition:
+    v: { amount: 475.5, currency: EUR, per: month }
+    src: { kind: extracted, source_ref: src-277, date: 2026-10-08, url: https://novigradini.com/anika/ceni/, verified: true }
+    note: Since September 2025. Deposit of one month, set against the last month.
+  programme_name:
+    v: „Приятели“ (Bulgarian publisher)
+    src: { source_ref: src-107, verified: false, check: unconfirmed, note: The website only says the programme is approved by the ministry; the publisher is not named. }
+  activity.swimming:
+    v: { offered: true, location: off_site, included: false }
+    src: { kind: extracted, source_ref: src-285, date: 2026-10-08, url: https://novigradini.com/anika/programa/, verified: true }
+    note: Run by an external school; there is no pool on site.
+  activity.yoga:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-287, date: 2026-10-08, url: https://novigradini.com/anika/programa/, verified: true }
+    note: Run by an external school.
+  activity.robotics:
+    v: { offered: true, included: false }
+    src: { kind: extracted, source_ref: src-286, date: 2026-10-08, url: https://novigradini.com/anika/programa/, verified: true }
+    note: Run by an external school.
+  activity.music:
+    v: { offered: true, location: on_site, included: true }
+    src: { kind: extracted, source_ref: src-284, date: 2026-10-08, url: https://novigradini.com/anika/programa/, verified: true }
+    note: Piano and singing lessons.
+  full_day:
+    v: true
+    src: { kind: extracted, source_ref: src-109, date: 2026-10-08, url: https://novigradini.com/anika/kontakti/, verified: true }
+    note: from opening hours 08:00–18:30
+  hours:
+    v: 08:00-18:30
+    src: { kind: extracted, source_ref: src-108, date: 2026-10-08, url: https://novigradini.com/anika/kontakti/, verified: true }
+  after_hours_care:
+    v: { available: true, included: true, hours: 16:00-18:30 }
+    src: { kind: extracted, source_ref: src-283, date: 2026-10-08, url: https://novigradini.com/anika/ceni/, verified: true }
+    note: Creative and music time 16:00–18:00, care until 18:30.
+  kitchen:
+    v: external_caterer
+    src: { kind: extracted, source_ref: src-110, date: 2026-10-08, url: https://novigradini.com/anika/hrana/, verified: true }
+    note: Meals from an external licensed kitchen, paid per attended day.
+  support.speech_therapist:
+    v: { available: true, included: false }
+    src: { kind: extracted, source_ref: src-288, date: 2026-10-08, url: https://novigradini.com/faq/, verified: true }
+    note: Listed as a possible extra in a general FAQ for both of the operator's kindergartens.
+  continuity.own_primary:
+    v: { exists: false }
+    src: { source_ref: src-111, verified: false, check: unconfirmed, note: "No own primary school is mentioned on the website, but absence is not stated either." }

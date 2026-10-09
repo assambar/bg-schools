@@ -68,8 +68,11 @@ const PRECEDENCE: SourceKind[] = ['visit', 'call', 'manual', 'user-edit', 'extra
 export function scopeFit(scope: Scope | undefined, ctx: Context): number {
   if (!scope) return 1;
   const grades = scope.grade === undefined ? undefined : ([] as string[]).concat(scope.grade);
-  if (scope.year && scope.year !== ctx.year) return -1;
-  if (grades && !grades.includes(ctx.grade)) return -1;
+  const yearOk = !scope.year || scope.year === ctx.year;
+  const gradeOk = !grades || grades.includes(ctx.grade);
+  // Another year or grade: negative, but prefer the right grade from another year
+  // (e.g. last year's price for the same group) over the right year for another grade.
+  if (!yearOk || !gradeOk) return -3 + (gradeOk ? (grades ? 2 : 1) : 0) + (yearOk ? 0.5 : 0);
   return 1 + (scope.year ? 2 : 0) + (grades ? 1 : 0);
 }
 
@@ -78,7 +81,8 @@ export type Match = 'exact' | 'general' | 'other';
 /**
  * The entry to show and filter on for a context: best scope fit first, then source
  * precedence (visit > call > manual > user-edit > extracted > imported > derived), then newest.
- * Entries for another year or grade are only used when nothing else exists ("other").
+ * Entries for another year or grade are only used when nothing else exists ("other");
+ * among those, the same grade from another year wins.
  */
 export function pickEntry(s: School, dim: string, ctx: Context): { entry: Entry; src: Src; match: Match } | undefined {
   const ranked = entriesOf(s, dim)

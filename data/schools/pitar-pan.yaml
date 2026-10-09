@@ -1,0 +1,78 @@
+id: pitar-pan
+name: Езикова ЧДГ „Питър Пан“
+sites:
+  - id: geo-milev
+    address: Nikola Obreshkov 8A (behind Hotel Pliska)
+    neighborhood: geo-milev
+    src: { kind: extracted, source_ref: src-078, date: 2026-10-08, url: https://registarnadetskitegradini.com/частна-целодневна-детска-градина-питър-пан-софия, verified: true }
+  - id: yarema
+    address: Vitosha–Yarema branch
+    neighborhood: vitosha
+    src: { source_ref: src-079, verified: false, check: manual, note: Manual check needed (call or visit). }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  website:
+    v: https://pitarpan.com
+    src: { source_ref: src-080, verified: false, check: unconfirmed, note: pitarpan.com did not load on 2026-10-08; a directory lists pitarpan.hit.bg. }
+  phone:
+    v: [ 02/870 09 10, 0885 644 355 ]
+    src: { source_ref: src-081, verified: false, check: unconfirmed, note: The landline is confirmed in a kindergarten directory; the mobile number was not found. }
+  email:
+    v: [ zunzun@abv.bg ]
+    src: { kind: extracted, source_ref: src-082, date: 2026-10-08, url: https://registarnadetskitegradini.com/частна-целодневна-детска-градина-питър-пан-софия, verified: true }
+  ages_accepted:
+    v: { min: 1, max: 7 }
+    src: { kind: extracted, source_ref: src-083, date: 2026-10-08, url: https://uchiteli.bg/profile/chcdg-pityr-pan/1800?ua=pr, verified: true }
+  languages_taught:
+    v: [ en, de ]
+    src: { source_ref: src-084, verified: false, check: unconfirmed, note: English is confirmed in a directory; German is not. }
+  activity.swimming:
+    v: { offered: true, location: off_site, included: false, frequency: "weekly, individual trainer", partner: external children's pool }
+    src: { source_ref: src-085, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  activity.gymnastics:
+    v: { offered: true, location: off_site, included: false, frequency: twice weekly, partner: external ballet school }
+    src: { source_ref: src-086, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  activity.ballet:
+    v: { offered: true, location: off_site, included: false, frequency: twice weekly, partner: external ballet school }
+    src: { source_ref: src-087, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  activity.modern_dance:
+    v: { offered: true }
+    src: { source_ref: src-089, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  activity.breakdance:
+    v: { offered: true, location: off_site, included: false, frequency: twice weekly, partner: external ballet school }
+    src: { source_ref: src-088, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  activity.visual_arts:
+    v: { offered: true }
+    src: { source_ref: src-090, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  facility.outdoor_playground:
+    v: true
+    src: { source_ref: src-091, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  garden_area_m2:
+    v: 3500
+    scope: { site: yarema }
+    src: { source_ref: src-092, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+    note: 3.5-decare garden.
+  meals_per_day:
+    v: 4
+    src: { source_ref: src-093, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  transport:
+    v: true
+    src: { source_ref: src-094, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  summer_care:
+    v: true
+    src: { source_ref: src-095, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+    note: Summer kindergarten May 31–Aug 31.
+  weekend_care:
+    v: true
+    src: { source_ref: src-096, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+    note: Including overnight.
+  support.medical_staff:
+    v: { available: true }
+    src: { source_ref: src-097, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  continuity.own_primary:
+    v: { exists: false }
+    src: { source_ref: src-098, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }
+  continuity.linked_school:
+    v: { exists: false }
+    src: { source_ref: src-099, verified: false, check: manual, note: The school website could not be reached on 2026-10-08 and no other source lists this. Call to confirm. }

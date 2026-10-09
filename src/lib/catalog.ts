@@ -156,6 +156,36 @@ export function retrievalFor(
   };
 }
 
+/**
+ * Extra retrieval instructions kept in a separate file with the catalog's own shape:
+ * `retrieval_methods` (added) and `dimensions: { <id>: { methods, steps, note } }`
+ * (methods merged, steps appended after the catalog's). Lets source-specific steps live in
+ * their own file and be added or removed by adding or removing that file.
+ */
+export interface RetrievalOverlay {
+  retrieval_methods?: RawCatalog['retrieval_methods'];
+  dimensions?: Record<string, Pick<Retrieval, 'methods' | 'steps' | 'note'>>;
+}
+
+export function mergeRetrieval(cat: Catalog, overlay: RetrievalOverlay, name = 'overlay'): string[] {
+  const errors: string[] = [];
+  Object.assign(cat.methods, overlay.retrieval_methods ?? {});
+  for (const [id, extra] of Object.entries(overlay.dimensions ?? {})) {
+    const d = cat.byId.get(id);
+    if (!d) { errors.push(`${name}: unknown dimension "${id}"`); continue; }
+    for (const m of extra.methods ?? []) if (!cat.methods[m]) errors.push(`${name}: ${id}: unknown retrieval method "${m}"`);
+    const base = d.retrieval ?? {};
+    // Family members share one retrieval object; copy before changing it.
+    d.retrieval = {
+      ...base,
+      methods: [...new Set([...(base.methods ?? []), ...(extra.methods ?? [])])],
+      steps: [...(base.steps ?? []), ...(extra.steps ?? [])],
+      ...(extra.note ? { note: base.note ? `${base.note} ${extra.note}` : extra.note } : {}),
+    };
+  }
+  return errors;
+}
+
 /** Every i18n key the catalog needs, so tests can require them in every dictionary. */
 export function catalogLabelKeys(cat: Catalog): string[] {
   const keys = new Set<string>();

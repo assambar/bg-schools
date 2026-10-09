@@ -1,10 +1,11 @@
 // App-wide state kept in the browser only (language and school year / group context).
 import data from 'virtual:catalog';
-import { buildCatalog } from './lib/catalog.ts';
+import { buildCatalog, mergeRetrieval } from './lib/catalog.ts';
 import { detectLang, setLang } from './lib/i18n.ts';
 import type { Context } from './lib/school.ts';
 
 export const catalog = buildCatalog(data.raw, data.grades, data.neighborhoods);
+for (const overlay of data.overlays) mergeRetrieval(catalog, overlay); // checked at build time
 
 const KEY_LANG = 'bg-schools.lang';
 const KEY_CTX = 'bg-schools.context';

@@ -40,8 +40,8 @@ function schoolsData(): Plugin {
     },
     load(id) {
       if (id === ids.catalog) {
-        const { raw, catalog } = loadCatalog();
-        return `export default ${JSON.stringify({ raw, grades: catalog.grades, neighborhoods: catalog.neighborhoods })};`;
+        const { raw, catalog, overlays } = loadCatalog();
+        return `export default ${JSON.stringify({ raw, grades: catalog.grades, neighborhoods: catalog.neighborhoods, overlays })};`;
       }
       if (id === ids.schools) {
         const { schools, errors } = checkDataDir(SCHOOLS_DIR);
