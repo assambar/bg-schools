@@ -1,19 +1,25 @@
-import schools from 'virtual:schools';
+import { app, changeContext, changeLang, state } from '../app.ts';
 import { h } from '../dom.ts';
+import { contextAxes, type ScopeAxis } from '../lib/domain.ts';
 import { dictionaries, LANGS, t } from '../lib/i18n.ts';
-import type { Entry } from '../lib/school.ts';
-import { catalog, changeContext, changeLang, state } from '../state.ts';
+import type { Entry } from '../lib/entity.ts';
 
-/** Years offered in the context picker: the default plus every year used in the data. */
-function years(): string[] {
-  const set = new Set([catalog.defaultContext.year]);
-  for (const s of schools) {
-    for (const v of Object.values(s.values).flat() as Entry[]) if (v.scope?.year) set.add(v.scope.year);
+/** Options for a context axis: its fixed values, or the default plus every value used in the data. */
+function options(axis: ScopeAxis): { id: string; label: string }[] {
+  const fixed = app().domain.scopeValues[axis.id];
+  if (fixed) return fixed.map((v) => ({ id: v.id, label: t(`${axis.id}.${v.id}`) }));
+  const set = new Set([axis.context!.default]);
+  for (const s of app().entities) {
+    for (const v of Object.values(s.values).flat() as Entry[]) {
+      const x = v.scope?.[axis.id];
+      if (x !== undefined) for (const y of ([] as string[]).concat(x)) set.add(y);
+    }
   }
-  return [...set].sort();
+  return [...set].sort().map((id) => ({ id, label: id }));
 }
 
 export function renderHeader(rerender: () => void): HTMLElement {
+  const dom = app().domain;
   const lang = h('select', { 'aria-label': t('lang.label'), id: 'lang' }, ...LANGS.map((l) => h('option', { value: l }, dictionaries[l]['_meta.name'] ?? l)));
   lang.value = state.lang;
   lang.addEventListener('change', () => {
@@ -21,22 +27,23 @@ export function renderHeader(rerender: () => void): HTMLElement {
     rerender();
   });
 
-  const year = h('select', { 'aria-label': t('context.year'), id: 'ctx-year' }, ...years().map((y) => h('option', { value: y }, y)));
-  year.value = state.ctx.year;
-  const grade = h('select', { 'aria-label': t('context.grade'), id: 'ctx-grade' }, ...catalog.grades.map((g) => h('option', { value: g.id }, t(`grade.${g.id}`))));
-  grade.value = state.ctx.grade;
+  const axes = contextAxes(dom);
+  const selects = axes.map((a) => {
+    const sel = h('select', { 'aria-label': t(`context.${a.id}`), id: `ctx-${a.id}` }, ...options(a).map((o) => h('option', { value: o.id }, o.label)));
+    sel.value = state.ctx[a.id];
+    return sel;
+  });
   const onCtx = () => {
-    changeContext({ year: year.value, grade: grade.value });
+    changeContext(Object.fromEntries(axes.map((a, i) => [a.id, selects[i].value])));
     rerender();
   };
-  year.addEventListener('change', onCtx);
-  grade.addEventListener('change', onCtx);
+  for (const sel of selects) sel.addEventListener('change', onCtx);
 
   return h(
     'header',
     {},
     h('a', { href: '#/', class: 'brand' }, t('app.title')),
-    h('nav', {}, h('a', { href: '#/' }, t('nav.schools')), h('a', { href: '#/criteria' }, t('nav.criteria')), h('a', { href: '#/new' }, t('nav.add'))),
-    h('div', { class: 'controls' }, h('span', { class: 'hint' }, t('context.label')), year, grade, lang),
+    h('nav', {}, h('a', { href: '#/' }, t('nav.list')), h('a', { href: '#/criteria' }, t('nav.criteria')), h('a', { href: '#/new' }, t('nav.add'))),
+    h('div', { class: 'controls' }, axes.length ? h('span', { class: 'hint' }, t('context.label')) : '', ...selects, lang),
   );
 }

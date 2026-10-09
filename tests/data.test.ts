@@ -1,14 +1,14 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
 import { checkDataDir, checkFiles } from '../scripts/check-data.ts';
-import { loadCatalog } from '../scripts/schema.ts';
-import { toYaml } from '../src/lib/school.ts';
+import { toYaml } from '../src/lib/entity.ts';
+import { setup } from './helpers.ts';
 
-const { catalog } = loadCatalog();
+const { dom: catalog } = setup();
 const ok = `id: germani
 name: Germani
 sites:
@@ -23,9 +23,9 @@ const withValues = (values: string) => ok.replace(/values:\n[\s\S]*$/, `values:\
 
 describe('repository data', () => {
   it('data/schools is valid', () => {
-    const { schools, errors } = checkDataDir('data/schools');
+    const { entities, errors } = checkDataDir('data/schools', catalog);
     expect(errors).toEqual([]);
-    expect(schools.length).toBeGreaterThan(0);
+    expect(entities.length).toBeGreaterThan(0);
   });
 
   it('files are in the canonical format the editor writes', () => {
@@ -76,7 +76,7 @@ describe('checkFiles', () => {
     expect(errors).toEqual([
       'data/schools/germani.yaml: full_day: "full_day" can\'t be scoped by year',
       'data/schools/germani.yaml: tuition[0]: unknown site "nowhere"',
-      'data/schools/germani.yaml: tuition[1]: school year must be consecutive years, e.g. 2027/2028',
+      'data/schools/germani.yaml: tuition[1]: year must be consecutive years, e.g. 2027/2028',
     ]);
   });
 
@@ -94,9 +94,13 @@ describe('checkFiles', () => {
 
 describe('npm run validate (CLI)', () => {
   it('exits non-zero and names the broken file', () => {
+    // A copy of the schools domain whose entities live in a temporary directory.
     const dir = mkdtempSync(join(tmpdir(), 'bg-schools-'));
-    writeFileSync(join(dir, 'germani.yaml'), ok);
-    writeFileSync(join(dir, 'broken.yaml'), 'id: broken\nname: "unterminated\n');
+    const data = join(dir, 'entities');
+    mkdirSync(data);
+    writeFileSync(join(data, 'germani.yaml'), ok);
+    writeFileSync(join(data, 'broken.yaml'), 'id: broken\nname: "unterminated\n');
+    writeFileSync(join(dir, 'domain.yaml'), readFileSync('domains/schools/domain.yaml', 'utf8').replace(/entities: data\/schools/, `entities: ${data}`));
     let failure: { status: number; stderr: string } | undefined;
     try {
       execFileSync(process.execPath, ['scripts/validate.ts', dir], { encoding: 'utf8', stdio: 'pipe' });

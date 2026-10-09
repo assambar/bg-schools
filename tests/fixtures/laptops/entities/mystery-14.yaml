@@ -1,0 +1,6 @@
+id: mystery-14
+name: Mystery 14
+defaults:
+  src: { kind: imported, ref: sample-test, date: 2026-10-09 }
+values:
+  ports: { v: [ hdmi ], src: { source_ref: src-l21 } }

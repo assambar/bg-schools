@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { checkCriteriaDir, checkCriteriaFiles, checkDataDir } from '../scripts/check-data.ts';
-import { loadCatalog } from '../scripts/schema.ts';
-import { annualEur, evalRule, evaluate, rank, type CriteriaSet } from '../src/lib/criteria.ts';
+import { annualBase, evalRule, evaluate, rank, type CriteriaSet } from '../src/lib/criteria.ts';
 import { dictionaries, LANGS } from '../src/lib/i18n.ts';
-import type { School } from '../src/lib/school.ts';
+import type { Entity as School } from '../src/lib/entity.ts';
+import { setup } from './helpers.ts';
 
-const { catalog } = loadCatalog();
+const { dom: catalog } = setup();
 const ctx = { year: '2027/2028', grade: 'pg2' };
 const src = { kind: 'extracted' as const, url: 'https://example.org', date: '2026-10-08', verified: true };
 
@@ -15,10 +15,10 @@ const school = (values: School['values'], sites: School['sites'] = [{ id: 'main'
 
 describe('money', () => {
   it('compares per year in EUR', () => {
-    expect(annualEur({ amount: 500, currency: 'EUR', per: 'month' })).toEqual({ min: 6000, max: 6000 });
-    expect(annualEur({ amount: 780, currency: 'EUR', per: 'month', months: 11 }).max).toBe(8580);
-    expect(annualEur({ amount: 1955.83, currency: 'BGN', per: 'year' }).max).toBeCloseTo(1000, 6);
-    expect(annualEur({ min: 300, max: 600, currency: 'EUR', per: 'month' })).toEqual({ min: 3600, max: 7200 });
+    expect(annualBase(catalog, { amount: 500, currency: 'EUR', per: 'month' })).toEqual({ min: 6000, max: 6000 });
+    expect(annualBase(catalog, { amount: 780, currency: 'EUR', per: 'month', months: 11 }).max).toBe(8580);
+    expect(annualBase(catalog, { amount: 1955.83, currency: 'BGN', per: 'year' }).max).toBeCloseTo(1000, 6);
+    expect(annualBase(catalog, { min: 300, max: 600, currency: 'EUR', per: 'month' })).toEqual({ min: 3600, max: 7200 });
   });
 });
 
@@ -97,10 +97,10 @@ describe('evaluate and rank', () => {
 });
 
 describe('default criteria sets (golden, on the sample data)', () => {
-  const { schools } = checkDataDir('data/schools');
-  const { sets, errors } = checkCriteriaDir('data/criteria');
+  const { entities: schools } = checkDataDir('data/schools', catalog);
+  const { sets, errors } = checkCriteriaDir('data/criteria', catalog);
   const by = (ids: string[]) => ids.map((id) => sets.find((s) => s.id === id)!);
-  const ids = (rs: ReturnType<typeof rank>) => rs.map((r) => r.school.id);
+  const ids = (rs: ReturnType<typeof rank>) => rs.map((r) => r.entity.id);
 
   it('are valid and labelled in every language', () => {
     expect(errors).toEqual([]);
@@ -113,8 +113,8 @@ describe('default criteria sets (golden, on the sample data)', () => {
     const excluded = ids(r.filter((x) => x.excluded));
     expect(excluded).toEqual(expect.arrayContaining(['quest-junior', 'toddlers-academy', 'izzi', 'prikluchenci']));
     expect(excluded).not.toContain('anika');
-    expect(r[0].school.id).toBe('anika'); // the only confirmed price under the cap for 2027/28
-    expect(r.find((x) => x.school.id === 'djani-rodari')).toMatchObject({ excluded: false, unverified: true }); // 2026/27 price
+    expect(r[0].entity.id).toBe('anika'); // the only confirmed price under the cap for 2027/28
+    expect(r.find((x) => x.entity.id === 'djani-rodari')).toMatchObject({ excluded: false, unverified: true }); // 2026/27 price
   });
 
   it('basics excludes nurseries that stop before the final preschool year', () => {

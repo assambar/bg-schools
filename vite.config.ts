@@ -1,36 +1,34 @@
 import { resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import standaloneCode from 'ajv/dist/standalone/index.js';
 import { checkCriteriaDir, checkDataDir } from './scripts/check-data.ts';
-import { CATALOG_DIR, createAjv, loadCatalog } from './scripts/schema.ts';
-import { buildSchoolSchema } from './src/lib/schema-gen.ts';
-
-const DATA_DIR = resolve(import.meta.dirname, 'data');
-const SCHOOLS_DIR = resolve(DATA_DIR, 'schools');
-const CRITERIA_DIR = resolve(DATA_DIR, 'criteria');
+import { createAjv, DEFAULT_DOMAIN_DIR, loadDomain, ROOT } from './scripts/load-domain.ts';
+import { buildEntitySchema } from './src/lib/schema-gen.ts';
 
 /**
- * Build-time data, no runtime fetches:
- * - `virtual:catalog`: data/catalog/*.yaml, checked. A broken catalog fails the build.
- * - `virtual:schools`: every data/schools/*.yaml, validated. Invalid data fails the build.
- * - `virtual:criteria`: every data/criteria/*.yaml, checked against the catalog.
- * - `virtual:school-validator`: Ajv validator precompiled from the generated schema (CSP-safe).
+ * Build-time data for one domain (DOMAIN_DIR, default domains/schools), no runtime fetches:
+ * - `virtual:domain`: the domain config, catalog, scope values, areas, overlays and the
+ *   domain's dictionaries, checked. A broken domain fails the build.
+ * - `virtual:entities`: every entity file, validated. Invalid data fails the build.
+ * - `virtual:criteria`: every criteria set, checked against the domain.
+ * - `virtual:entity-validator`: Ajv validator precompiled from the generated schema (CSP-safe).
  */
-function schoolsData(): Plugin {
-  const ids = { schools: '\0virtual:schools', catalog: '\0virtual:catalog', validator: '\0virtual:school-validator', criteria: '\0virtual:criteria' };
-  const names: Record<string, string> = { 'virtual:schools': ids.schools, 'virtual:catalog': ids.catalog, 'virtual:school-validator': ids.validator, 'virtual:criteria': ids.criteria };
+function domainData(dir: string): Plugin {
+  const ids = { domain: '\0virtual:domain', entities: '\0virtual:entities', validator: '\0virtual:entity-validator', criteria: '\0virtual:criteria' };
+  const names: Record<string, string> = { 'virtual:domain': ids.domain, 'virtual:entities': ids.entities, 'virtual:entity-validator': ids.validator, 'virtual:criteria': ids.criteria };
   return {
-    name: 'schools-data',
+    name: 'domain-data',
     resolveId(id) {
       return names[id];
     },
-    // Dev server: reload when data or catalog files change.
+    // Dev server: reload when the domain or its data change.
     configureServer(server) {
-      server.watcher.add([DATA_DIR, fileURLToPath(CATALOG_DIR)]);
+      const { domain } = loadDomain(dir);
+      const watched = [dir, domain.config.paths.catalog, domain.config.paths.entities, domain.config.paths.criteria, domain.config.paths.overlays ?? dir].map((p) => resolve(ROOT, p));
+      server.watcher.add(watched);
       const onChange = (file: string) => {
-        if (!file.startsWith(DATA_DIR)) return;
+        if (!watched.some((w) => file.startsWith(w.replace(/[^/]*\.yaml$/, '')))) return;
         const graph = server.environments.client.moduleGraph;
         for (const id of Object.values(ids)) {
           const mod = graph.getModuleById(id);
@@ -41,29 +39,32 @@ function schoolsData(): Plugin {
       server.watcher.on('add', onChange).on('change', onChange).on('unlink', onChange);
     },
     load(id) {
-      if (id === ids.catalog) {
-        const { raw, catalog, overlays } = loadCatalog();
-        return `export default ${JSON.stringify({ raw, grades: catalog.grades, neighborhoods: catalog.neighborhoods, overlays })};`;
+      if (!Object.values(ids).includes(id)) return;
+      let loaded;
+      try {
+        loaded = loadDomain(dir);
+      } catch (e) {
+        this.error(`Invalid domain:\n${(e as Error).message}`);
       }
-      if (id === ids.schools) {
-        const { schools, errors } = checkDataDir(SCHOOLS_DIR);
+      const { domain, files, overlays, i18n } = loaded;
+      if (id === ids.domain) return `export default ${JSON.stringify({ files, overlays, i18n })};`;
+      if (id === ids.entities) {
+        const { entities, errors } = checkDataDir(domain.config.paths.entities, domain);
         if (errors.length > 0) this.error(`Invalid data:\n${errors.join('\n')}`);
-        schools.sort((a, b) => a.name.localeCompare(b.name, 'bg'));
-        return `export default ${JSON.stringify(schools)};`;
+        entities.sort((a, b) => a.name.localeCompare(b.name, domain.config.display.sort_locale));
+        return `export default ${JSON.stringify(entities)};`;
       }
       if (id === ids.criteria) {
-        const { sets, errors } = checkCriteriaDir(CRITERIA_DIR);
+        const { sets, errors } = checkCriteriaDir(domain.config.paths.criteria, domain);
         if (errors.length > 0) this.error(`Invalid criteria:\n${errors.join('\n')}`);
         return `export default ${JSON.stringify(sets)};`;
       }
-      if (id === ids.validator) {
-        const ajv = createAjv({ standalone: true });
-        const validate = ajv.compile(buildSchoolSchema(loadCatalog().catalog));
-        const code = standaloneCode(ajv, validate);
-        // Ajv emits require() for some keywords even in ESM mode; that breaks in the browser.
-        if (code.includes('require(')) this.error('Precompiled validator needs require(); avoid that schema keyword');
-        return code;
-      }
+      const ajv = createAjv({ standalone: true });
+      const validate = ajv.compile(buildEntitySchema(domain));
+      const code = standaloneCode(ajv, validate);
+      // Ajv emits require() for some keywords even in ESM mode; that breaks in the browser.
+      if (code.includes('require(')) this.error('Precompiled validator needs require(); avoid that schema keyword');
+      return code;
     },
   };
 }
@@ -93,7 +94,7 @@ function contentSecurityPolicy(): Plugin {
 
 export default defineConfig({
   base: '/bg-schools/', // project Pages site: https://assambar.github.io/bg-schools/
-  plugins: [schoolsData(), contentSecurityPolicy()],
+  plugins: [domainData(DEFAULT_DOMAIN_DIR), contentSecurityPolicy()],
   test: {
     include: ['tests/**/*.test.ts'],
   },

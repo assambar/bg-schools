@@ -1,0 +1,4 @@
+id: budget-1000
+kind: budget
+require:
+  - { dim: price, lte: { amount: 1000, currency: EUR, per: once } }

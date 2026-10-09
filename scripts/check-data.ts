@@ -1,14 +1,14 @@
-// Reads every data/schools/*.yaml file and reports anything that would break the
-// site: malformed YAML, schema violations, id/filename mismatch, duplicates, and the
-// cross-file rules in src/lib/school.ts (scope, provenance, unique source_refs).
+// Reads every entity file of a domain and reports anything that would break the site:
+// malformed YAML, schema violations, id/filename mismatch, duplicates, and the
+// cross-file rules in src/lib/entity.ts (scope, provenance, unique source_refs).
 import { readdirSync, readFileSync } from 'node:fs';
 import { basename, join, relative } from 'node:path';
 import { parseDocument } from 'yaml';
-import type { Catalog } from '../src/lib/catalog.ts';
 import { checkCriteria, type CriteriaSet } from '../src/lib/criteria.ts';
-import { buildCriteriaSchema, buildSchoolSchema } from '../src/lib/schema-gen.ts';
-import { checkSchool, type School } from '../src/lib/school.ts';
-import { createAjv, loadCatalog } from './schema.ts';
+import type { Domain } from '../src/lib/domain.ts';
+import { checkEntity, type Entity } from '../src/lib/entity.ts';
+import { buildCriteriaSchema, buildEntitySchema } from '../src/lib/schema-gen.ts';
+import { createAjv } from './load-domain.ts';
 
 export interface DataFile {
   path: string; // used in error messages
@@ -16,7 +16,7 @@ export interface DataFile {
 }
 
 export interface CheckResult {
-  schools: School[];
+  entities: Entity[];
   errors: string[];
 }
 
@@ -30,10 +30,10 @@ export function readDataDir(dir: string): DataFile[] {
     }));
 }
 
-export function checkFiles(files: DataFile[], catalog: Catalog = loadCatalog().catalog): CheckResult {
-  const validate = createAjv().compile(buildSchoolSchema(catalog));
+export function checkFiles(files: DataFile[], dom: Domain): CheckResult {
+  const validate = createAjv().compile(buildEntitySchema(dom));
   const errors: string[] = [];
-  const schools: School[] = [];
+  const entities: Entity[] = [];
   const seen = new Map<string, string>();
   const refs = new Map<string, string>();
 
@@ -55,32 +55,32 @@ export function checkFiles(files: DataFile[], catalog: Catalog = loadCatalog().c
       }
       continue;
     }
-    const school = data as School;
+    const entity = data as Entity;
     const expected = basename(file.path, '.yaml');
-    if (school.id !== expected) {
-      errors.push(`${file.path}: id "${school.id}" must match the file name "${expected}"`);
+    if (entity.id !== expected) {
+      errors.push(`${file.path}: id "${entity.id}" must match the file name "${expected}"`);
       continue;
     }
-    const previous = seen.get(school.id);
+    const previous = seen.get(entity.id);
     if (previous) {
-      errors.push(`${file.path}: duplicate id "${school.id}" (also in ${previous})`);
+      errors.push(`${file.path}: duplicate id "${entity.id}" (also in ${previous})`);
       continue;
     }
-    seen.set(school.id, file.path);
-    const problems = checkSchool(school, catalog, refs);
+    seen.set(entity.id, file.path);
+    const problems = checkEntity(entity, dom, refs);
     for (const p of problems) errors.push(`${file.path}: ${p}`);
-    if (problems.length === 0) schools.push(school);
+    if (problems.length === 0) entities.push(entity);
   }
-  return { schools, errors };
+  return { entities, errors };
 }
 
-export function checkDataDir(dir: string): CheckResult {
-  return checkFiles(readDataDir(dir));
+export function checkDataDir(dir: string, dom: Domain): CheckResult {
+  return checkFiles(readDataDir(dir), dom);
 }
 
-/** Checks data/criteria/*.yaml: schema, id = file name, and rules that fit the catalog. */
-export function checkCriteriaFiles(files: DataFile[], catalog: Catalog = loadCatalog().catalog): { sets: CriteriaSet[]; errors: string[] } {
-  const validate = createAjv().compile(buildCriteriaSchema());
+/** Checks criteria set files: schema, id = file name, and rules that fit the domain. */
+export function checkCriteriaFiles(files: DataFile[], dom: Domain): { sets: CriteriaSet[]; errors: string[] } {
+  const validate = createAjv().compile(buildCriteriaSchema(dom));
   const errors: string[] = [];
   const sets: CriteriaSet[] = [];
   for (const file of files) {
@@ -99,13 +99,13 @@ export function checkCriteriaFiles(files: DataFile[], catalog: Catalog = loadCat
       errors.push(`${file.path}: id "${set.id}" must match the file name`);
       continue;
     }
-    const problems = checkCriteria(set, catalog);
+    const problems = checkCriteria(set, dom);
     for (const p of problems) errors.push(`${file.path}: ${p}`);
     if (problems.length === 0) sets.push(set);
   }
   return { sets, errors };
 }
 
-export function checkCriteriaDir(dir: string): { sets: CriteriaSet[]; errors: string[] } {
-  return checkCriteriaFiles(readDataDir(dir));
+export function checkCriteriaDir(dir: string, dom: Domain): { sets: CriteriaSet[]; errors: string[] } {
+  return checkCriteriaFiles(readDataDir(dir), dom);
 }

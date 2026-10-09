@@ -1,0 +1,82 @@
+# Domain config: everything the generic app needs to know about one kind of thing to
+# compare and choose between. The app, the validator and the build read only this file
+# (and the files it points to); nothing outside domains/<name>/ and the data it names
+# is specific to schools. Labels are i18n keys, looked up in domains/schools/i18n/<lang>.json
+# (domain strings) and src/i18n/<lang>.json (generic UI strings).
+# Checked by schema/domain.schema.json. Paths are relative to the repository root.
+
+id: schools
+entity:
+  route: school                        # detail page: #/school/<id>
+  id_pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+
+paths:
+  catalog: data/catalog/dimensions.yaml  # dimensions, areas (groups), value sets, records, retrieval
+  overlays: data/catalog                 # optional retrieval.<name>.yaml overlays
+  entities: data/schools                 # one <id>.yaml per school
+  criteria: data/criteria                # criteria sets
+  i18n: domains/schools/i18n
+
+# Named scope axes a value may be scoped by (`scope: { year: 2027/2028, grade: pg2 }`).
+# A dimension lists the axes it accepts in `scopable`. Context axes appear in the header
+# and pick which entry is shown; `fit` weighs how well an entry's scope fits the context:
+# `exact` is added when the entry names the axis and matches; when some axis does not match,
+# `fallback` (entry names the axis and it matches) or `fallback_unscoped` (axis not named)
+# ranks the leftovers. Here: the same group from another year beats another group.
+scopes:
+  - id: year
+    pattern: '^[0-9]{4}/[0-9]{4}$'
+    consecutive: true                    # 2027/2028: the second year follows the first
+    context: { default: 2027/2028 }
+    fit: { exact: 2, fallback: 0.5, fallback_unscoped: 0.5 }
+  - id: grade
+    values_from: data/catalog/grades.yaml#systems.bg   # ladder: { id, age | age_min/age_max }
+    list: true                           # a value may name several grades
+    measure: age                         # `covers: context` checks a range dimension against this
+    context: { default: pg2 }
+    fit: { exact: 1, fallback: 2, fallback_unscoped: 1 }
+  - id: site
+    ref: sites                           # one of the entity's own site ids
+
+# Optional. Entities have `sites` (address, area, coordinates) and criteria can use area
+# and distance rules. Labels: <area_label>.<id>, <group_label>.<group>.
+locations:
+  areas_from: data/catalog/neighborhoods.yaml#neighborhoods
+  group_key: district
+  area_label: neighborhood
+  group_label: district
+
+display:
+  title: name
+  subtitle: name_en
+  sort_locale: bg
+  # Extra list columns besides name, area and known facts; `label` defaults to dim.<id>.
+  list_columns:
+    - { dim: ages_accepted, label: list.col.ages }
+    - { dim: tuition, label: list.col.tuition }
+  # Shown as form fields above the YAML editor (enum: radio, multi_enum: checkboxes, bool: checkbox).
+  editor_fields: [levels]
+  new_template: |
+    id: new-school
+    name: New school
+    sites:
+      - id: main
+        address: ""
+    values: {}
+
+money:
+  currencies: [EUR, BGN]
+  base: EUR                              # criteria compare money per year in this currency
+  rates: { BGN: 1.95583 }                # units per 1 base
+
+criteria:
+  kinds: [basics, budget, location, custom]
+  default_selection: [basics, budget-medium, anywhere]
+  # Controls on the criteria page, one per kind: a toggle (on/off) or a select (one set of that kind).
+  controls:
+    - { kind: basics, type: toggle }
+    - { kind: budget, type: select, label: criteria.budget, none: true }
+    - { kind: location, type: select, label: criteria.location }
+
+repo: { name: assambar/bg-schools, branch: main }
+storage_prefix: bg-schools               # localStorage keys: <prefix>.lang, .context, .criteria, .near
