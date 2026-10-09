@@ -30,7 +30,7 @@ values:
   state_compensation:
     v: true
     src: { kind: extracted, source_ref: src-279, date: 2026-10-08, url: https://novigradini.com/faq/, verified: true }
-    note: Municipal compensation of up to €281.21 a month for ages 3–6.
+    note: "State compensation of proven costs, up to €320 a month from 1 Aug 2026 (€296.55 before): from age 3 until grade 1, preparatory groups included, only if the child applied for a municipal or state place and was not admitted for lack of places. Source: MON order of 17 Sep 2026, https://www.mon.bg/nfs/2026/09/zapoved-kompensacii-2026-17092026.pdf (see also https://www.sofia.bg/w/kompensacia-na-razhodite-izv-rseni-ot-roditelite-za-otglezdaneto-i-obucenieto-na-decata-koito-ne-sa-prieti-v-d-rzavni-ili-obsinski-detski-gradini-ili-)."
   sibling_discount_pct:
     v: 5
     src: { kind: extracted, source_ref: src-278, date: 2026-10-08, url: https://novigradini.com/anika/ceni/, verified: true }
