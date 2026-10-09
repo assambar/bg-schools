@@ -62,3 +62,20 @@ describe('t() and language detection', () => {
     expect(formatValue(catalog, tuition, { amount: 400, currency: 'BGN', per: 'month' })).toBe('400 лв. / месец');
   });
 });
+
+describe('browse-only domains (universities)', () => {
+  it('labels every key of each extra domain in every language, apart from the generic strings', async () => {
+    const { EXTRA_DOMAIN_DIRS, loadDomain } = await import('../scripts/load-domain.ts');
+    expect(EXTRA_DOMAIN_DIRS).toContain('domains/universities');
+    for (const dir of EXTRA_DOMAIN_DIRS) {
+      const { domain, i18n: dict } = loadDomain(dir);
+      for (const lang of LANGS) {
+        const all = { ...core(lang), ...dict[lang] };
+        expect(domainLabelKeys(domain).filter((k) => !(k in all)), `${dir} ${lang}`).toEqual([]);
+        expect(Object.keys(dict[lang]).sort(), `${dir} ${lang}`).toEqual(Object.keys(dict.en).sort());
+        expect(Object.keys(core(lang)).filter((k) => k in dict[lang]), `${dir} ${lang}`).toEqual([]);
+        expect(Object.values(dict[lang]).filter((v) => !v.trim()), `${dir} ${lang}`).toEqual([]);
+      }
+    }
+  });
+});

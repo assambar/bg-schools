@@ -1,0 +1,71 @@
+# Imperial College London. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: imperial
+name: Imperial College London
+values:
+  website:
+    v: https://www.imperial.ac.uk/study/
+    src:
+      kind: extracted
+      source_ref: src-u013
+      date: 2026-10-09
+      url: https://www.imperial.ac.uk/study/
+      verified: true
+  country:
+    v: uk
+    src:
+      kind: extracted
+      source_ref: src-u014
+      date: 2026-10-09
+      url: https://www.imperial.ac.uk/study/
+      verified: true
+  strong_in:
+    v:
+      - mathematics
+      - computing
+      - engineering
+      - physics
+    src:
+      kind: extracted
+      source_ref: src-u015
+      date: 2026-10-09
+      url: https://www.imperial.ac.uk/study/
+      verified: true
+  fee_status:
+    v: overseas
+    src:
+      kind: extracted
+      source_ref: src-u016
+      date: 2026-10-09
+      url: https://www.imperial.ac.uk/students/fees-and-funding/tuition-fees/undergraduate-tuition-fees/2026-27/faculty-of-engineering/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  tuition:
+    v:
+      amount: 45500
+      currency: GBP
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u017
+      date: 2026-10-09
+      url: https://www.imperial.ac.uk/study/courses/undergraduate/2026/mathematics-computer-science-meng/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: Mathematics and Computer Science, overseas fee, 2026 entry.
+  living_cost:
+    v:
+      min: 1821
+      max: 1893
+      currency: GBP
+      per: month
+      months: 9
+    src:
+      kind: extracted
+      source_ref: src-u018
+      date: 2026-10-09
+      url: https://www.imperial.ac.uk/study/fees-and-funding/living-costs/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

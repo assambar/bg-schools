@@ -133,6 +133,25 @@ Your own state (status per school: `research`, `to_visit`, `visited`, `shortlist
 
 **Recommended token setup:** GitHub → Settings → Developer settings → Fine-grained personal access tokens → Generate new token. Repository access: *Only select repositories* → just your private status repository. Permissions: **Contents: read-only** (and **Metadata: read-only**, which GitHub adds automatically). Set an expiry date. Nothing else.
 
+## Universities, paths and finance
+
+Three more pages sit next to the schools (links in the header):
+
+- **Universities** (`#/universities`, detail `#/university/<id>`): a second, browse-only domain in [`domains/universities/`](domains/universities) with its catalog [`data/catalog/universities.yaml`](data/catalog/universities.yaml) and sample data in [`data/universities/`](data/universities): published 2026/27 fees, living costs, entry rules for the Bulgarian diploma, test policy and international aid, each value with its source. Values taken from a search summary of the official page are marked `verified: false, check: unconfirmed`; values not found are left out (shown as unknown). The same generic list and detail views render it; extra browse-only domains are listed in `EXTRA_DOMAIN_DIRS` ([`scripts/load-domain.ts`](scripts/load-domain.ts)).
+- **Paths** (`#/paths`, one path `#/paths/<id>`): [`data/pathways/`](data/pathways) holds the stages, the transitions between them and 11 paths from PG2 to university, with their gates and fee schedules. A transition is a `mechanism` (an admission or continuation rule) or an `association` (where a school's pupils went, or how they scored), never causal: [`schema/pathways.schema.json`](schema/pathways.schema.json) has no causal kind and [`src/pathways/pathways.ts`](src/pathways/pathways.ts) rejects causal wording ("boosts", "raises your chance", "повишава шанса", ...). Evidence records year, sample size and source type; fewer than 20 pupils is flagged as a small sample, school self-reports are labelled. Each path shows its flowchart (mechanisms solid, associations dashed with year, N and source type), its gates and its cost for the family, with the standing note that the data shows where pupils went or how they scored, not what a school caused.
+- **Finance** (`#/finance`): inputs (amount per child per month, children, 9 or 12 months, second-child offset, fee growth, return scenario) stay in the browser. The defaults (€1,000 per child per month, 2 children, 9 months, second child 2 years later) are adjustable examples in [`data/finance/assumptions.yaml`](data/finance/assumptions.yaml), with a source for every fixed number. [`src/pathways/finance.ts`](src/pathways/finance.ts) computes, in the browser: fees paid per path, the value of investing the same money in an S&P 500 UCITS fund (pessimistic / cautious / base / optimistic from the 1928-2025 history in [`data/finance/sp500-total-return.csv`](data/finance/sp500-total-return.csv), after TER, 0% Bulgarian tax on EU regulated-market disposals), borrowing it as consumer loans (BNB rates), three other uses of the money, university costs per child and the bottom line. It is a port of the reference calculator [`scripts/pathways/finance-reference.py`](scripts/pathways/finance-reference.py); `tests/finance.test.ts` checks both give the same numbers for the defaults.
+
+Both pages carry two disclaimers (also in the footer of every page): the projections ignore the AI revolution, and nothing here is financial advice.
+
+### Diagrams: pre-rendered, no Mermaid in the browser
+
+The diagrams are Mermaid, generated from the data and rendered to SVG ahead of time, so the site ships no Mermaid runtime (about 1.5 MB gzipped) and the Content Security Policy stays strict (`script-src 'self'`, `style-src 'self'`; the SVGs load as images). The interactive numbers on the Finance page are plain tables and a small chart drawn with SVG elements.
+
+- `npm run diagrams` ([`scripts/pathways/build-diagrams.ts`](scripts/pathways/build-diagrams.ts)) writes `generated/diagrams/paths/<path>.<lang>.mmd` (flowcharts), `generated/diagrams/money/<id>.<lang>.mmd` (sankey-beta, xychart-beta and a decision flowchart, for the default inputs) and `generated/finance/defaults.json`.
+- `npm run diagrams:render` ([`scripts/pathways/render-diagrams.ts`](scripts/pathways/render-diagrams.ts)) renders changed sources to SVG with the pinned `@mermaid-js/mermaid-cli@12.0.0` (needs Chrome: `CHROME_PATH=/usr/bin/google-chrome`) and records the sha256 of each source in `generated/diagrams/rendered.json`. Commit the SVGs.
+- CI runs `npm run diagrams:check`: it regenerates the sources and fails on any difference in `generated/`, or when an SVG was rendered from older text. CI doesn't render (no Chrome needed there).
+- Mermaid's sankey parser accepts ASCII text only, so the sankey labels are in English in both languages.
+
 ## Adding things
 
 - **A dimension:** add it to `dimensions.yaml` (or to a `families` list) and add `dim.<id>` (plus any new `enum.<set>.<value>`) to every file in `domains/schools/i18n/`. Tests fail if a label is missing.
@@ -149,7 +168,8 @@ Requires Node 22.18+ (CI uses Node 24).
 ```sh
 npm ci
 npm run dev        # http://localhost:5173/bg-schools/
-npm run validate   # domain config, catalog, data/schools/*.yaml, criteria
+npm run validate   # domains (schools, universities), data, criteria, pathways, finance inputs
+npm run diagrams   # regenerate generated/ (then diagrams:render for the SVGs)
 npm run hygiene
 npm test
 npm run build      # output in dist/

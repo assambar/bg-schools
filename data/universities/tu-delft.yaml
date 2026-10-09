@@ -1,0 +1,68 @@
+# TU Delft. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: tu-delft
+name: TU Delft
+values:
+  website:
+    v: https://www.tudelft.nl/en/education
+    src:
+      kind: extracted
+      source_ref: src-u077
+      date: 2026-10-09
+      url: https://www.tudelft.nl/en/education
+      verified: true
+  country:
+    v: nl
+    src:
+      kind: extracted
+      source_ref: src-u078
+      date: 2026-10-09
+      url: https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances
+      verified: true
+  strong_in:
+    v:
+      - computer science
+      - engineering
+      - applied mathematics
+    src:
+      kind: extracted
+      source_ref: src-u079
+      date: 2026-10-09
+      url: https://www.tudelft.nl/en/education
+      verified: true
+  fee_status:
+    v: eu_home
+    src:
+      kind: extracted
+      source_ref: src-u080
+      date: 2026-10-09
+      url: https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  tuition:
+    v:
+      amount: 2694
+      currency: EUR
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u081
+      date: 2026-10-09
+      url: https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: Statutory fee 2026/27 for EU/EEA students.
+  living_cost:
+    v:
+      amount: 909
+      currency: EUR
+      per: month
+    src:
+      kind: extracted
+      source_ref: src-u082
+      date: 2026-10-09
+      url: https://www.tudelft.nl/onderwijs/opleidingen/bachelors/tw/dubbele-bachelor/van-aanmelding-tot-inschrijving/studiekosten
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

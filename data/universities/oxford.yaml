@@ -1,0 +1,84 @@
+# University of Oxford. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: oxford
+name: University of Oxford
+values:
+  website:
+    v: https://www.ox.ac.uk/admissions/undergraduate
+    src:
+      kind: extracted
+      source_ref: src-u001
+      date: 2026-10-09
+      url: https://www.ox.ac.uk/admissions/undergraduate
+      verified: true
+  country:
+    v: uk
+    src:
+      kind: extracted
+      source_ref: src-u002
+      date: 2026-10-09
+      url: https://www.ox.ac.uk/admissions/undergraduate
+      verified: true
+  strong_in:
+    v:
+      - mathematics
+      - computer science
+      - physics
+      - engineering
+      - PPE
+    src:
+      kind: extracted
+      source_ref: src-u003
+      date: 2026-10-09
+      url: https://www.ox.ac.uk/admissions/undergraduate
+      verified: true
+  fee_status:
+    v: overseas
+    src:
+      kind: extracted
+      source_ref: src-u004
+      date: 2026-10-09
+      url: https://www.ox.ac.uk/admissions/undergraduate/fees-and-funding/tuition-fees/fee-status
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  tuition:
+    v:
+      min: 37380
+      max: 62820
+      currency: GBP
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u005
+      date: 2026-10-09
+      url: https://www.ox.ac.uk/node/688
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: Overseas fee, 2026 entry; depends on the course.
+  living_cost:
+    v:
+      min: 1405
+      max: 2105
+      currency: GBP
+      per: month
+      months: 9
+    src:
+      kind: extracted
+      source_ref: src-u006
+      date: 2026-10-09
+      url: https://www.ox.ac.uk/students/fees-funding/living-costs
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: 2026/27 estimate for a single student.
+  fee_rules:
+    v: EU, EEA and Swiss students without UK settled or pre-settled status pay overseas fees.
+    src:
+      kind: extracted
+      source_ref: src-u007
+      date: 2026-10-09
+      url: https://www.ox.ac.uk/admissions/undergraduate/fees-and-funding/tuition-fees/fee-status
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

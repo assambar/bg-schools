@@ -11,6 +11,9 @@
     "validate": "node scripts/validate.ts",
     "hygiene": "node scripts/check-hygiene.ts",
     "test": "vitest run",
+    "diagrams": "node scripts/pathways/build-diagrams.ts",
+    "diagrams:render": "node scripts/pathways/render-diagrams.ts",
+    "diagrams:check": "node scripts/pathways/build-diagrams.ts --check && git diff --exit-code -- generated/ && test -z \"$(git status --porcelain -- generated/)\"",
     "typecheck": "tsc",
     "build": "tsc && vite build",
     "preview": "vite preview"

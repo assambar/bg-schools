@@ -1,0 +1,129 @@
+# Transitions between stages. `kind` is `mechanism` (a rule: how admission or continuation works)
+# or `association` (where pupils of a school went, or how they scored). There is no causal kind:
+# the data can't show what a school caused, and the check rejects causal wording.
+# An association points either to a stage (`to`) or to an outcome (`outcome`).
+# Evidence: year, sample_size (pupils), source_type, verification, confidence, caveats, url.
+# sample_size under 20 is flagged as a small sample automatically.
+
+- id: state-pg-primary
+  kind: mechanism
+  from: pg-state
+  to: primary-state
+  label: { en: municipal admission to grade 1, bg: общински прием в 1. клас }
+  gate: { en: 'Grade 1: municipal central admission (address points) [verify the area rules]', bg: '1. клас: общински централизиран прием (точки по адрес) [да се провери]' }
+- id: rodari-pg-primary
+  kind: mechanism
+  from: pg-rodari
+  to: primary-state
+  label: { en: municipal admission to grade 1, bg: общински прием в 1. клас }
+  gate: { en: 'Grade 1: municipal central admission (address points) [verify the area rules]', bg: '1. клас: общински централизиран прием (точки по адрес) [да се провери]' }
+- id: drujba-continue
+  kind: mechanism
+  from: pg-drujba
+  to: primary-drujba
+  label: { en: continues in the same school (10% off), bg: продължава в същото училище (10% отстъпка) }
+- id: drujba-upper
+  kind: mechanism
+  from: primary-drujba
+  to: drujba-5-12
+  label: { en: continues in the same school, bg: продължава в същото училище }
+- id: quest-continue
+  kind: mechanism
+  from: pg-quest
+  to: quest-1-7
+  label: { en: continues in the same school, bg: продължава в същото училище }
+- id: state-primary-5
+  kind: mechanism
+  from: primary-state
+  to: state-5-7
+  label: { en: continues to grade 5, bg: продължава в 5. клас }
+- id: smg-5-from-state
+  kind: mechanism
+  from: primary-state
+  to: smg-5-7
+  label: { en: 'SMG ranking after grade 4', bg: 'класиране в СМГ след 4. клас' }
+  gate: &smg5 { en: 'SMG grade 5: NVO 4 taken; ranking by competition results (score B = 6M+P+L+N+D); 156 places in 2026', bg: 'СМГ 5. клас: положено НВО 4; класиране по резултати от състезания (бал B = 6M+P+L+N+D); 156 места през 2026' }
+  sources: [ 'https://smg.bg/wp-content/uploads/2026/01/04-pravila-priem-za-2026-2027.pdf' ]
+- id: smg-5-from-drujba
+  kind: mechanism
+  from: primary-drujba
+  to: smg-5-7
+  label: { en: 'SMG ranking after grade 4', bg: 'класиране в СМГ след 4. клас' }
+  gate: *smg5
+  sources: [ 'https://smg.bg/wp-content/uploads/2026/01/04-pravila-priem-za-2026-2027.pdf' ]
+- id: npmg-5
+  kind: mechanism
+  from: primary-state
+  to: npmg-5-12
+  label: { en: 'NPMG ranking after grade 4', bg: 'класиране в НПМГ след 4. клас' }
+  gate: { en: 'NPMG grade 5: ranking after grade 4, 52 places [verify the rules and whether grade 8 needs NVO 7]', bg: 'НПМГ 5. клас: класиране след 4. клас, 52 места [да се провери правилата и дали за 8. клас е нужно НВО 7]' }
+- id: smg-8
+  kind: mechanism
+  from: smg-5-7
+  to: smg-8-12
+  label: { en: 'NVO 7 ranking, not automatic', bg: 'класиране по НВО 7, не автоматично' }
+  gate: { en: 'SMG grade 8: pupils admitted after grade 4 apply again after grade 7 like everyone else (NVO 7 ranking; cut-off 481.25 of 500 in 2026)', bg: 'СМГ 8. клас: приетите след 4. клас кандидатстват отново след 7. клас на общо основание (класиране по НВО 7; минимален бал 481,25 от 500 през 2026)' }
+  sources: [ 'https://smg.bg/kandidatstvane-v-smg/priem-sled-7-klas/' ]
+- id: elite-hs-from-state
+  kind: mechanism
+  from: state-5-7
+  to: elite-hs
+  label: { en: NVO 7 ranking, bg: класиране по НВО 7 }
+  gate: &nvo7 { en: 'Grade 8 in a state high school: NVO 7 ranking (score of 500); 2026 cut-offs 423.5 (9 FEG) to 481.25 (SMG)', bg: '8. клас в държавна гимназия: класиране по НВО 7 (бал от 500); минимални балове 2026: от 423,5 (9 ФЕГ) до 481,25 (СМГ)' }
+- id: acs-from-state
+  kind: mechanism
+  from: state-5-7
+  to: acs-8-12
+  label: { en: ACS entrance exam, bg: изпит за АКС }
+  gate: &acs { en: 'ACS grade 8: entrance exam in March (2027: 21 March), grade average at least 5.00, about 180 places; need-based fee reduction 10-90%', bg: 'АКС 8. клас: приемен изпит през март (2027: 21 март), среден успех поне 5,00, около 180 места; намаление на таксата според нуждата 10-90%' }
+  sources: [ 'https://acs.bg/news/2026-grade-7-admissions-exam-results/', 'https://acs.bg/admissions/tuition-reduction-program/' ]
+  evidence: &acs_ev
+    - { year: 2026, sample_size: 701, source_type: official, verification: verified_against_official, confidence: high, url: 'https://acs.bg/news/2026-grade-7-admissions-exam-results/', label: { en: '701 candidates sat the exam for about 180 places', bg: '701 кандидати на изпита за около 180 места' } }
+- id: acs-from-quest
+  kind: mechanism
+  from: quest-1-7
+  to: acs-8-12
+  label: { en: ACS entrance exam, bg: изпит за АКС }
+  gate: *acs
+  evidence: *acs_ev
+- id: acs-from-smg
+  kind: mechanism
+  from: smg-5-7
+  to: acs-8-12
+  label: { en: ACS entrance exam, bg: изпит за АКС }
+  gate: *acs
+  evidence: *acs_ev
+- id: uni-from-smg
+  kind: mechanism
+  from: smg-8-12
+  to: university
+  label: &uni { en: 'applications (diploma, matura, tests)', bg: 'кандидатстване (диплома, матури, тестове)' }
+- { id: uni-from-elite, kind: mechanism, from: elite-hs, to: university, label: *uni }
+- { id: uni-from-npmg, kind: mechanism, from: npmg-5-12, to: university, label: *uni }
+- { id: uni-from-acs, kind: mechanism, from: acs-8-12, to: university, label: *uni }
+- { id: uni-from-drujba, kind: mechanism, from: drujba-5-12, to: university, label: *uni }
+- { id: uni-from-bss, kind: mechanism, from: bss, to: university, label: { en: applications (IB Diploma), bg: кандидатстване (IB диплома) } }
+- { id: uni-from-aas, kind: mechanism, from: aas, to: university, label: { en: applications (IB Diploma), bg: кандидатстване (IB диплома) } }
+
+# ---- associations: where pupils went or how they scored, not what the school caused
+- id: sveta-sofia-to-acs
+  kind: association
+  from: sveta-sofia-1-7
+  to: acs-8-12
+  label: { en: '40 of 72 grade-7 pupils admitted to ACS', bg: '40 от 72 седмокласници приети в АКС' }
+  evidence:
+    - { year: 2026, sample_size: 72, source_type: school_self_report, verification: consistent_with_official, confidence: medium, caveats: [selection, tutoring, self_reported], url: 'https://danybon.com/chastno-obrazovanie/nad-55-pr-vipusk-2026-sveta-sofia-prieti-v-acs/', label: { en: 'school report; the 72 matches the official NVO 7 head count', bg: 'съобщение на училището; 72 съвпада с официалния брой явили се на НВО 7' } }
+- id: smg-nvo7
+  kind: association
+  from: smg-5-7
+  outcome: { en: 'NVO 7 average: BEL 95.08, maths 97.20', bg: 'НВО 7 среден резултат: БЕЛ 95,08, математика 97,20' }
+  label: { en: how SMG grade-7 pupils scored, bg: как са се представили седмокласниците на СМГ }
+  evidence:
+    - { year: 2026, sample_size: 158, source_type: official, verification: verified_against_official, confidence: high, caveats: [selection, tutoring], url: 'https://github.com/ivandavidov/nvo', label: { en: 'MON results (mirror)', bg: 'резултати на МОН (копие)' } }
+- id: rodari-nvo4
+  kind: association
+  from: pg-rodari
+  outcome: { en: 'NVO 4 average of the same school: BEL 83.25, maths 70.43 (Sofia: 85.05, 71.86)', bg: 'НВО 4 среден резултат на същото училище: БЕЛ 83,25, математика 70,43 (София: 85,05, 71,86)' }
+  label: { en: how the school's grade-4 pupils scored, bg: как са се представили четвъртокласниците на училището }
+  evidence:
+    - { year: 2026, sample_size: 14, source_type: official, verification: verified_against_official, confidence: low, caveats: [small_n, selection], url: 'https://ivandavidov.github.io/nvo/4/sofia/', label: { en: 'MON results (mirror)', bg: 'резултати на МОН (копие)' } }

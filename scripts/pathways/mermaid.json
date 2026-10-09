@@ -1,0 +1,9 @@
+{
+  "theme": "default",
+  "deterministicIds": true,
+  "deterministicIDSeed": "bg-schools",
+  "fontFamily": "Arial, Helvetica, sans-serif",
+  "flowchart": { "htmlLabels": false, "wrappingWidth": 220 },
+  "sankey": { "showValues": true, "width": 900, "height": 420 },
+  "xyChart": { "width": 900, "height": 420 }
+}

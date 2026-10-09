@@ -1,0 +1,96 @@
+# Massachusetts Institute of Technology. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: mit
+name: Massachusetts Institute of Technology
+values:
+  website:
+    v: https://mitadmissions.org/
+    src:
+      kind: extracted
+      source_ref: src-u028
+      date: 2026-10-09
+      url: https://mitadmissions.org/
+      verified: true
+  country:
+    v: us
+    src:
+      kind: extracted
+      source_ref: src-u029
+      date: 2026-10-09
+      url: https://mitadmissions.org/
+      verified: true
+  strong_in:
+    v:
+      - mathematics
+      - computer science
+      - physics
+      - engineering
+    src:
+      kind: extracted
+      source_ref: src-u030
+      date: 2026-10-09
+      url: https://mitadmissions.org/
+      verified: true
+  fee_status:
+    v: international
+    src:
+      kind: extracted
+      source_ref: src-u031
+      date: 2026-10-09
+      url: https://mitadmissions.org/help/faq/international-admissions/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  cost_of_attendance:
+    v:
+      amount: 92760
+      currency: USD
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u032
+      date: 2026-10-09
+      url: https://sfs.mit.edu/undergraduate-students/the-cost-of-attendance/coa/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: "2026/27, before aid: tuition $66,720, housing $14,090, food, fees, books, personal."
+  sat_act:
+    v: required
+    src:
+      kind: extracted
+      source_ref: src-u033
+      date: 2026-10-09
+      url: https://mitadmissions.org/apply/firstyear/tests-scores/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  need_blind_international:
+    v: true
+    src:
+      kind: extracted
+      source_ref: src-u034
+      date: 2026-10-09
+      url: https://mitadmissions.org/help/faq/need-blind-admissions/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  meets_full_need:
+    v: true
+    src:
+      kind: extracted
+      source_ref: src-u035
+      date: 2026-10-09
+      url: https://sfs.mit.edu/undergraduate-students/apply-for-aid/international/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  aid_note:
+    v: Families with income under $200,000 and typical assets pay no tuition, international students included.
+    src:
+      kind: extracted
+      source_ref: src-u036
+      date: 2026-10-09
+      url: https://admitted.mit.edu/affordability
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

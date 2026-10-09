@@ -1,0 +1,79 @@
+# Technical University of Munich. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: tum
+name: Technical University of Munich
+values:
+  website:
+    v: https://www.tum.de/en/studies
+    src:
+      kind: extracted
+      source_ref: src-u069
+      date: 2026-10-09
+      url: https://www.tum.de/en/studies
+      verified: true
+  country:
+    v: de
+    src:
+      kind: extracted
+      source_ref: src-u070
+      date: 2026-10-09
+      url: https://www.tum.de/en/studies/fees/tuition/
+      verified: true
+  strong_in:
+    v:
+      - informatics
+      - mathematics
+      - engineering
+    src:
+      kind: extracted
+      source_ref: src-u071
+      date: 2026-10-09
+      url: https://www.tum.de/en/studies
+      verified: true
+  fee_status:
+    v: free_eu
+    src:
+      kind: extracted
+      source_ref: src-u072
+      date: 2026-10-09
+      url: https://www.tum.de/en/studies/fees/tuition/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  tuition:
+    v:
+      amount: 0
+      currency: EUR
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u073
+      date: 2026-10-09
+      url: https://www.tum.de/en/studies/fees/tuition/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: No tuition for EU students; semester fee €97.
+  living_cost:
+    v:
+      min: 1300
+      max: 2000
+      currency: EUR
+      per: month
+    src:
+      kind: extracted
+      source_ref: src-u074
+      date: 2026-10-09
+      url: https://www.tum.de/en/studies/fees
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  entry_bulgarian_diploma:
+    v: "Check the Bulgarian certificate in anabin: direct entry if equivalent, otherwise Studienkolleg. Apply with a uni-assist VPD and TUMonline."
+    src:
+      kind: extracted
+      source_ref: src-u075
+      date: 2026-10-09
+      url: https://www.tum.de/en/studies/application/application-info-portal/higher-education-entrance-qualification/international-higher-education-entrance-qualification
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

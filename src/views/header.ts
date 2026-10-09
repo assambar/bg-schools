@@ -1,4 +1,4 @@
-import { app, changeContext, changeLang, state } from '../app.ts';
+import { app, changeContext, changeLang, extraDomains, state } from '../app.ts';
 import { h } from '../dom.ts';
 import { contextAxes, type ScopeAxis } from '../lib/domain.ts';
 import { dictionaries, LANGS, t } from '../lib/i18n.ts';
@@ -44,7 +44,10 @@ export function renderHeader(rerender: () => void): HTMLElement[] {
     'header',
     {},
     h('a', { href: '#/', class: 'brand' }, t('app.title')),
-    h('nav', {}, h('a', { href: '#/' }, t('nav.list')), h('a', { href: '#/criteria' }, t('nav.criteria')), h('a', { href: '#/new' }, t('nav.add')),
+    h('nav', {}, h('a', { href: '#/' }, t('nav.list')), h('a', { href: '#/criteria' }, t('nav.criteria')),
+      ...extraDomains().map((d) => h('a', { href: `#/${d.domain.config.id}` }, t(`nav.${d.domain.config.id}`))),
+      h('a', { href: '#/paths' }, t('nav.paths')), h('a', { href: '#/finance' }, t('nav.finance')),
+      h('a', { href: '#/new' }, t('nav.add')),
       dom.config.status ? h('a', { href: '#/status' }, t('nav.status')) : null),
     h('div', { class: 'controls' }, axes.length ? h('span', { class: 'hint' }, t('context.label')) : '', ...selects, lang),
   );

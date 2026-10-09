@@ -1,0 +1,45 @@
+# Domain config: universities a Sofia school leaver may aim for (about 2040 entry).
+# Browse-only second domain of the site: list and detail views come from the same generic
+# app as the schools. Fees are the published 2026/27 (or 2026 entry) values, in the
+# university's own currency, with the fee status that applies to a Bulgarian (EU) citizen.
+# Values marked "unconfirmed" come from a search summary of the official page; open the
+# linked page before relying on them. Checked by schema/domain.schema.json.
+
+id: universities
+entity:
+  route: university                     # detail page: #/university/<id>
+  id_pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+
+paths:
+  catalog: data/catalog/universities.yaml
+  entities: data/universities
+  criteria: data/criteria-universities
+  i18n: domains/universities/i18n
+
+scopes: []
+
+display:
+  title: name
+  sort_locale: en
+  list_columns:
+    - { dim: country }
+    - { dim: tuition }
+    - { dim: need_blind_international }
+  new_template: |
+    id: new-university
+    name: New university
+    values: {}
+
+money:
+  currencies: [EUR, GBP, USD, CHF]
+  base: EUR
+  rates: { GBP: 0.84698, USD: 1.1186, CHF: 0.9326 }   # ECB reference rates, 8 Oct 2026
+
+criteria:
+  kinds: [cost]
+  default_selection: []
+  controls:
+    - { kind: cost, type: toggle }
+
+repo: { name: assambar/bg-schools, branch: main }
+storage_prefix: bg-schools-universities

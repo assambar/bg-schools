@@ -1,0 +1,12 @@
+# LMU Munich. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: lmu-munich
+name: LMU Munich
+values:
+  country:
+    v: de
+    src:
+      kind: extracted
+      source_ref: src-u076
+      date: 2026-10-09
+      url: https://www.lmu.de/en/
+      verified: true

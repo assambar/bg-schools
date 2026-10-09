@@ -1,0 +1,219 @@
+{
+ "returns": {
+  "pessimistic": 0.041617,
+  "cautious": 0.079954,
+  "base": 0.100183,
+  "optimistic": 0.166523,
+  "worst_window": -0.032459
+ },
+ "invest": [
+  {
+   "years": 5,
+   "value_end": {
+    "pessimistic": 50158,
+    "cautious": 55470,
+    "base": 58473,
+    "optimistic": 69371
+   },
+   "value_at_uni": {
+    "pessimistic": 69114,
+    "cautious": 102063,
+    "base": 124808,
+    "optimistic": 236533
+   },
+   "paid": 45000
+  },
+  {
+   "years": 8,
+   "value_end": {
+    "pessimistic": 85447,
+    "cautious": 100442,
+    "base": 109425,
+    "optimistic": 145041
+   },
+   "value_at_uni": {
+    "pessimistic": 104403,
+    "cautious": 147035,
+    "base": 175760,
+    "optimistic": 312203
+   },
+   "paid": 72000
+  },
+  {
+   "years": 13,
+   "value_end": {
+    "pessimistic": 154561,
+    "cautious": 202505,
+    "base": 234234,
+    "optimistic": 381574
+   },
+   "value_at_uni": {
+    "pessimistic": 154561,
+    "cautious": 202505,
+    "base": 234234,
+    "optimistic": 381574
+   },
+   "paid": 117000
+  }
+ ],
+ "borrow": [
+  {
+   "years": 5,
+   "borrowed": 45000,
+   "repaid": 56600,
+   "interest": 11600,
+   "peak_monthly_instalment": 943,
+   "debt_free_after_years": 9
+  },
+  {
+   "years": 8,
+   "borrowed": 72000,
+   "repaid": 90559,
+   "interest": 18559,
+   "peak_monthly_instalment": 943,
+   "debt_free_after_years": 12
+  },
+  {
+   "years": 13,
+   "borrowed": 117000,
+   "repaid": 147159,
+   "interest": 30159,
+   "peak_monthly_instalment": 943,
+   "debt_free_after_years": 17
+  }
+ ],
+ "paths": {
+  "state-smg": {
+   "cost": 59463,
+   "budget": 234000,
+   "over_budget_kid_years": 0,
+   "max_shortfall": 0,
+   "net_surplus_at_uni": 365623
+  },
+  "rodari-state-smg": {
+   "cost": 68802,
+   "budget": 234000,
+   "over_budget_kid_years": 0,
+   "max_shortfall": 0,
+   "net_surplus_at_uni": 335087
+  },
+  "drujba-smg": {
+   "cost": 144872,
+   "budget": 234000,
+   "over_budget_kid_years": 4,
+   "max_shortfall": -3563,
+   "net_surplus_at_uni": 134408
+  },
+  "state-lang": {
+   "cost": 16431,
+   "budget": 234000,
+   "over_budget_kid_years": 0,
+   "max_shortfall": 0,
+   "net_surplus_at_uni": 430609
+  },
+  "state-npmg": {
+   "cost": 59463,
+   "budget": 234000,
+   "over_budget_kid_years": 0,
+   "max_shortfall": 0,
+   "net_surplus_at_uni": 365623
+  },
+  "state-acs": {
+   "cost": 206391,
+   "budget": 234000,
+   "over_budget_kid_years": 10,
+   "max_shortfall": -12912,
+   "net_surplus_at_uni": 189924
+  },
+  "quest-acs": {
+   "cost": 345771,
+   "budget": 234000,
+   "over_budget_kid_years": 20,
+   "max_shortfall": -12912,
+   "net_surplus_at_uni": -149396
+  },
+  "smg-acs": {
+   "cost": 295808,
+   "budget": 234000,
+   "over_budget_kid_years": 14,
+   "max_shortfall": -12912,
+   "net_surplus_at_uni": -56115
+  },
+  "drujba-stay": {
+   "cost": 316573,
+   "budget": 234000,
+   "over_budget_kid_years": 17,
+   "max_shortfall": -9562,
+   "net_surplus_at_uni": -104915
+  },
+  "bss-ib": {
+   "cost": 644182,
+   "budget": 234000,
+   "over_budget_kid_years": 26,
+   "max_shortfall": -29980,
+   "net_surplus_at_uni": -693602
+  },
+  "aas-ib": {
+   "cost": 1075931,
+   "budget": 234000,
+   "over_budget_kid_years": 26,
+   "max_shortfall": -51333,
+   "net_surplus_at_uni": -1502373
+  }
+ },
+ "universities": {
+  "tu-delft": [
+   13602,
+   13602,
+   86075,
+   86075
+  ],
+  "tum": [
+   15794,
+   24194,
+   99946,
+   153102
+  ],
+  "ku-leuven": [
+   13781,
+   17981,
+   87210,
+   113788
+  ],
+  "eth-zurich": [
+   30131,
+   30131,
+   190671,
+   190671
+  ],
+  "bocconi": [
+   17000,
+   17000,
+   107578,
+   107578
+  ],
+  "oxford": [
+   59063,
+   96537,
+   373756,
+   610898
+  ],
+  "imperial": [
+   73070,
+   73835,
+   462396,
+   467238
+  ],
+  "mit": [
+   82925,
+   82925,
+   524759,
+   524759
+  ]
+ },
+ "apartment": {
+  "principal": 324440,
+  "sqm": 121.1,
+  "wage_months_13y": 162
+ }
+}

@@ -1,0 +1,33 @@
+# California Institute of Technology. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: caltech
+name: California Institute of Technology
+values:
+  country:
+    v: us
+    src:
+      kind: extracted
+      source_ref: src-u056
+      date: 2026-10-09
+      url: https://www.admissions.caltech.edu/afford
+      verified: true
+  need_blind_international:
+    v: false
+    src:
+      kind: extracted
+      source_ref: src-u057
+      date: 2026-10-09
+      url: https://www.admissions.caltech.edu/afford
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: Need-aware for international applicants.
+  meets_full_need:
+    v: true
+    src:
+      kind: extracted
+      source_ref: src-u058
+      date: 2026-10-09
+      url: https://www.admissions.caltech.edu/afford
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

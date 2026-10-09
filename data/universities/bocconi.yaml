@@ -1,0 +1,37 @@
+# Università Bocconi. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: bocconi
+name: Università Bocconi
+values:
+  country:
+    v: it
+    src:
+      kind: extracted
+      source_ref: src-u088
+      date: 2026-10-09
+      url: https://www.unibocconi.it/en/current-students/fees
+      verified: true
+  strong_in:
+    v:
+      - economics
+      - finance
+      - data science
+    src:
+      kind: extracted
+      source_ref: src-u089
+      date: 2026-10-09
+      url: https://www.unibocconi.it/en/current-students/fees
+      verified: true
+  tuition:
+    v:
+      amount: 17000
+      currency: EUR
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u090
+      date: 2026-10-09
+      url: https://www.unibocconi.it/en/current-students/fees
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: Full fee, BSc 2026/27; income-based reductions and ISU grants for EU students.

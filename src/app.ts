@@ -18,9 +18,33 @@ export interface AppData {
   /** Personal status: validator and the public fallback file (domain config `status`). */
   statusValidate?: ValidateFunction;
   statusDefault?: StatusFile | null;
+  /** Browse-only domain (list and detail pages, no editing), listed at `#/<domain id>`. */
+  browseOnly?: boolean;
 }
 
 let data: AppData | undefined;
+/** The main domain (initApp) and the browse-only ones (registerDomain), by domain id. */
+let primary: AppData | undefined;
+const extras = new Map<string, AppData>();
+
+export function registerDomain(d: AppData): void {
+  extras.set(d.domain.config.id, { ...d, browseOnly: true });
+}
+export const extraDomains = (): AppData[] => [...extras.values()];
+
+/** Makes a domain the active one (default: the main domain); its dictionaries win. */
+export function activate(id?: string): AppData {
+  const d = (id && extras.get(id)) || primary;
+  if (!d) throw new Error('initApp() was not called');
+  if (data !== d) {
+    data = d;
+    addDictionaries(d.i18n);
+  }
+  return d;
+}
+
+/** Where the list of the active domain is: `#/` for the main one, `#/<id>` for the others. */
+export const listHref = (): string => (app().browseOnly ? `#/${app().domain.config.id}` : '#/');
 
 export const app = (): AppData => {
   if (!data) throw new Error('initApp() was not called');
@@ -43,7 +67,8 @@ export const state = {
 /** The GitHub token, in memory only unless the user opted in to remembering it. */
 let token: string | undefined;
 
-const key = (name: string) => `${app().domain.config.storage_prefix}.${name}`;
+// Settings live under the main domain's prefix, whichever domain is active.
+const key = (name: string) => `${(primary ?? app()).domain.config.storage_prefix}.${name}`;
 
 function read(name: string): string | null {
   try {
@@ -62,6 +87,7 @@ function write(name: string, value: string): void {
 
 export function initApp(d: AppData): void {
   data = d;
+  primary = d;
   addDictionaries(d.i18n);
   // ?lang=en in the URL wins (handy for sharing a link in a given language).
   const urlLang = new URLSearchParams(location.search).get('lang');
@@ -75,6 +101,17 @@ export function initApp(d: AppData): void {
   setLang(state.lang);
   document.documentElement.lang = state.lang;
 }
+
+/** A JSON setting kept in this browser (e.g. the Finance page inputs). */
+export function readSetting<T>(name: string): T | undefined {
+  try {
+    const raw = read(name);
+    return raw === null ? undefined : (JSON.parse(raw) as T);
+  } catch {
+    return undefined;
+  }
+}
+export const writeSetting = (name: string, value: unknown): void => write(name, JSON.stringify(value));
 
 export function changeLang(lang: string): void {
   state.lang = lang;

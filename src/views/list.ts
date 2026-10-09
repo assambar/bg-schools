@@ -20,7 +20,7 @@ export function renderList(entities: readonly Entity[]): HTMLElement {
   const columns = config.display.list_columns;
   // The personal status column appears once the status in use has any entries.
   const mine = state.status?.file.entities ?? {};
-  const showStatus = Object.keys(mine).length > 0;
+  const showStatus = !app().browseOnly && Object.keys(mine).length > 0;
   const rows = entities.map((s) => {
     const known = dom.dimensions.filter((d) => entriesOf(s, d.id).length > 0).length;
     return h(

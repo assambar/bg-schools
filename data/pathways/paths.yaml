@@ -1,0 +1,124 @@
+# Pathways from PG2 (age 5-6) to university. `steps` lists stages in order; each consecutive
+# pair needs a mechanism transition (transitions.yaml). `cost` feeds the Finance page and the
+# Paths page (cost for the family): fees per child per school year at 2026/27 prices, EUR, by
+# grade index 0 = PG2, 1-12 = grades. `tutoring` lists grade ranges with the tutoring or math-
+# school rate (data/finance/assumptions.yaml). `sibling_discount` applies to the second child
+# when the first is in a paid year of the same path. `once` is a one-off fee in the first year.
+# Fees come from the school data (data/schools) or the cited pages; unknowns are listed.
+
+- id: state-smg
+  label: { en: 'State PG2 → state primary → SMG (5-12)', bg: 'Държавна ПГ2 → държавно основно → СМГ (5-12)' }
+  steps: [pg-state, primary-state, smg-5-7, smg-8-12, university]
+  cost:
+    fees: [{ grades: [0, 12], eur: 0 }]
+    tutoring: [[3, 12]]
+    sources: ['https://smg.bg/wp-content/uploads/2026/01/04-pravila-priem-za-2026-2027.pdf', 'https://www.horus.bg/']
+    unknowns:
+      - { en: 'State-school meals, after-school care and materials (small, not included)', bg: 'Храна, занималня и материали в държавно училище (малки суми, не са включени)' }
+- id: rodari-state-smg
+  label: { en: 'Dzhani Rodari PG2 → state primary → SMG', bg: 'Джани Родари ПГ2 → държавно основно → СМГ' }
+  steps: [pg-rodari, primary-state, smg-5-7, smg-8-12, university]
+  cost:
+    fees: [{ grades: [0, 0], eur: 4230 }]
+    tutoring: [[3, 12]]
+    sources: ['data/schools/djani-rodari.yaml', 'https://www.horus.bg/']
+    unknowns:
+      - { en: 'Sibling discount unconfirmed (not applied)', bg: 'Отстъпка за второ дете не е потвърдена (не е приложена)' }
+- id: drujba-smg
+  label: { en: 'Drujba PG2 → Drujba primary (1-4) → SMG (5-12)', bg: 'Дружба ПГ2 → Дружба (1-4) → СМГ (5-12)' }
+  steps: [pg-drujba, primary-drujba, smg-5-7, smg-8-12, university]
+  cost:
+    fees: [{ grades: [0, 0], eur: 7865 }, { grades: [1, 4], eur: 7078.5 }]   # 7,865 less 10% when moving from the kindergarten
+    tutoring: [[3, 12]]
+    sibling_discount: 0.10
+    sources: ['data/schools/drujba.yaml', 'https://www.horus.bg/']
+    unknowns:
+      - { en: 'Transport extra', bg: 'Транспортът е допълнително' }
+- id: state-lang
+  label: { en: 'State PG2 → state school (1-7) → state language or math high school', bg: 'Държавна ПГ2 → държавно училище (1-7) → държавна езикова или математическа гимназия' }
+  steps: [pg-state, primary-state, state-5-7, elite-hs, university]
+  cost:
+    fees: [{ grades: [0, 12], eur: 0 }]
+    tutoring: [[5, 7]]
+    sources: ['https://azbuki.bg/news/novini-2026/9987-kandidat-gimnazisti-sa-prieti-na-parvo-klasirane-v-stoliczata/', 'https://www.horus.bg/']
+    unknowns:
+      - { en: 'NVO 7 preparation assumed at the math-school rate in grades 5-7 only', bg: 'Подготовката за НВО 7 е приета по цената на школата по математика само в 5-7 клас' }
+- id: state-npmg
+  label: { en: 'State PG2 → state primary → NPMG (5-12)', bg: 'Държавна ПГ2 → държавно основно → НПМГ (5-12)' }
+  steps: [pg-state, primary-state, npmg-5-12, university]
+  cost:
+    fees: [{ grades: [0, 12], eur: 0 }]
+    tutoring: [[3, 12]]
+    sources: ['https://smg.bg/priem-sled-4-klas-novini/2026/07/06/11031/ima-nezaeti-mesta-za-priem-na-uchenitsi-v-v-klas-na-smg-paisiy-hilendarski-za-2026-2027-uchebna-godina/', 'https://www.horus.bg/']
+    unknowns:
+      - { en: 'NPMG admission rules after grade 4 [verify]', bg: 'Правила за прием в НПМГ след 4. клас [да се провери]' }
+- id: state-acs
+  label: { en: 'State PG2 → state school (1-7) → ACS (8-12)', bg: 'Държавна ПГ2 → държавно училище (1-7) → АКС (8-12)' }
+  steps: [pg-state, primary-state, state-5-7, acs-8-12, university]
+  cost:
+    fees: [{ grades: [8, 12], eur: 10540 }]
+    tutoring: [[5, 7]]
+    sources: ['https://acs.bg/admissions/tuition-rates/', 'https://www.horus.bg/']
+    unknowns:
+      - { en: 'ACS exam preparation assumed at the math-school rate', bg: 'Подготовката за АКС е приета по цената на школата по математика' }
+      - { en: 'ACS need-based reduction (10-90%) not applied', bg: 'Намалението на АКС според нуждата (10-90%) не е приложено' }
+- id: quest-acs
+  label: { en: 'Quest PG2 → Quest school (1-7) → ACS (8-12)', bg: 'Куест ПГ2 → училище Куест (1-7) → АКС (8-12)' }
+  steps: [pg-quest, quest-1-7, acs-8-12, university]
+  cost:
+    fees:
+      - { grades: [0, 0], eur: 9600 }      # 800 a month x 12, meals included
+      - { grades: [1, 3], eur: 7050 }      # 6,750 + materials 300
+      - { grades: [4, 7], eur: 7800 }      # 7,500 + materials 300
+      - { grades: [8, 12], eur: 10540 }    # ACS, Bulgarian rate
+    sibling_discount: 0.05
+    sources: ['data/schools/quest-junior.yaml', 'https://acs.bg/admissions/tuition-rates/']
+    unknowns:
+      - { en: 'Quest kindergarten billed 12 months (assumption); school meals (EUR 9 a day) not included', bg: 'Детската градина на Куест се плаща 12 месеца (допускане); храната в училище (9 евро на ден) не е включена' }
+      - { en: 'ACS sibling discount unknown; need-based reduction not applied', bg: 'Отстъпката за второ дете в АКС е неизвестна; намалението според нуждата не е приложено' }
+- id: smg-acs
+  label: { en: 'Drujba PG2-4 → SMG (5-7) → ACS (8-12)', bg: 'Дружба ПГ2-4 → СМГ (5-7) → АКС (8-12)' }
+  steps: [pg-drujba, primary-drujba, smg-5-7, acs-8-12, university]
+  cost:
+    fees: [{ grades: [0, 0], eur: 7865 }, { grades: [1, 4], eur: 7078.5 }, { grades: [8, 12], eur: 10540 }]
+    tutoring: [[3, 7]]
+    sibling_discount: 0.10
+    sources: ['data/schools/drujba.yaml', 'https://acs.bg/admissions/tuition-rates/', 'https://www.horus.bg/']
+    unknowns:
+      - { en: 'Discount applies only while both children are at Drujba; ACS sibling discount unknown', bg: 'Отстъпката важи само докато и двете деца са в Дружба; отстъпката за второ дете в АКС е неизвестна' }
+- id: drujba-stay
+  label: { en: 'Drujba K-12 (same school throughout)', bg: 'Дружба от ПГ2 до 12. клас (едно училище)' }
+  steps: [pg-drujba, primary-drujba, drujba-5-12, university]
+  cost:
+    fees: [{ grades: [0, 0], eur: 7865 }, { grades: [1, 12], eur: 7078.5 }]
+    tutoring: [[5, 12]]
+    sibling_discount: 0.10
+    sources: ['data/schools/drujba.yaml', 'https://www.horus.bg/']
+    unknowns:
+      - { en: 'Fee for grades 5-12 assumed equal to the published school fee [verify]', bg: 'Таксата за 5-12 клас е приета равна на публикуваната такса [да се провери]' }
+- id: bss-ib
+  label: { en: 'British School of Sofia (Year 1 at PG2 age) → IGCSE → IB Diploma', bg: 'Британско училище в София (Year 1 на възраст ПГ2) → IGCSE → IB диплома' }
+  steps: [bss, university]
+  cost:
+    fees:
+      - { grades: [0, 1], eur: 13800 }
+      - { grades: [2, 5], eur: 15180 }
+      - { grades: [6, 8], eur: 16260 }
+      - { grades: [9, 10], eur: 17590 }    # IGCSE
+      - { grades: [11, 12], eur: 18750 }   # IB Diploma
+    once: 1000                              # enrolment fee
+    sources: ['https://www.bssofia.bg/financial-terms-2026%20-%202027/']
+    unknowns:
+      - { en: 'Age-to-year mapping assumed; exam fees, meals and bus extra; sibling discount not applied', bg: 'Съответствието възраст-година е допускане; изпитни такси, храна и автобус са допълнително; отстъпка за второ дете не е приложена' }
+- id: aas-ib
+  label: { en: 'Anglo-American School K-12 (IB Diploma)', bg: 'Англо-американско училище K-12 (IB диплома)' }
+  steps: [aas, university]
+  cost:
+    fees:
+      - { grades: [0, 5], eur: 25702 }     # tuition 22,300 + capital fee 3,402
+      - { grades: [6, 8], eur: 27385 }     # 23,983 + 3,402
+      - { grades: [9, 12], eur: 29021 }    # 25,619 + 3,402
+    once: 2809                              # new-student fee
+    sources: ['https://www.aas-sofia.org/join/tuition-and-fees']
+    unknowns:
+      - { en: 'Bus (EUR 2,900 a year), language and learning support, exams extra', bg: 'Автобус (2900 евро годишно), езикова и учебна подкрепа, изпити са допълнително' }

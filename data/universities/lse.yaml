@@ -1,0 +1,48 @@
+# London School of Economics. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: lse
+name: London School of Economics
+values:
+  country:
+    v: uk
+    src:
+      kind: extracted
+      source_ref: src-u022
+      date: 2026-10-09
+      url: https://www.lse.ac.uk/study-at-lse/international-students/fee-status-classification
+      verified: true
+  strong_in:
+    v:
+      - economics
+      - mathematics with economics
+      - statistics
+    src:
+      kind: extracted
+      source_ref: src-u023
+      date: 2026-10-09
+      url: https://www.lse.ac.uk/study-at-lse/international-students/fee-status-classification
+      verified: true
+  fee_status:
+    v: overseas
+    src:
+      kind: extracted
+      source_ref: src-u024
+      date: 2026-10-09
+      url: https://www.lse.ac.uk/study-at-lse/international-students/fee-status-classification
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  tuition:
+    v:
+      min: 28900
+      max: 39900
+      currency: GBP
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u025
+      date: 2026-10-09
+      url: https://info.lse.ac.uk/staff/divisions/Planning-Division/Assets/Documents/Table-of-Fees-2026-27-and-PGR-structure-combined-19Feb2026.pdf
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: Overseas fee 2026/27, fixed for the course duration.
