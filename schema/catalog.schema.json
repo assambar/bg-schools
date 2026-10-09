@@ -30,6 +30,7 @@
       "required": ["year", "grade"],
       "properties": { "year": { "type": "string", "pattern": "^[0-9]{4}/[0-9]{4}$" }, "grade": { "type": "string" } }
     },
+    "editor_fields": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
     "retrieval_methods": {
       "type": "object",
       "additionalProperties": {

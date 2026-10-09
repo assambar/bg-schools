@@ -21,9 +21,10 @@ values:
     v: { min: 3, max: 18 }
     src: { kind: extracted, source_ref: src-201, date: 2026-10-08, url: http://aeasofia.com/upload/ENG_Admissions_Policy.pdf, verified: true }
     note: Pre-K (age 3) to grade 12.
-  school_type:
-    v: combined
+  levels:
+    v: [ kindergarten, preschool, primary, lower_secondary, upper_secondary ]
     src: { kind: extracted, source_ref: src-202, date: 2026-10-08, url: http://aeasofia.com/upload/ENG_Admissions_Policy.pdf, verified: true }
+    note: Pre-K (age 3) to grade 12.
   instruction_languages:
     v: [ en, bg ]
     src: { kind: extracted, source_ref: src-378, date: 2026-10-08, url: https://aeasofia.com/academics/, verified: true }

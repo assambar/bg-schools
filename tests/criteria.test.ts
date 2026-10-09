@@ -22,6 +22,20 @@ describe('money', () => {
   });
 });
 
+describe('levels (several per school)', () => {
+  it('"has" matches when the levels contain any wanted value; checkCriteria knows the value set', () => {
+    const s = school({ levels: { v: ['kindergarten', 'preschool', 'primary'] } });
+    const o = (r: object) => evalRule(s, r as never, catalog, { ctx }, true)!.outcome;
+    expect(o({ dim: 'levels', has: 'preschool' })).toBe('pass');
+    expect(o({ dim: 'levels', has: ['nursery', 'primary'] })).toBe('pass');
+    expect(o({ dim: 'levels', has: 'upper_secondary' })).toBe('fail');
+    expect(evalRule(school({}), { dim: 'levels', has: 'preschool' }, catalog, { ctx }, true)!.outcome).toBe('unknown');
+    const set = (has: string): CriteriaSet => ({ id: 'x', kind: 'custom', require: [{ dim: 'levels', has }] });
+    expect(checkCriteriaFiles([{ path: 'x.yaml', content: JSON.stringify(set('preschool')) }], catalog).errors).toEqual([]);
+    expect(checkCriteriaFiles([{ path: 'x.yaml', content: JSON.stringify(set('combined')) }], catalog).errors.join()).toMatch(/"combined" is not in level/);
+  });
+});
+
 describe('rules', () => {
   const cap = { amount: 6000, currency: 'EUR', per: 'year' };
   it('lte on money: pass, fail, and unknown when a range crosses the limit', () => {

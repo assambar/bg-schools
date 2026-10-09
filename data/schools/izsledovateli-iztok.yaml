@@ -20,8 +20,8 @@ values:
   ages_accepted:
     v: { min: 1, max: 4 }
     src: { kind: extracted, source_ref: src-163, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
-  school_type:
-    v: nursery
+  levels:
+    v: [ nursery ]
     src: { kind: extracted, source_ref: src-164, date: 2026-10-08, url: https://explorers.bg/iztok, verified: true }
   instruction_languages:
     v: [ bg, en ]

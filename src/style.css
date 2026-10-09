@@ -92,3 +92,9 @@ td.chips { max-width: 32rem; }
 td.chips .badge { white-space: normal; display: inline-block; margin: 0.1rem; }
 .unknown-rules { display: inline-block; font-size: 0.8rem; color: var(--muted); }
 .unknown-rules[open] { display: block; }
+
+/* Editor form fields */
+.form-fields { margin: 0.5rem 0 0.75rem; }
+fieldset.form-field { border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.75rem; margin: 0 0 0.5rem; }
+fieldset.form-field legend { font-weight: 600; font-size: 0.9rem; }
+fieldset.form-field label { display: inline-block; font-weight: 400; margin: 0.15rem 1rem 0.15rem 0; }

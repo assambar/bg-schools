@@ -14,8 +14,8 @@ values:
   phone:
     v: [ 0888 730 767 ]
     src: { source_ref: src-178, verified: false, check: unconfirmed, note: Not found on the school website on 2026-10-08. }
-  school_type:
-    v: nursery
+  levels:
+    v: [ nursery ]
     src: { kind: extracted, source_ref: src-179, date: 2026-10-08, url: https://prikluchenci.bg/детска-ясла/, verified: true }
     note: From 10 months to 3 years.
   fee.meals:

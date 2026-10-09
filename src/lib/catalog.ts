@@ -57,6 +57,8 @@ export interface Family {
 export interface RawCatalog {
   groups: string[];
   default_context: { year: string; grade: string };
+  /** Dimensions the editor shows as form fields (enum, multi_enum or bool). */
+  editor_fields?: string[];
   retrieval_methods: Record<string, { automatable: boolean; steps: string[] }>;
   value_sets: Record<string, string[]>;
   families: Family[];
@@ -78,6 +80,7 @@ export interface Neighborhood {
 export interface Catalog {
   groups: string[];
   defaultContext: { year: string; grade: string };
+  editorFields: string[];
   methods: RawCatalog['retrieval_methods'];
   valueSets: Record<string, readonly string[]>;
   dimensions: Dimension[];
@@ -106,6 +109,7 @@ export function buildCatalog(raw: RawCatalog, grades: Grade[], neighborhoods: Ne
   return {
     groups: raw.groups,
     defaultContext: raw.default_context,
+    editorFields: raw.editor_fields ?? [],
     methods: raw.retrieval_methods,
     valueSets: { ...raw.value_sets, ...BUILTIN_SETS },
     dimensions,
@@ -130,6 +134,11 @@ export function checkCatalog(raw: RawCatalog, cat: Catalog): string[] {
       if (!raw.retrieval_methods[m]) errors.push(`catalog: ${d.id}: unknown retrieval method "${m}"`);
     }
     if (!d.retrieval?.steps?.length) errors.push(`catalog: ${d.id}: retrieval steps are required`);
+  }
+  for (const id of cat.editorFields) {
+    const d = cat.byId.get(id);
+    if (!d) errors.push(`catalog: editor_fields: unknown dimension "${id}"`);
+    else if (!['enum', 'multi_enum', 'bool'].includes(d.type)) errors.push(`catalog: editor_fields: ${id} must be enum, multi_enum or bool`);
   }
   if (!cat.grades.some((g) => g.id === raw.default_context.grade)) errors.push('catalog: default_context.grade is not a known grade');
   return errors;
