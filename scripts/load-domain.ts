@@ -11,6 +11,8 @@ import { buildEntitySchema } from '../src/lib/schema-gen.ts';
 export const ROOT = resolve(import.meta.dirname, '..');
 /** The domain the site is built from. Override with DOMAIN_DIR=<dir>. */
 export const DEFAULT_DOMAIN_DIR = process.env.DOMAIN_DIR ?? 'domains/schools';
+/** Browse-only domains shown next to the main one (list and detail pages, no editing). */
+export const EXTRA_DOMAIN_DIRS: string[] = process.env.DOMAIN_DIR ? [] : ['domains/universities'];
 
 export function createAjv(options: { standalone?: boolean } = {}) {
   return new Ajv2020({

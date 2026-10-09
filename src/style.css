@@ -107,3 +107,28 @@ label.inline { font-weight: 400; }
 .my-status-box { background: #f6f8fa; border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem 0.75rem; margin: 0.5rem 0; }
 .my-status-box .note { margin: 0.25rem 0 0; }
 td.my-status { white-space: nowrap; }
+
+/* Paths and Finance pages */
+.disclaimer { background: #fff8c5; border: 1px solid #d4a72c; border-radius: 6px; padding: 0.5rem 0.9rem; margin: 0.75rem 0; font-size: 0.9rem; }
+.disclaimer p { margin: 0.3rem 0; }
+.footnote { border-left: 3px solid var(--border); padding-left: 0.75rem; color: var(--muted); font-size: 0.9rem; }
+.legend { font-size: 0.85rem; color: var(--muted); }
+.path { border-top: 2px solid var(--border); margin-top: 1.5rem; }
+.path .steps { font-size: 0.9rem; }
+.diagram { display: block; overflow-x: auto; margin: 0.5rem 0; }
+.diagram img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 6px; background: #fff; }
+.assoc { margin-bottom: 0.35rem; }
+.assoc.small { color: var(--muted); }
+.unknowns { font-size: 0.85rem; color: var(--muted); }
+.scroll { overflow-x: auto; }
+table.figures td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+table.figures tbody th { font-weight: 500; color: inherit; font-size: 0.95rem; }
+form.inputs { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 0.75rem 1rem; align-items: end; background: #f6f8fa; border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem; margin: 0.75rem 0; }
+label.input { display: flex; flex-direction: column; gap: 0.2rem; margin: 0; }
+label.input .hint { font-weight: 400; font-size: 0.8rem; }
+svg.chart { width: 100%; max-width: 40rem; height: auto; display: block; margin: 0.75rem 0 0.25rem; }
+.figures-note { font-size: 1.02rem; }
+ul.cases li { margin-bottom: 0.5rem; }
+ul.sources { font-size: 0.85rem; }
+footer#footer { border-top: 1px solid var(--border); padding: 0.75rem 1.25rem 2rem; max-width: 72rem; margin: 0 auto; font-size: 0.85rem; }
+footer#footer p { margin: 0.35rem 0; }

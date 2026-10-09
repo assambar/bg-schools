@@ -1,6 +1,6 @@
 // Entity detail: every known value grouped by catalog group (area), each with its source
 // badge, plus an expandable "How to update this" per dimension (retrieval instructions).
-import { app, state } from '../app.ts';
+import { app, listHref, state } from '../app.ts';
 import { h } from '../dom.ts';
 import { retrievalFor, type Dimension } from '../lib/domain.ts';
 import { formatValue } from '../lib/format.ts';
@@ -93,7 +93,7 @@ export function renderDetail(s: Entity): HTMLElement {
   const root = h(
     'section',
     { class: 'detail hide-unknown' },
-    h('p', {}, h('a', { href: '#/' }, t('detail.back')), ' · ', h('a', { href: `#/edit/${encodeURIComponent(s.id)}` }, t('detail.edit'))),
+    h('p', {}, h('a', { href: listHref() }, t('detail.back')), ...(app().browseOnly ? [] : [' · ', h('a', { href: `#/edit/${encodeURIComponent(s.id)}` }, t('detail.edit'))])),
     h('h1', {}, String((s as unknown as Record<string, unknown>)[dom.config.display.title] ?? s.id)),
     subtitle ? h('p', { class: 'hint' }, subtitle) : null,
     loc ? h('h2', {}, t('detail.sites')) : null,

@@ -3,7 +3,8 @@ import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import standaloneCode from 'ajv/dist/standalone/index.js';
 import { checkCriteriaDir, checkDataDir, checkDefaultStatus } from './scripts/check-data.ts';
-import { createAjv, DEFAULT_DOMAIN_DIR, loadDomain, ROOT } from './scripts/load-domain.ts';
+import { createAjv, DEFAULT_DOMAIN_DIR, EXTRA_DOMAIN_DIRS, loadDomain, ROOT } from './scripts/load-domain.ts';
+import { loadFinance, loadPathways } from './scripts/pathways/load.ts';
 import { buildEntitySchema, buildStatusSchema } from './src/lib/schema-gen.ts';
 
 /**
@@ -76,6 +77,46 @@ function domainData(dir: string): Plugin {
   };
 }
 
+/**
+ * - `virtual:extra-domains`: the browse-only domains (EXTRA_DOMAIN_DIRS, e.g. universities):
+ *   domain files, dictionaries and validated entities. List and detail pages only.
+ * - `virtual:plan`: pathways (data/pathways) and finance inputs (data/finance), checked.
+ */
+function extraData(dirs: string[]): Plugin {
+  const ids: Record<string, string> = { 'virtual:extra-domains': '\0virtual:extra-domains', 'virtual:plan': '\0virtual:plan' };
+  return {
+    name: 'extra-data',
+    resolveId: (id) => ids[id],
+    configureServer(server) {
+      server.watcher.add(['data/pathways', 'data/finance', 'data/universities', 'domains/universities'].map((p) => resolve(ROOT, p)));
+    },
+    load(id) {
+      if (id === ids['virtual:plan']) {
+        try {
+          return `export default ${JSON.stringify({ pathways: loadPathways(), finance: loadFinance() })};`;
+        } catch (e) {
+          this.error(`Invalid pathways or finance data:\n${(e as Error).message}`);
+        }
+      }
+      if (id !== ids['virtual:extra-domains']) return;
+      const out = dirs.map((dir) => {
+        let loaded;
+        try {
+          loaded = loadDomain(dir);
+        } catch (e) {
+          this.error(`Invalid domain ${dir}:\n${(e as Error).message}`);
+        }
+        const { domain, files, overlays, i18n } = loaded;
+        const { entities, errors } = checkDataDir(domain.config.paths.entities, domain);
+        if (errors.length > 0) this.error(`Invalid data:\n${errors.join('\n')}`);
+        entities.sort((a, b) => a.name.localeCompare(b.name, domain.config.display.sort_locale));
+        return { files, overlays, i18n, entities };
+      });
+      return `export default ${JSON.stringify(out)};`;
+    },
+  };
+}
+
 /** Strict CSP for the production build only (Vite's dev server injects inline styles). */
 function contentSecurityPolicy(): Plugin {
   const policy = [
@@ -101,7 +142,7 @@ function contentSecurityPolicy(): Plugin {
 
 export default defineConfig({
   base: '/bg-schools/', // project Pages site: https://assambar.github.io/bg-schools/
-  plugins: [domainData(DEFAULT_DOMAIN_DIR), contentSecurityPolicy()],
+  plugins: [domainData(DEFAULT_DOMAIN_DIR), extraData(EXTRA_DOMAIN_DIRS), contentSecurityPolicy()],
   test: {
     include: ['tests/**/*.test.ts'],
   },
