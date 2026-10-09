@@ -1,7 +1,7 @@
 // Build-time data from the domain directory (see vite.config.ts).
 declare module 'virtual:domain' {
   import type { DomainFiles, RetrievalOverlay } from './lib/domain.ts';
-  const data: { files: DomainFiles; overlays: RetrievalOverlay[]; i18n: Record<string, Record<string, string>> };
+  const data: { files: DomainFiles; overlays: RetrievalOverlay[]; i18n: Record<string, Record<string, string>>; statusDefault: import('./lib/status.ts').StatusFile | null };
   export default data;
 }
 
@@ -20,4 +20,10 @@ declare module 'virtual:entity-validator' {
 declare module 'virtual:criteria' {
   const sets: import('./lib/criteria.ts').CriteriaSet[];
   export default sets;
+}
+
+declare module 'virtual:status-validator' {
+  import type { ValidateFunction } from 'ajv';
+  const validate: ValidateFunction;
+  export default validate;
 }

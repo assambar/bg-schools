@@ -2,6 +2,7 @@ import { app, changeContext, changeLang, state } from '../app.ts';
 import { h } from '../dom.ts';
 import { contextAxes, type ScopeAxis } from '../lib/domain.ts';
 import { dictionaries, LANGS, t } from '../lib/i18n.ts';
+import { statusBanner } from './status.ts';
 import type { Entry } from '../lib/entity.ts';
 
 /** Options for a context axis: its fixed values, or the default plus every value used in the data. */
@@ -18,7 +19,7 @@ function options(axis: ScopeAxis): { id: string; label: string }[] {
   return [...set].sort().map((id) => ({ id, label: id }));
 }
 
-export function renderHeader(rerender: () => void): HTMLElement {
+export function renderHeader(rerender: () => void): HTMLElement[] {
   const dom = app().domain;
   const lang = h('select', { 'aria-label': t('lang.label'), id: 'lang' }, ...LANGS.map((l) => h('option', { value: l }, dictionaries[l]['_meta.name'] ?? l)));
   lang.value = state.lang;
@@ -39,11 +40,14 @@ export function renderHeader(rerender: () => void): HTMLElement {
   };
   for (const sel of selects) sel.addEventListener('change', onCtx);
 
-  return h(
+  const header = h(
     'header',
     {},
     h('a', { href: '#/', class: 'brand' }, t('app.title')),
-    h('nav', {}, h('a', { href: '#/' }, t('nav.list')), h('a', { href: '#/criteria' }, t('nav.criteria')), h('a', { href: '#/new' }, t('nav.add'))),
+    h('nav', {}, h('a', { href: '#/' }, t('nav.list')), h('a', { href: '#/criteria' }, t('nav.criteria')), h('a', { href: '#/new' }, t('nav.add')),
+      dom.config.status ? h('a', { href: '#/status' }, t('nav.status')) : null),
     h('div', { class: 'controls' }, axes.length ? h('span', { class: 'hint' }, t('context.label')) : '', ...selects, lang),
   );
+  const banner = statusBanner(rerender);
+  return banner ? [header, banner] : [header];
 }

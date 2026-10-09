@@ -98,3 +98,12 @@ td.chips .badge { white-space: normal; display: inline-block; margin: 0.1rem; }
 fieldset.form-field { border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.75rem; margin: 0 0 0.5rem; }
 fieldset.form-field legend { font-weight: 600; font-size: 0.9rem; }
 fieldset.form-field label { display: inline-block; font-weight: 400; margin: 0.15rem 1rem 0.15rem 0; }
+
+/* Personal status */
+.status-banner { background: #ddf4ff; color: #0550ae; padding: 0.4rem 1.25rem; font-size: 0.9rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.status-page input[type='password'] { max-width: 32rem; }
+label.inline { font-weight: 400; }
+.warn-text { color: #7d4e00; }
+.my-status-box { background: #f6f8fa; border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem 0.75rem; margin: 0.5rem 0; }
+.my-status-box .note { margin: 0.25rem 0 0; }
+td.my-status { white-space: nowrap; }

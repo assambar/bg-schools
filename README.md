@@ -122,6 +122,17 @@ prefer:                          # soft: scored, optional weight (default 1)
 - Defaults: `basics`; `budget-low` / `budget-medium` / `budget-high` (sample caps of €6,000 / €9,000 / €25,000 a year); `location-near` (only your neighbourhoods), `location-wider` (near ones rank higher), `anywhere`. Your neighbourhood list is chosen on the page and kept in the browser only. No site has coordinates yet, so distance rules have nothing to work with.
 - Labels: `criteria.set.<id>` in each domain dictionary. Kinds and page controls come from `criteria` in the domain config. `npm run validate` checks the files against the catalog.
 
+## Personal status
+
+Your own state (status per school: `research`, `to_visit`, `visited`, `shortlisted`, `rejected`; notes; gut feeling 1–5; chosen criteria sets; neighbourhoods; a reference point; a budget) stays out of this public repository. It lives in a **private repository of yours** and the site reads it with a GitHub token you paste on the **Personal status** page (`#/status`).
+
+- **File convention:** `<name>.status.yaml` at the root of the private repository, or any `.yaml` file in its `status/` directory. The first file (in path order) that validates is used. The shape is defined by the domain config (`status:`) and checked with a generated JSON Schema plus id checks (unknown schools, criteria sets or neighbourhoods are errors). See [`domains/schools/status.default.yaml`](domains/schools/status.default.yaml) for an example; that neutral file is also what the site uses when no token is connected.
+- **One token, one private repository:** the site lists the private repositories the token can read (`GET /user/repos?visibility=private`, all pages; public repositories never count, since fine-grained tokens can read every public repository). 0 private repositories → "token has no private repository access"; more than 1 → "token is too wide: it can access N private repositories"; exactly 1 → its status files are read. If none validates, the page lists each file and why it failed.
+- **What it changes:** a "My status" column in the list and a box on the detail page; your criteria sets and neighbourhoods replace the browser's choices while connected; a `budget` adds a "My budget" option to the budget criteria; a `place` feeds distance rules. A banner "Personal status loaded from owner/repo" with a **Disconnect** button shows while connected.
+- **Token handling:** read-only, sent only to `https://api.github.com` (also enforced by the site's Content Security Policy). It is kept in memory only, unless you tick "Remember the token on this device", which stores it in this site's `localStorage`. All `*.github.io` project sites of the same owner share that storage, so only opt in on your own device. Disconnect removes it.
+
+**Recommended token setup:** GitHub → Settings → Developer settings → Fine-grained personal access tokens → Generate new token. Repository access: *Only select repositories* → just your private status repository. Permissions: **Contents: read-only** (and **Metadata: read-only**, which GitHub adds automatically). Set an expiry date. Nothing else.
+
 ## Adding things
 
 - **A dimension:** add it to `dimensions.yaml` (or to a `families` list) and add `dim.<id>` (plus any new `enum.<set>.<value>`) to every file in `domains/schools/i18n/`. Tests fail if a label is missing.

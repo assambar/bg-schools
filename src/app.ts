@@ -3,6 +3,7 @@
 // areas). main.ts fills it from the build-time data; tests fill it with any domain.
 import type { ValidateFunction } from 'ajv';
 import type { CriteriaSet } from './lib/criteria.ts';
+import { connectStatus, type ConnectError, type LoadedStatus, type StatusFile } from './lib/status.ts';
 import type { Context, Domain } from './lib/domain.ts';
 import type { Entity } from './lib/entity.ts';
 import { addDictionaries, detectLang, setLang } from './lib/i18n.ts';
@@ -14,6 +15,9 @@ export interface AppData {
   validate: ValidateFunction;
   /** The domain's dictionaries per language. */
   i18n: Record<string, Record<string, string>>;
+  /** Personal status: validator and the public fallback file (domain config `status`). */
+  statusValidate?: ValidateFunction;
+  statusDefault?: StatusFile | null;
 }
 
 let data: AppData | undefined;
@@ -30,7 +34,14 @@ export const state = {
   criteria: [] as string[],
   /** The user's areas for location rules. Stays in this browser only. */
   near: [] as string[],
+  /** The user's reference point [lat, lon] for distance rules (from the personal status). */
+  place: undefined as [number, number] | undefined,
+  /** Personal status in use: from the user's private repository, else the public default. */
+  status: undefined as LoadedStatus | undefined,
 };
+
+/** The GitHub token, in memory only unless the user opted in to remembering it. */
+let token: string | undefined;
 
 const key = (name: string) => `${app().domain.config.storage_prefix}.${name}`;
 
@@ -58,6 +69,9 @@ export function initApp(d: AppData): void {
   state.ctx = { ...d.domain.defaultContext, ...(JSON.parse(read('context') ?? '{}') as Context) };
   state.criteria = JSON.parse(read('criteria') ?? JSON.stringify(d.domain.config.criteria.default_selection)) as string[];
   state.near = JSON.parse(read('near') ?? '[]') as string[];
+  state.place = undefined;
+  state.status = d.statusDefault ? { file: d.statusDefault } : undefined;
+  token = undefined;
   setLang(state.lang);
   document.documentElement.lang = state.lang;
 }
@@ -82,4 +96,66 @@ export function changeCriteria(ids: string[]): void {
 export function changeNear(ids: string[]): void {
   state.near = ids;
   write('near', JSON.stringify(ids));
+}
+
+// ---- personal status ---------------------------------------------------------------------
+
+/** The domain's criteria sets plus, with a personal budget, a "My budget" set. */
+export function criteriaSets(): CriteriaSet[] {
+  const { criteria, domain } = app();
+  const budget = state.status?.file.budget;
+  const cfg = domain.config.status?.budget;
+  if (!budget || !cfg) return criteria;
+  return [...criteria, { id: STATUS_BUDGET_SET, kind: cfg.kind, require: [{ dim: cfg.dim, lte: budget }] }];
+}
+export const STATUS_BUDGET_SET = 'my-budget';
+
+export const isRemembered = (): boolean => read('status-token') !== null;
+export const hasToken = (): boolean => token !== undefined;
+
+function apply(loaded: LoadedStatus): void {
+  state.status = loaded;
+  const f = loaded.file;
+  // In memory only: your own choices from the browser are restored on disconnect.
+  if (f.criteria?.length) state.criteria = f.criteria;
+  if (f.near) state.near = f.near;
+  state.place = f.place;
+}
+
+/** Connects with a token; on success the status file overlays the public data. */
+export async function connect(newToken: string, remember: boolean, fetchFn?: (u: string, i?: RequestInit) => Promise<Response>): Promise<ConnectError | undefined> {
+  const d = app();
+  if (!d.statusValidate) return { key: 'status.err.network', params: { why: 'no status schema in this domain' } };
+  const r = await connectStatus(newToken, d.domain, d.statusValidate, d.entities.map((e) => e.id), [...d.criteria.map((c) => c.id), STATUS_BUDGET_SET], fetchFn);
+  if (!r.ok) return r.error;
+  token = newToken;
+  if (remember) write('status-token', newToken);
+  else forget();
+  apply(r.status);
+  return undefined;
+}
+
+function forget(): void {
+  try {
+    localStorage.removeItem(key('status-token'));
+  } catch {
+    /* nothing stored */
+  }
+}
+
+/** Drops the token (memory and device) and goes back to the public default status. */
+export function disconnect(): void {
+  token = undefined;
+  forget();
+  const d = app();
+  state.status = d.statusDefault ? { file: d.statusDefault } : undefined;
+  state.criteria = JSON.parse(read('criteria') ?? JSON.stringify(d.domain.config.criteria.default_selection)) as string[];
+  state.near = JSON.parse(read('near') ?? '[]') as string[];
+  state.place = undefined;
+}
+
+/** On start: reconnect with a remembered token. Returns the error if it no longer works. */
+export async function reconnect(fetchFn?: (u: string, i?: RequestInit) => Promise<Response>): Promise<ConnectError | undefined> {
+  const saved = read('status-token');
+  return saved ? connect(saved, true, fetchFn) : undefined;
 }

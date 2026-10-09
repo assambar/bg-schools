@@ -72,6 +72,17 @@ function row(s: Entity, d: Dimension): HTMLElement {
   );
 }
 
+/** The user's own status for this entity (from the personal status layer), if any. */
+function myStatus(s: Entity): HTMLElement | null {
+  const m = state.status?.file.entities[s.id];
+  if (!m) return null;
+  return h('div', { class: 'my-status-box', id: 'my-status' },
+    h('strong', {}, `${t('status.col')}: `), t(`status.value.${m.status}`),
+    m.gut_feeling !== undefined ? h('span', { class: 'hint' }, ` · ${t('status.gut')}: ${m.gut_feeling}/5`) : null,
+    m.updated ? h('span', { class: 'hint' }, ` · ${m.updated}`) : null,
+    m.notes ? h('p', { class: 'note' }, m.notes) : null);
+}
+
 export function renderDetail(s: Entity): HTMLElement {
   const dom = app().domain;
   const loc = dom.config.locations;
@@ -87,6 +98,7 @@ export function renderDetail(s: Entity): HTMLElement {
     subtitle ? h('p', { class: 'hint' }, subtitle) : null,
     loc ? h('h2', {}, t('detail.sites')) : null,
     loc ? h('ul', {}, ...(s.sites ?? []).map((site) => h('li', {}, [site.address, ([] as string[]).concat(site.neighborhood ?? []).map((n) => t(`${loc.area_label}.${n}`)).join(' / ')].filter(Boolean).join(' · ') || site.id))) : null,
+    myStatus(s),
     h('p', { class: 'hint' }, t('detail.known', { known, total: dom.dimensions.length }), ' · ', h('label', {}, toggle, ' ', t('detail.show_unknown'))),
     ...dom.groups.map((g) => {
       const dims = dom.dimensions.filter((d) => d.group === g);

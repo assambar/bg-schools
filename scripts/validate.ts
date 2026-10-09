@@ -1,7 +1,7 @@
 // CLI: node scripts/validate.ts [domain-dir]   (default: domains/schools, or DOMAIN_DIR)
 // Checks the domain config and catalog, every entity file, then the criteria sets.
 // Exits 1 on any problem. Used by CI.
-import { checkCriteriaDir, checkDataDir } from './check-data.ts';
+import { checkCriteriaDir, checkDataDir, checkDefaultStatus } from './check-data.ts';
 import { DEFAULT_DOMAIN_DIR, loadDomain, type LoadedDomain } from './load-domain.ts';
 
 const dir = process.argv[2] ?? DEFAULT_DOMAIN_DIR;
@@ -32,3 +32,12 @@ if (criteria.errors.length > 0) {
   process.exit(1);
 }
 console.log(`✓ ${criteria.sets.length} criteria set(s) in ${paths.criteria} are valid`);
+
+if (domain.config.status) {
+  const st = checkDefaultStatus(domain, entities.map((e) => e.id), criteria.sets.map((c) => c.id));
+  if (st.errors.length > 0) {
+    console.error(`✗ default status file:\n  ${st.errors.join('\n  ')}`);
+    process.exit(1);
+  }
+  console.log(`✓ default status file ${domain.config.status.default} is valid`);
+}

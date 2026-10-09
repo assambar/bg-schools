@@ -7,7 +7,8 @@ import { parseDocument } from 'yaml';
 import { checkCriteria, type CriteriaSet } from '../src/lib/criteria.ts';
 import type { Domain } from '../src/lib/domain.ts';
 import { checkEntity, type Entity } from '../src/lib/entity.ts';
-import { buildCriteriaSchema, buildEntitySchema } from '../src/lib/schema-gen.ts';
+import { buildCriteriaSchema, buildEntitySchema, buildStatusSchema } from '../src/lib/schema-gen.ts';
+import { parseStatus, type StatusFile } from '../src/lib/status.ts';
 import { createAjv } from './load-domain.ts';
 
 export interface DataFile {
@@ -108,4 +109,13 @@ export function checkCriteriaFiles(files: DataFile[], dom: Domain): { sets: Crit
 
 export function checkCriteriaDir(dir: string, dom: Domain): { sets: CriteriaSet[]; errors: string[] } {
   return checkCriteriaFiles(readDataDir(dir), dom);
+}
+
+/** Checks the domain's public default status file (domain config `status.default`). */
+export function checkDefaultStatus(dom: Domain, entityIds: string[], criteriaIds: string[]): { file?: StatusFile; errors: string[] } {
+  const path = dom.config.status?.default;
+  if (!path) return { errors: [] };
+  const validate = createAjv().compile(buildStatusSchema(dom));
+  const { file, errors } = parseStatus(readFileSync(path, 'utf8'), dom, validate, entityIds, criteriaIds);
+  return { file, errors: errors.map((e) => `${path}: ${e}`) };
 }

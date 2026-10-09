@@ -68,6 +68,15 @@ export interface DomainConfig {
   };
   repo?: { name: string; branch: string };
   storage_prefix: string;
+  /** Personal status layer (see src/lib/status.ts). */
+  status?: {
+    /** Public fallback file used when no token is set. */
+    default: string;
+    /** Allowed per-entity statuses (labels: status.value.<value>). */
+    values: string[];
+    /** A personal `budget` becomes an extra criteria set of this kind on this money dimension. */
+    budget?: { dim: string; kind: string };
+  };
 }
 
 // ---- catalog (dimensions.yaml) ---------------------------------------------------------
@@ -248,6 +257,11 @@ export function checkDomain(dom: Domain): string[] {
   }
   for (const c of config.display.list_columns) if (!dom.byId.has(c.dim)) errors.push(`domain: list_columns: unknown dimension "${c.dim}"`);
   for (const c of config.criteria.controls) if (!config.criteria.kinds.includes(c.kind)) errors.push(`domain: criteria control: unknown kind "${c.kind}"`);
+  const st = config.status;
+  if (st?.budget) {
+    if (dom.byId.get(st.budget.dim)?.type !== 'money') errors.push(`domain: status.budget.dim must be a money dimension`);
+    if (!config.criteria.kinds.includes(st.budget.kind)) errors.push(`domain: status.budget.kind: unknown kind "${st.budget.kind}"`);
+  }
   if (config.money && !config.money.currencies.includes(config.money.base)) errors.push('domain: money.base must be one of money.currencies');
   for (const cur of Object.keys(config.money?.rates ?? {})) if (!config.money!.currencies.includes(cur)) errors.push(`domain: money.rates: unknown currency "${cur}"`);
   return errors;
@@ -340,6 +354,7 @@ export function domainLabelKeys(dom: Domain): string[] {
   }
   for (const c of config.display.list_columns) if (c.label) keys.add(c.label);
   for (const c of config.criteria.controls) if (c.label) keys.add(c.label);
+  for (const v of config.status?.values ?? []) keys.add(`status.value.${v}`);
   for (const k of SOURCE_KINDS) keys.add(`kind.${k}`);
   for (const m of Object.keys(dom.methods)) keys.add(`method.${m}`);
   return [...keys];
