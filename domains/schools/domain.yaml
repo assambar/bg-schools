@@ -80,3 +80,11 @@ criteria:
 
 repo: { name: assambar/bg-schools, branch: main }
 storage_prefix: bg-schools               # localStorage keys: <prefix>.lang, .context, .criteria, .near
+
+# Personal status layer: per-school status, notes, gut feeling, chosen criteria sets,
+# areas, reference point and budget. The real file lives in the user's own private
+# repository (see README "Personal status"); this public file is the neutral fallback.
+status:
+  default: domains/schools/status.default.yaml
+  values: [research, to_visit, visited, shortlisted, rejected]
+  budget: { dim: tuition, kind: budget }    # a personal budget becomes a "My budget" criteria set

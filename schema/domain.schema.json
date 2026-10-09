@@ -320,6 +320,44 @@
     "storage_prefix": {
       "type": "string",
       "pattern": "^[a-z0-9_.-]+$"
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default",
+        "values"
+      ],
+      "properties": {
+        "default": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dim",
+            "kind"
+          ],
+          "properties": {
+            "dim": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   }
 }

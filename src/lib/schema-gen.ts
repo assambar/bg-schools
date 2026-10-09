@@ -178,3 +178,33 @@ export function buildCriteriaSchema(dom: Domain): Schema {
     ...obj({ id: { type: 'string', pattern: ID }, kind: { enum: [...dom.config.criteria.kinds] }, require: rules, prefer: rules }, ['id', 'kind']),
   };
 }
+
+/** JSON Schema for personal status files (domain config `status`). Ids are checked by checkStatus. */
+export function buildStatusSchema(dom: Domain): Schema {
+  const values = dom.config.status?.values ?? [];
+  const props: Record<string, Schema> = {
+    kind: { const: 'status' },
+    domain: { type: 'string', pattern: ID },
+    entities: {
+      type: 'object',
+      propertyNames: { pattern: dom.config.entity.id_pattern },
+      additionalProperties: obj({
+        status: { enum: [...values] },
+        notes: text,
+        gut_feeling: { type: 'integer', minimum: 1, maximum: 5 },
+        updated: { type: 'string', pattern: DATE },
+      }, ['status']),
+    },
+    criteria: { type: 'array', uniqueItems: true, items: { type: 'string', pattern: ID } },
+  };
+  if (dom.config.locations) {
+    props.near = { type: 'array', uniqueItems: true, items: { type: 'string', pattern: ID } };
+    props.place = { type: 'array', minItems: 2, maxItems: 2, items: { type: 'number' } };
+  }
+  if (dom.config.money) props.budget = moneySchema(dom);
+  return {
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    title: `Personal status (${dom.config.id})`,
+    ...obj(props, ['kind', 'domain', 'entities']),
+  };
+}

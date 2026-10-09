@@ -18,6 +18,9 @@ export function renderList(entities: readonly Entity[]): HTMLElement {
   const { config } = dom;
   const total = dom.dimensions.length;
   const columns = config.display.list_columns;
+  // The personal status column appears once the status in use has any entries.
+  const mine = state.status?.file.entities ?? {};
+  const showStatus = Object.keys(mine).length > 0;
   const rows = entities.map((s) => {
     const known = dom.dimensions.filter((d) => entriesOf(s, d.id).length > 0).length;
     return h(
@@ -27,9 +30,10 @@ export function renderList(entities: readonly Entity[]): HTMLElement {
       config.locations ? h('td', {}, areaText(s)) : null,
       ...columns.map((c) => h('td', {}, cell(s, c.dim))),
       h('td', { class: 'num' }, `${known} / ${total}`),
+      showStatus ? h('td', { class: 'my-status' }, mine[s.id] ? t(`status.value.${mine[s.id].status}`) : '') : null,
     );
   });
-  const heads = [t('list.col.name'), ...(config.locations ? [t('list.col.area')] : []), ...columns.map((c) => t(c.label ?? `dim.${c.dim}`)), t('list.col.known')];
+  const heads = [t('list.col.name'), ...(config.locations ? [t('list.col.area')] : []), ...columns.map((c) => t(c.label ?? `dim.${c.dim}`)), t('list.col.known'), ...(showStatus ? [t('status.col')] : [])];
   const dir = config.paths.entities;
   const repo = config.repo;
   return h(

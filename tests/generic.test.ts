@@ -109,7 +109,7 @@ describe('a second domain through the generic pipeline', () => {
 
   it('renders the header with its own context axis, in Bulgarian too', () => {
     setLang('bg');
-    const el = renderHeader(() => {});
+    const el = renderHeader(() => {})[0];
     expect([...el.querySelectorAll('#ctx-market option')].map(text)).toEqual(['ЕС', 'САЩ']);
     expect(el.querySelector('#ctx-year')).toBeNull();
     expect(text(renderList(entities).querySelector('h1')!)).toBe('Лаптопи (3)');

@@ -2,9 +2,9 @@ import { resolve } from 'node:path';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import standaloneCode from 'ajv/dist/standalone/index.js';
-import { checkCriteriaDir, checkDataDir } from './scripts/check-data.ts';
+import { checkCriteriaDir, checkDataDir, checkDefaultStatus } from './scripts/check-data.ts';
 import { createAjv, DEFAULT_DOMAIN_DIR, loadDomain, ROOT } from './scripts/load-domain.ts';
-import { buildEntitySchema } from './src/lib/schema-gen.ts';
+import { buildEntitySchema, buildStatusSchema } from './src/lib/schema-gen.ts';
 
 /**
  * Build-time data for one domain (DOMAIN_DIR, default domains/schools), no runtime fetches:
@@ -12,11 +12,12 @@ import { buildEntitySchema } from './src/lib/schema-gen.ts';
  *   domain's dictionaries, checked. A broken domain fails the build.
  * - `virtual:entities`: every entity file, validated. Invalid data fails the build.
  * - `virtual:criteria`: every criteria set, checked against the domain.
- * - `virtual:entity-validator`: Ajv validator precompiled from the generated schema (CSP-safe).
+ * - `virtual:entity-validator`, `virtual:status-validator`: Ajv validators precompiled from the
+ *   generated schemas (CSP-safe).
  */
 function domainData(dir: string): Plugin {
-  const ids = { domain: '\0virtual:domain', entities: '\0virtual:entities', validator: '\0virtual:entity-validator', criteria: '\0virtual:criteria' };
-  const names: Record<string, string> = { 'virtual:domain': ids.domain, 'virtual:entities': ids.entities, 'virtual:entity-validator': ids.validator, 'virtual:criteria': ids.criteria };
+  const ids = { domain: '\0virtual:domain', entities: '\0virtual:entities', validator: '\0virtual:entity-validator', criteria: '\0virtual:criteria', status: '\0virtual:status-validator' };
+  const names: Record<string, string> = { 'virtual:domain': ids.domain, 'virtual:entities': ids.entities, 'virtual:entity-validator': ids.validator, 'virtual:criteria': ids.criteria, 'virtual:status-validator': ids.status };
   return {
     name: 'domain-data',
     resolveId(id) {
@@ -47,7 +48,13 @@ function domainData(dir: string): Plugin {
         this.error(`Invalid domain:\n${(e as Error).message}`);
       }
       const { domain, files, overlays, i18n } = loaded;
-      if (id === ids.domain) return `export default ${JSON.stringify({ files, overlays, i18n })};`;
+      if (id === ids.domain) {
+        const entities = checkDataDir(domain.config.paths.entities, domain).entities.map((e) => e.id);
+        const sets = checkCriteriaDir(domain.config.paths.criteria, domain).sets.map((c) => c.id);
+        const status = checkDefaultStatus(domain, entities, sets);
+        if (status.errors.length > 0) this.error(`Invalid default status:\n${status.errors.join('\n')}`);
+        return `export default ${JSON.stringify({ files, overlays, i18n, statusDefault: status.file ?? null })};`;
+      }
       if (id === ids.entities) {
         const { entities, errors } = checkDataDir(domain.config.paths.entities, domain);
         if (errors.length > 0) this.error(`Invalid data:\n${errors.join('\n')}`);
@@ -60,7 +67,7 @@ function domainData(dir: string): Plugin {
         return `export default ${JSON.stringify(sets)};`;
       }
       const ajv = createAjv({ standalone: true });
-      const validate = ajv.compile(buildEntitySchema(domain));
+      const validate = ajv.compile(id === ids.status ? buildStatusSchema(domain) : buildEntitySchema(domain));
       const code = standaloneCode(ajv, validate);
       // Ajv emits require() for some keywords even in ESM mode; that breaks in the browser.
       if (code.includes('require(')) this.error('Precompiled validator needs require(); avoid that schema keyword');
@@ -76,7 +83,7 @@ function contentSecurityPolicy(): Plugin {
     "script-src 'self'",
     "style-src 'self'",
     "img-src 'self' data:",
-    "connect-src 'self'",
+    "connect-src 'self' https://api.github.com", // personal status (read-only, token sent only there)
     "base-uri 'none'",
     "form-action 'none'",
   ].join('; ');

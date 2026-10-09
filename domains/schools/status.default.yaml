@@ -1,0 +1,16 @@
+# Default personal status: the neutral fallback when no GitHub token is connected.
+# Your own status file has the same shape and lives in your private repository as
+# <name>.status.yaml (root) or status/<name>.yaml. Example of a filled-in file:
+#
+#   kind: status
+#   domain: schools
+#   entities:
+#     germani: { status: to_visit, notes: Open day in November., gut_feeling: 4, updated: 2026-10-09 }
+#     anika: { status: research }
+#   criteria: [basics, budget-medium, location-near]
+#   near: [izgrev, iztok]
+#   place: [42.67, 23.35]
+#   budget: { amount: 700, currency: EUR, per: month }
+kind: status
+domain: schools
+entities: {}

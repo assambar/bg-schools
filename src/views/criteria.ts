@@ -1,5 +1,5 @@
 // Criteria page: pick criteria sets (controls from the domain config) and rank entities.
-import { app, changeCriteria, changeNear, state } from '../app.ts';
+import { changeCriteria, changeNear, criteriaSets, state, STATUS_BUDGET_SET, app } from '../app.ts';
 import { h } from '../dom.ts';
 import { rank, type CriteriaSet, type Rule, type RuleResult } from '../lib/criteria.ts';
 import { contextAxes } from '../lib/domain.ts';
@@ -7,8 +7,10 @@ import { formatMoney, formatValue } from '../lib/format.ts';
 import { t } from '../lib/i18n.ts';
 import type { Entity, Money } from '../lib/entity.ts';
 
-const byId = () => new Map(app().criteria.map((s) => [s.id, s]));
-const ofKind = (k: string) => app().criteria.filter((s) => s.kind === k);
+const byId = () => new Map(criteriaSets().map((s) => [s.id, s]));
+const ofKind = (k: string) => criteriaSets().filter((s) => s.kind === k);
+/** Set label; the personal budget set shows its amount. */
+const setLabel = (id: string) => (id === STATUS_BUDGET_SET ? t('status.budget_set', { v: formatMoney(state.status!.file.budget!) }) : t(`criteria.set.${id}`));
 const pct = (x: number | null) => (x === null ? '–' : `${Math.round(x * 100)}%`);
 
 export function describeRule(r: Rule): string {
@@ -54,7 +56,7 @@ function notes(r: ReturnType<typeof rank>[number]): Node[] {
 function select(label: string, kind: string, current: string | undefined, allowNone: boolean, onPick: (id: string) => void): HTMLElement {
   const sel = h('select', { 'aria-label': label, id: `crit-${kind}` },
     ...(allowNone ? [h('option', { value: '' }, t('criteria.none'))] : []),
-    ...ofKind(kind).map((s) => h('option', { value: s.id }, t(`criteria.set.${s.id}`))));
+    ...ofKind(kind).map((s) => h('option', { value: s.id }, setLabel(s.id))));
   sel.value = current ?? '';
   sel.addEventListener('change', () => onPick(sel.value));
   return h('label', {}, `${label} `, sel);
@@ -107,7 +109,7 @@ export function renderCriteria(entities: readonly Entity[], idsFromUrl: string[]
     return h('label', {}, box, ` ${t(`criteria.set.${set.id}`)}`);
   });
 
-  const opts = { ctx: state.ctx, near: state.near };
+  const opts = { ctx: state.ctx, near: state.near, place: state.place };
   const usesPlaces = sets.some((s) => [...(s.require ?? []), ...(s.prefer ?? [])].some((r) => r.neighborhood?.editable));
   const results = rank(entities, sets, dom, opts);
   const kept = results.filter((r) => !r.excluded);
