@@ -1,0 +1,369 @@
+{
+ "inputs": {
+  "monthly_per_child": 1000,
+  "kids": 2,
+  "months_per_year": 9,
+  "child2_offset_years": 2,
+  "fee_growth": 0.05,
+  "scenario": "base"
+ },
+ "returns": {
+  "pessimistic": 0.041617,
+  "cautious": 0.079954,
+  "base": 0.100183,
+  "optimistic": 0.166523,
+  "worst_window": -0.032459
+ },
+ "uniYear": 2040,
+ "invest": [
+  {
+   "years": 5,
+   "paid": 45000,
+   "value_end": {
+    "pessimistic": 50158,
+    "cautious": 55470,
+    "base": 58473,
+    "optimistic": 69371
+   },
+   "value_at_uni": {
+    "pessimistic": 69114,
+    "cautious": 102063,
+    "base": 124808,
+    "optimistic": 236533
+   },
+   "value_at_uni_real": 96481
+  },
+  {
+   "years": 8,
+   "paid": 72000,
+   "value_end": {
+    "pessimistic": 85447,
+    "cautious": 100442,
+    "base": 109425,
+    "optimistic": 145041
+   },
+   "value_at_uni": {
+    "pessimistic": 104403,
+    "cautious": 147035,
+    "base": 175760,
+    "optimistic": 312203
+   },
+   "value_at_uni_real": 135868
+  },
+  {
+   "years": 13,
+   "paid": 117000,
+   "value_end": {
+    "pessimistic": 154561,
+    "cautious": 202505,
+    "base": 234234,
+    "optimistic": 381574
+   },
+   "value_at_uni": {
+    "pessimistic": 154561,
+    "cautious": 202505,
+    "base": 234234,
+    "optimistic": 381574
+   },
+   "value_at_uni_real": 181070
+  }
+ ],
+ "borrow": [
+  {
+   "years": 5,
+   "borrowed": 45000,
+   "repaid": 56600,
+   "interest": 11600,
+   "peak_monthly": 943,
+   "debt_free_after_years": 9
+  },
+  {
+   "years": 8,
+   "borrowed": 72000,
+   "repaid": 90559,
+   "interest": 18559,
+   "peak_monthly": 943,
+   "debt_free_after_years": 12
+  },
+  {
+   "years": 13,
+   "borrowed": 117000,
+   "repaid": 147159,
+   "interest": 30159,
+   "peak_monthly": 943,
+   "debt_free_after_years": 17
+  }
+ ],
+ "universities": [
+  {
+   "id": "tu-delft",
+   "per_year_min": 13602,
+   "per_year_max": 13602,
+   "living_included": true,
+   "degree_min": 86075,
+   "degree_max": 86075
+  },
+  {
+   "id": "tum",
+   "per_year_min": 15794,
+   "per_year_max": 24194,
+   "living_included": true,
+   "degree_min": 99946,
+   "degree_max": 153102
+  },
+  {
+   "id": "ku-leuven",
+   "per_year_min": 13781,
+   "per_year_max": 17981,
+   "living_included": true,
+   "degree_min": 87210,
+   "degree_max": 113788
+  },
+  {
+   "id": "eth-zurich",
+   "per_year_min": 30131,
+   "per_year_max": 30131,
+   "living_included": true,
+   "degree_min": 190671,
+   "degree_max": 190671
+  },
+  {
+   "id": "bocconi",
+   "per_year_min": 17000,
+   "per_year_max": 17000,
+   "living_included": false,
+   "degree_min": 107578,
+   "degree_max": 107578
+  },
+  {
+   "id": "oxford",
+   "per_year_min": 59063,
+   "per_year_max": 96537,
+   "living_included": true,
+   "degree_min": 373756,
+   "degree_max": 610898
+  },
+  {
+   "id": "imperial",
+   "per_year_min": 73070,
+   "per_year_max": 73835,
+   "living_included": true,
+   "degree_min": 462396,
+   "degree_max": 467238
+  },
+  {
+   "id": "mit",
+   "per_year_min": 82925,
+   "per_year_max": 82925,
+   "living_included": true,
+   "degree_min": 524759,
+   "degree_max": 524759
+  }
+ ],
+ "uniFund": [
+  {
+   "id": "tu-delft",
+   "cost_per_year_at_start": 20574,
+   "years": {
+    "pessimistic": 7.5,
+    "cautious": 9.8,
+    "base": 11.4,
+    "optimistic": 18.5
+   }
+  },
+  {
+   "id": "tum",
+   "cost_per_year_at_start": 30243,
+   "years": {
+    "pessimistic": 5.1,
+    "cautious": 6.7,
+    "base": 7.7,
+    "optimistic": 12.6
+   }
+  },
+  {
+   "id": "ku-leuven",
+   "cost_per_year_at_start": 24021,
+   "years": {
+    "pessimistic": 6.4,
+    "cautious": 8.4,
+    "base": 9.8,
+    "optimistic": 15.9
+   }
+  },
+  {
+   "id": "eth-zurich",
+   "cost_per_year_at_start": 45576,
+   "years": {
+    "pessimistic": 3.4,
+    "cautious": 4.4,
+    "base": 5.1,
+    "optimistic": 8.4
+   }
+  },
+  {
+   "id": "bocconi",
+   "cost_per_year_at_start": 25714,
+   "years": {
+    "pessimistic": 6,
+    "cautious": 7.9,
+    "base": 9.1,
+    "optimistic": 14.8
+   }
+  },
+  {
+   "id": "oxford",
+   "cost_per_year_at_start": 117679,
+   "years": {
+    "pessimistic": 1.3,
+    "cautious": 1.7,
+    "base": 2,
+    "optimistic": 3.2
+   }
+  },
+  {
+   "id": "imperial",
+   "cost_per_year_at_start": 111103,
+   "years": {
+    "pessimistic": 1.4,
+    "cautious": 1.8,
+    "base": 2.1,
+    "optimistic": 3.4
+   }
+  },
+  {
+   "id": "mit",
+   "cost_per_year_at_start": 125432,
+   "years": {
+    "pessimistic": 1.2,
+    "cautious": 1.6,
+    "base": 1.9,
+    "optimistic": 3
+   }
+  }
+ ],
+ "paths": [
+  {
+   "id": "state-smg",
+   "cost": 59463,
+   "budget": 234000,
+   "over_budget_kid_years": 0,
+   "max_shortfall": 0,
+   "net_surplus_at_uni": 365623,
+   "fees": 0,
+   "tutoring": 59463
+  },
+  {
+   "id": "rodari-state-smg",
+   "cost": 68802,
+   "budget": 234000,
+   "over_budget_kid_years": 0,
+   "max_shortfall": 0,
+   "net_surplus_at_uni": 335087,
+   "fees": 9339,
+   "tutoring": 59463
+  },
+  {
+   "id": "drujba-smg",
+   "cost": 144872,
+   "budget": 234000,
+   "over_budget_kid_years": 4,
+   "max_shortfall": -3563,
+   "net_surplus_at_uni": 134408,
+   "fees": 85409,
+   "tutoring": 59463
+  },
+  {
+   "id": "state-lang",
+   "cost": 16431,
+   "budget": 234000,
+   "over_budget_kid_years": 0,
+   "max_shortfall": 0,
+   "net_surplus_at_uni": 430609,
+   "fees": 0,
+   "tutoring": 16431
+  },
+  {
+   "id": "state-npmg",
+   "cost": 59463,
+   "budget": 234000,
+   "over_budget_kid_years": 0,
+   "max_shortfall": 0,
+   "net_surplus_at_uni": 365623,
+   "fees": 0,
+   "tutoring": 59463
+  },
+  {
+   "id": "state-acs",
+   "cost": 206391,
+   "budget": 234000,
+   "over_budget_kid_years": 10,
+   "max_shortfall": -12912,
+   "net_surplus_at_uni": 189924,
+   "fees": 189960,
+   "tutoring": 16431
+  },
+  {
+   "id": "quest-acs",
+   "cost": 345771,
+   "budget": 234000,
+   "over_budget_kid_years": 20,
+   "max_shortfall": -12912,
+   "net_surplus_at_uni": -149396,
+   "fees": 345771,
+   "tutoring": 0
+  },
+  {
+   "id": "smg-acs",
+   "cost": 295808,
+   "budget": 234000,
+   "over_budget_kid_years": 14,
+   "max_shortfall": -12912,
+   "net_surplus_at_uni": -56115,
+   "fees": 269685,
+   "tutoring": 26123
+  },
+  {
+   "id": "drujba-stay",
+   "cost": 316573,
+   "budget": 234000,
+   "over_budget_kid_years": 17,
+   "max_shortfall": -9562,
+   "net_surplus_at_uni": -104915,
+   "fees": 266799,
+   "tutoring": 49771
+  },
+  {
+   "id": "bss-ib",
+   "cost": 644182,
+   "budget": 234000,
+   "over_budget_kid_years": 26,
+   "max_shortfall": -29980,
+   "net_surplus_at_uni": -693602,
+   "fees": 644182,
+   "tutoring": 0
+  },
+  {
+   "id": "aas-ib",
+   "cost": 1075931,
+   "budget": 234000,
+   "over_budget_kid_years": 26,
+   "max_shortfall": -51333,
+   "net_surplus_at_uni": -1502373,
+   "fees": 1075930,
+   "tutoring": 0
+  }
+ ],
+ "apartment": {
+  "family_per_year": 18000,
+  "monthly_instalment": 1500,
+  "principal": 324440,
+  "sqm": 121.1,
+  "rent_per_year": [
+   12978,
+   19466
+  ],
+  "wage_months_13y": 162,
+  "share_of_avg_wage": 1.39
+ }
+}

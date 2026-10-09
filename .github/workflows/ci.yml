@@ -24,6 +24,8 @@ jobs:
         run: npm run hygiene
       - name: Validate catalog and YAML data
         run: npm run validate
+      - name: Generated diagrams are up to date (Mermaid sources, rendered SVGs, finance defaults)
+        run: npm run diagrams:check
       - name: Tests
         run: npm test
       - name: Production build
