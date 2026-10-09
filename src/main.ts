@@ -1,32 +1,38 @@
 import './style.css';
 import schools from 'virtual:schools';
-import { renderEditor } from './editor.ts';
-import { renderList } from './list.ts';
 import { h } from './dom.ts';
+import { t } from './lib/i18n.ts';
+import './state.ts';
+import { renderDetail } from './views/detail.ts';
+import { renderEditor } from './views/editor.ts';
+import { renderHeader } from './views/header.ts';
+import { renderList } from './views/list.ts';
 
 const app = document.getElementById('app')!;
+const top = document.getElementById('top')!;
 
-// Hash routing: GitHub Pages has no server-side rewrites.
-//   #/            list
-//   #/new         add a school
-//   #/edit/<id>   edit an existing school
+// Hash routing (GitHub Pages has no server-side rewrites):
+//   #/              list
+//   #/school/<id>   detail
+//   #/new           add a school
+//   #/edit/<id>     edit a school's YAML
 function route(): void {
-  const hash = location.hash.replace(/^#\/?/, '');
-  const [page, id] = hash.split('/');
+  document.title = t('app.title');
+  top.replaceChildren(renderHeader(route));
+  const [page, rawId] = location.hash.replace(/^#\/?/, '').split('/');
+  const id = rawId ? decodeURIComponent(rawId) : '';
+  const school = schools.find((s) => s.id === id);
+  const notFound = () => h('p', {}, t('detail.not_found', { id }), ' ', h('a', { href: '#/' }, t('detail.back')));
   let view: HTMLElement;
-  if (page === 'new') {
-    view = renderEditor(undefined, schools);
-  } else if (page === 'edit' && id) {
-    const school = schools.find((s) => s.id === decodeURIComponent(id));
-    view = school
-      ? renderEditor(school, schools)
-      : h('p', {}, 'No school with id "', decodeURIComponent(id), '". ', h('a', { href: '#/' }, 'Back to list'));
-  } else {
-    view = renderList(schools);
-  }
+  if (page === 'new') view = renderEditor(undefined, schools);
+  else if (page === 'edit') view = school ? renderEditor(school, schools) : notFound();
+  else if (page === 'school') view = school ? renderDetail(school) : notFound();
+  else view = renderList(schools);
   app.replaceChildren(view);
-  window.scrollTo(0, 0);
 }
 
-window.addEventListener('hashchange', route);
+window.addEventListener('hashchange', () => {
+  route();
+  window.scrollTo(0, 0);
+});
 route();

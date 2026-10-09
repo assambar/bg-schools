@@ -1,5 +1,10 @@
 id: nikator
 name: Nikator
-district: Student City / Malinova dolina
-status: call-needed
-notes: Published open days have passed; call for 2027/28 dates.
+sites:
+  - id: main
+    neighborhood: [ studentski-grad, malinova-dolina ]
+    src: { source_ref: src-007, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  {}

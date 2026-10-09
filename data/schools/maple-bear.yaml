@@ -1,5 +1,14 @@
 id: maple-bear
 name: Maple Bear
-district: Kambanite / Boyana
-status: check
-open_day: 2026-10-27
+sites:
+  - id: main
+    neighborhood: [ kambanite, boyana ]
+    src: { source_ref: src-005, verified: true }
+defaults:
+  src: { kind: imported, ref: sample-2026-10, date: 2026-10-07 }
+values:
+  open_days:
+    v: [ 2026-10-27 ]
+    scope: { year: 2027/2028 }
+    src: { source_ref: src-006, verified: false, check: manual }
+    note: Source notes this date may have passed.

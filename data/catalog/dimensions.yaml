@@ -1,0 +1,387 @@
+# Dimension catalog: the single list of facts the app knows how to store per school.
+# Adding a dimension is a data-only change: add an entry here and its labels to every
+# dictionary in src/i18n/. The school schema is generated from this file at build time.
+#
+# Fields per dimension:
+#   id         unique; dotted ids (activity.swimming) come from `families`
+#   group      one of `groups` (the detail view shows values grouped by these)
+#   type       value type, see README "Value types"
+#   values     value set name for enum / multi_enum (see `value_sets`)
+#   unit       display unit (optional)
+#   scopable   which scope keys a value may carry: year, grade, site
+#   filter     true if criteria sets may use it (default true)
+#   retrieval  how to fetch or refresh the value: { methods, cadence, automatable, steps }
+#              `methods` refer to `retrieval_methods` below; `steps` are dimension-specific.
+#              A school file may override or extend this per dimension (`retrieval:` key).
+
+groups: [identity, admissions, cost, languages, programme, activities, facilities, practical, support, continuity, reputation]
+
+default_context: { year: 2027/2028, grade: pg2 }
+
+retrieval_methods:
+  website:
+    automatable: true
+    steps:
+      - Open the school's official website (the `website` value) and find the page that covers this topic (fees, admissions, programme, contacts, daily schedule).
+      - Prefer the Bulgarian version if the English one is shorter or older.
+      - Record the value exactly as published, plus the page URL and today's date.
+      - Set provenance kind `extracted` (script or agent) or `manual` (typed by a maintainer), with `url` and `date`.
+      - If the page names a school year or group, add `scope` (year as YYYY/YYYY, grade id such as pg2).
+      - If the site does not mention the topic, leave the value absent (unknown). Never record `false` just because it is not mentioned.
+  registry:
+    automatable: true
+    steps:
+      - Look the school up in the official register of private kindergartens and schools (Ministry of Education register or the municipal list).
+      - Record the value with the register URL and today's date; provenance kind `extracted`.
+  ratings:
+    automatable: true
+    steps:
+      - Look the school up on public review sites (map listings, parent forums, business directories).
+      - Record score, scale maximum, review count and the site name; one entry per site. Provenance kind `extracted` with URL and date.
+  call:
+    automatable: false
+    steps:
+      - Phone or email the school's admissions contact (`phone` / `email` values).
+      - Ask the question for this dimension, note the answer and who gave it.
+      - Provenance kind `call`, with date and a short note; add scope if the answer is year/group specific.
+  visit:
+    automatable: false
+    steps:
+      - Check during an open day or visit.
+      - Provenance kind `visit`, with date and a short note.
+
+value_sets:
+  school_type: [nursery, kindergarten, school, combined]
+  license_type: [mon, international, bilingual]
+  admission_step: [orientation, interview, trial_day, diagnostic_test]
+  spots: [open, waitlist, full]
+  language: [bg, en, de, ru, fr, it, es, ja]
+  bilingual_model: [none, partial, 50_50, immersion, clil]
+  curriculum: [mon, cambridge, ib_pyp, ieyc, montessori, reggio, waldorf, maple_bear, us_common_core, stream, english_early_years]
+  accreditation: [ib, bso, cis, cambridge_school, other]
+  certificate: [cambridge_yle, other]
+  pedagogy: [play, project, academic, montessori, waldorf, nature]
+  kitchen: [on_site, external_caterer, parents_bring]
+  diet: [allergy, vegetarian, vegan, religious]
+
+families:
+  - prefix: activity
+    group: activities
+    type: offering
+    members: [swimming, gymnastics, football, basketball, volleyball, tennis, table_tennis, badminton, martial_arts, fencing, yoga, climbing, ballet, folk_dance, modern_dance, breakdance, chess, robotics, coding, music, theater, visual_arts, cooking, gardening, ergotherapy]
+    retrieval:
+      methods: [website, call]
+      cadence: yearly
+      automatable: true
+      steps:
+        - Look for the activity on the programme / extracurricular / "clubs" page.
+        - Record `offered`, and where stated `location` (on_site = at the school; off_site = children are taken elsewhere), `included` (in base tuition or paid extra), `frequency`, `partner` (external club) and `from_age`.
+        - "If off-site or extra cost is not stated, leave those fields out and flag `check: manual`."
+  - prefix: facility
+    group: facilities
+    type: bool
+    members: [own_gym, own_pool, pool_seasonal, outdoor_playground, sports_courts, salt_room]
+    retrieval:
+      methods: [website, visit]
+      cadence: yearly
+      automatable: true
+      steps:
+        - Look at the facilities / gallery / "about us" page. Record true only when the facility is at the school itself.
+  - prefix: fee
+    group: cost
+    type: fee_item
+    scopable: [year, grade, site]
+    members: [enrollment, meals, transport, activities, materials, uniform, trips, after_hours]
+    retrieval:
+      methods: [website, call]
+      cadence: yearly
+      automatable: true
+      steps:
+        - On the fees page, find whether this item is included in the base tuition or charged extra.
+        - Record `included` and, if charged, `price` (amount or min/max, currency, per month/year/once).
+        - Scope to the school year and group the price list applies to.
+  - prefix: support
+    group: support
+    type: service
+    members: [psychologist, speech_therapist, resource_teacher, tutoring, adaptation, medical_staff]
+    retrieval:
+      methods: [website, call]
+      cadence: yearly
+      automatable: true
+      steps:
+        - Look for the team / staff / "support" page or the admissions FAQ.
+        - Record `available`, and where stated `included` (in tuition or extra), `frequency` and `price`.
+
+dimensions:
+  # identity
+  - id: website
+    group: identity
+    type: url
+    filter: false
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["Search the school name plus \"детска градина\" or \"училище\"; use the official domain, not a directory listing. Check that it loads."] }
+  - id: phone
+    group: identity
+    type: text_list
+    filter: false
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["Copy the admissions phone numbers from the contacts page."] }
+  - id: email
+    group: identity
+    type: text_list
+    filter: false
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["Copy the admissions email addresses from the contacts page."] }
+  - id: ages_accepted
+    group: identity
+    type: range
+    unit: years
+    retrieval: { methods: [website, registry], cadence: yearly, automatable: true, steps: ["Record the youngest and oldest age accepted (e.g. min 1, max 7). If only group names are given, translate them: ясла 1-3, 1st group 3, 2nd group 4, ПГ1 5, ПГ2 6."] }
+  - id: school_type
+    group: identity
+    type: enum
+    values: school_type
+    retrieval: { methods: [registry, website], cadence: once, automatable: true, steps: ["Use the register entry: ЧДЯ = nursery, ЧДГ = kindergarten, ЧОУ/ЧСУ = school; combined if one operator runs kindergarten and school at the same address."] }
+  - id: license_type
+    group: identity
+    type: multi_enum
+    values: license_type
+    retrieval: { methods: [registry, website], cadence: yearly, automatable: true, steps: ["Check whether the school is licensed by the Ministry of Education (mon) and whether it presents itself as international or bilingual."] }
+  - id: mon_license_no
+    group: identity
+    type: text
+    filter: false
+    retrieval: { methods: [registry], cadence: yearly, automatable: true, steps: ["Copy the licence order number and date from the register entry (e.g. \"RD 14-55/17.07.2024\")."] }
+  - id: state_compensation
+    group: identity
+    type: bool
+    retrieval: { methods: [registry, call], cadence: yearly, automatable: true, steps: ["Check the municipality's list of private kindergartens in the compensation scheme for the current year."] }
+  # admissions
+  - id: open_days
+    group: admissions
+    type: date_list
+    scopable: [year, grade]
+    retrieval: { methods: [website, call], cadence: each_term, automatable: true, steps: ["Check the news / admissions / events page every few weeks from September to March.", "Record every date with the admission year it is for (scope.year) and the group if stated (scope.grade)."] }
+  - id: open_day_preregistration
+    group: admissions
+    type: bool
+    scopable: [year]
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Note whether the open day announcement asks parents to register in advance."] }
+  - id: application_deadline
+    group: admissions
+    type: date
+    scopable: [year, grade]
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Record the last day to apply for the given year and group."] }
+  - id: admission_process
+    group: admissions
+    type: multi_enum
+    values: admission_step
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["List the admission steps described on the admissions page."] }
+  - id: spots_status
+    group: admissions
+    type: enum
+    values: spots
+    scopable: [year, grade]
+    retrieval: { methods: [call], cadence: each_term, automatable: false, steps: ["Ask whether there are free places for the given year and group, or a waiting list."] }
+  - id: sibling_discount_pct
+    group: admissions
+    type: number
+    unit: "%"
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Look for \"втори брат/сестра\" or \"second child\" on the fees page; record the percentage."] }
+  - id: alumni_priority
+    group: admissions
+    type: bool
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Check whether children from the kindergarten get priority for the operator's school."] }
+  # cost
+  - id: tuition
+    group: cost
+    type: money
+    scopable: [year, grade, site]
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Open the fees page (\"такси\", \"цени\").", "Record each published price separately with amount (or min/max), currency, period (month/year), number of billed months if stated, and scope (year, grade, site).", "Do not convert currencies in the stored value; the app converts BGN to EUR for comparison."] }
+  - id: prepay_discount_pct
+    group: cost
+    type: number
+    unit: "%"
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Record the discount for paying the year in advance."] }
+  - id: payment_plans
+    group: cost
+    type: text
+    filter: false
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Summarise the available payment plans (monthly, per term, annual) in one line."] }
+  # languages
+  - id: instruction_languages
+    group: languages
+    type: multi_enum
+    values: language
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["List the languages in which the daily programme is run (not clubs)."] }
+  - id: languages_taught
+    group: languages
+    type: multi_enum
+    values: language
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["List every language taught as a subject or club. Note in `note` which ones cost extra."] }
+  - id: bilingual_model
+    group: languages
+    type: enum
+    values: bilingual_model
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Classify how the second language is used (partial lessons, 50/50, immersion, CLIL)."] }
+  - id: english_per_week
+    group: languages
+    type: int
+    unit: sessions/week
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Record the number of English sessions per week for the target group."] }
+  - id: second_language_from_age
+    group: languages
+    type: int
+    unit: years
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Record the age from which a second foreign language starts."] }
+  - id: native_english_teachers
+    group: languages
+    type: bool
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Check the team page or programme description for native English-speaking teachers."] }
+  - id: international_intake
+    group: languages
+    type: bool
+    retrieval: { methods: [website, visit], cadence: yearly, automatable: true, steps: ["Check whether groups include children of many nationalities."] }
+  # programme
+  - id: curriculum
+    group: programme
+    type: multi_enum
+    values: curriculum
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["List the curriculum frameworks named on the programme page."] }
+  - id: programme_name
+    group: programme
+    type: text
+    filter: false
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["Record the name of the national programme / textbook system used."] }
+  - id: accreditation
+    group: programme
+    type: multi_enum
+    values: accreditation
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["List external accreditations (IB, BSO, CIS, Cambridge school) with the accrediting body's listing as URL if possible."] }
+  - id: certificates
+    group: programme
+    type: multi_enum
+    values: certificate
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["List external certificates children can take at preschool age."] }
+  - id: pedagogy
+    group: programme
+    type: multi_enum
+    values: pedagogy
+    retrieval: { methods: [website, visit], cadence: yearly, automatable: true, steps: ["Classify the stated approach (play-, project-based, academic, Montessori, Waldorf, nature)."] }
+  - id: stem_focus
+    group: programme
+    type: bool
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["True if science / robotics / coding is a stated part of the regular programme."] }
+  # activities (the activity.* family is above)
+  - id: sports_frequency
+    group: activities
+    type: text
+    filter: false
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Summarise how often sport happens in the regular programme (e.g. \"daily gymnastics\")."] }
+  - id: sports_partners
+    group: activities
+    type: text_list
+    filter: false
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["List external clubs or partners running activities."] }
+  # facilities (facility.* family above)
+  - id: garden_area_m2
+    group: facilities
+    type: number
+    unit: m²
+    scopable: [site]
+    retrieval: { methods: [website], cadence: once, automatable: true, steps: ["Record the yard / garden area per site in square metres (1 decare = 1000 m²)."] }
+  # practical
+  - id: full_day
+    group: practical
+    type: bool
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["True if the regular programme runs until about 18:00."] }
+  - id: hours
+    group: practical
+    type: time_range
+    scopable: [site]
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["Record opening hours as HH:MM-HH:MM per site."] }
+  - id: half_day_option
+    group: practical
+    type: bool
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["True if a shorter (partial / half-day) programme is offered."] }
+  - id: after_hours_care
+    group: practical
+    type: service
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Check for care after the regular day (late stay / extended hours). Record availability, hours, and included vs extra with price."] }
+  - id: homework_support
+    group: practical
+    type: service
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Check for supervised homework / study sessions at the school (mainly for school-age groups). Record availability, hours, and included vs extra."] }
+  - id: meals_per_day
+    group: practical
+    type: int
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["Count meals and snacks in the published daily menu or schedule."] }
+  - id: kitchen
+    group: practical
+    type: enum
+    values: kitchen
+    retrieval: { methods: [website, visit], cadence: yearly, automatable: true, steps: ["Record whether food is cooked on site, delivered by a caterer, or brought by parents."] }
+  - id: dietary_accommodations
+    group: practical
+    type: multi_enum
+    values: diet
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["List the special diets the school accommodates."] }
+  - id: transport
+    group: practical
+    type: bool
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["True if the school runs its own bus / pick-up service."] }
+  - id: transport_areas
+    group: practical
+    type: text_list
+    filter: false
+    retrieval: { methods: [call], cadence: yearly, automatable: false, steps: ["Ask which neighbourhoods the bus serves."] }
+  - id: class_size_avg
+    group: practical
+    type: int
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Record the typical group size."] }
+  - id: class_size_max
+    group: practical
+    type: int
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Record the maximum group size."] }
+  - id: child_teacher_ratio
+    group: practical
+    type: number
+    unit: children/adult
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["Record children per adult in the target group."] }
+  - id: summer_care
+    group: practical
+    type: bool
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["True if the school runs a summer programme or stays open in summer."] }
+  - id: weekend_care
+    group: practical
+    type: bool
+    retrieval: { methods: [website, call], cadence: yearly, automatable: true, steps: ["True if weekend care is offered."] }
+  - id: access_control
+    group: practical
+    type: bool
+    retrieval: { methods: [website, visit], cadence: once, automatable: true, steps: ["True if entry is controlled (staffed entrance or access system)."] }
+  - id: cctv
+    group: practical
+    type: bool
+    retrieval: { methods: [website, visit], cadence: once, automatable: true, steps: ["True if the school states it has video surveillance."] }
+  - id: metro_walk_min
+    group: practical
+    type: int
+    unit: min
+    scopable: [site]
+    retrieval: { methods: [website], cadence: once, automatable: true, steps: ["Walking minutes from the nearest metro station, per site, from a map route planner."] }
+  - id: parent_app
+    group: practical
+    type: bool
+    retrieval: { methods: [website], cadence: yearly, automatable: true, steps: ["True if parents get an app or e-diary."] }
+  # continuity
+  - id: continuity.own_primary
+    group: continuity
+    type: link
+    retrieval: { methods: [website, registry], cadence: yearly, automatable: true, steps: ["True (exists) if the same operator runs a primary school in the same building or complex. Record grades, school name, and tuition if published."] }
+  - id: continuity.linked_school
+    group: continuity
+    type: link
+    retrieval: { methods: [website, registry], cadence: yearly, automatable: true, steps: ["True (exists) if the operator runs a school at another site. Record name, grades, curriculum, tuition."] }
+  # reputation
+  - id: rating
+    group: reputation
+    type: rating
+    retrieval: { methods: [ratings], cadence: each_term, automatable: true, steps: ["Keep one entry per review site; update score and count."] }
