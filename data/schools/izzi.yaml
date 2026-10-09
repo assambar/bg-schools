@@ -24,9 +24,10 @@ values:
   ages_accepted:
     v: { min: 2, max: 19 }
     src: { kind: extracted, source_ref: src-189, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
-  school_type:
-    v: combined
-    src: { kind: extracted, source_ref: src-190, date: 2026-10-08, url: https://izzi.academy/admissions/tuition-fees/, verified: true }
+  levels:
+    v: [ kindergarten, preschool, primary, lower_secondary, upper_secondary ]
+    src: { kind: extracted, source_ref: src-190, date: 2026-10-09, url: https://izzi.academy/, verified: true }
+    note: Izzi Start (born 2022–2024), Izzi PUK (born 2021–2022), primary, 5th grade, SMART Science grades 8–10.
   state_compensation:
     v: true
     src: { kind: extracted, source_ref: src-360, date: 2026-10-08, url: https://izzi.academy/admissions/darjavnofinansirane/, verified: true }

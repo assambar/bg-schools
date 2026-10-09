@@ -18,6 +18,10 @@ groups: [identity, admissions, cost, languages, programme, activities, facilitie
 
 default_context: { year: 2027/2028, grade: pg2 }
 
+# Dimensions the add/edit page shows as form fields above the YAML
+# (enum: radio buttons, multi_enum: checkboxes, bool: one checkbox).
+editor_fields: [levels]
+
 retrieval_methods:
   website:
     automatable: true
@@ -51,7 +55,7 @@ retrieval_methods:
       - Provenance kind `visit`, with date and a short note.
 
 value_sets:
-  school_type: [nursery, kindergarten, school, combined]
+  level: [nursery, kindergarten, preschool, primary, lower_secondary, upper_secondary]
   license_type: [mon, international, bilingual]
   admission_step: [orientation, interview, trial_day, diagnostic_test]
   spots: [open, waitlist, full]
@@ -134,11 +138,11 @@ dimensions:
     type: range
     unit: years
     retrieval: { methods: [website, registry], cadence: yearly, automatable: true, steps: ["Record the youngest and oldest age accepted (e.g. min 1, max 7). If only group names are given, translate them: ясла 1-3, 1st group 3, 2nd group 4, ПГ1 5, ПГ2 6."] }
-  - id: school_type
+  - id: levels
     group: identity
-    type: enum
-    values: school_type
-    retrieval: { methods: [registry, website], cadence: once, automatable: true, steps: ["Use the register entry: ЧДЯ = nursery, ЧДГ = kindergarten, ЧОУ/ЧСУ = school; combined if one operator runs kindergarten and school at the same address."] }
+    type: multi_enum
+    values: level
+    retrieval: { methods: [registry, website], cadence: yearly, automatable: true, steps: ["Record every level the school offers (tick all that apply): nursery (ясла, ages 1-3), kindergarten (groups 1-2, ages 3-5), preschool (ПГ1/ПГ2, ages 5-7), primary (grades 1-4), lower_secondary (grades 5-7), upper_secondary (grades 8-12).", "Use the register entry where it exists: ЧДЯ = nursery, ЧДГ = kindergarten and usually preschool, ЧОУ/ЧСУ = school levels; check the website for the exact groups and grades."] }
   - id: license_type
     group: identity
     type: multi_enum
