@@ -1,0 +1,34 @@
+# Dimension catalog of the universities domain (domains/universities/domain.yaml).
+# Same format as data/catalog/dimensions.yaml. Labels: domains/universities/i18n/<lang>.json.
+
+groups: [identity, cost, entry, aid]
+
+retrieval_methods:
+  website:
+    automatable: true
+    steps:
+      - Open the university's official page for this topic (fees, cost of living, entry requirements by country, financial aid).
+      - Record the value as published for the coming entry year, with the page URL and today's date.
+      - Fees in the university's own currency; note the fee status that applies to a Bulgarian (EU) citizen.
+      - If only a third-party summary is available, record it with `verified false` and `check unconfirmed`.
+
+value_sets:
+  country: [uk, us, ch, de, nl, be, dk, fr, it]
+  fee_status: [eu_home, overseas, international, foreign_higher, free_eu]
+  test_policy: [required, optional, not_used]
+
+dimensions:
+  - { id: website, group: identity, type: url, filter: false, retrieval: { methods: [website], cadence: once, automatable: true, steps: [The university's main admissions page.] } }
+  - { id: country, group: identity, type: enum, values: country, retrieval: { methods: [website], cadence: once, automatable: true, steps: [Country of the main campus.] } }
+  - { id: strong_in, group: identity, type: text_list, retrieval: { methods: [website], cadence: once, automatable: true, steps: [Subjects of interest for this family (mathematics, computer science, engineering, physics, economics).] } }
+  - { id: fee_status, group: cost, type: enum, values: fee_status, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Which fee group a Bulgarian citizen without residence in the country falls into.] } }
+  - { id: tuition, group: cost, type: money, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Undergraduate tuition per year for that fee group; a range when it differs by programme.] } }
+  - { id: living_cost, group: cost, type: money, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [The university's own estimate of living costs for one student.] } }
+  - { id: cost_of_attendance, group: cost, type: money, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Total published cost of attendance (tuition, housing, food, fees) before aid.] } }
+  - { id: fee_rules, group: cost, type: text, filter: false, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Short note on the fee rule that applies to EU citizens.] } }
+  - { id: entry_bulgarian_diploma, group: entry, type: text, filter: false, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Entry requirements for the Bulgarian Diploma za sredno obrazovanie (country page).] } }
+  - { id: admission_tests, group: entry, type: text, filter: false, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Admission tests or entrance exams for the subjects of interest.] } }
+  - { id: sat_act, group: entry, type: enum, values: test_policy, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Whether SAT or ACT scores are required for international applicants.] } }
+  - { id: need_blind_international, group: aid, type: bool, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Whether admission ignores ability to pay for international applicants.] } }
+  - { id: meets_full_need, group: aid, type: bool, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Whether demonstrated financial need is met in full for admitted international students.] } }
+  - { id: aid_note, group: aid, type: text, filter: false, retrieval: { methods: [website], cadence: yearly, automatable: true, steps: [Income thresholds or other aid details.] } }

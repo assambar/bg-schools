@@ -1,0 +1,61 @@
+# KU Leuven. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: ku-leuven
+name: KU Leuven
+values:
+  country:
+    v: be
+    src:
+      kind: extracted
+      source_ref: src-u083
+      date: 2026-10-09
+      url: https://www.kuleuven.be/english/education/student/fees/tuition-fee-breakdown
+      verified: true
+  strong_in:
+    v:
+      - engineering
+      - mathematics
+      - computer science
+    src:
+      kind: extracted
+      source_ref: src-u084
+      date: 2026-10-09
+      url: https://www.kuleuven.be/english/education/student/fees/tuition-fee-breakdown
+      verified: true
+  fee_status:
+    v: eu_home
+    src:
+      kind: extracted
+      source_ref: src-u085
+      date: 2026-10-09
+      url: https://www.kuleuven.be/english/education/student/fees/tuition-fee-breakdown
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  tuition:
+    v:
+      amount: 1181.4
+      currency: EUR
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u086
+      date: 2026-10-09
+      url: https://www.kuleuven.be/english/education/student/fees/tuition-fee-breakdown
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: EEA rate 2026/27, 60 credits.
+  living_cost:
+    v:
+      min: 1050
+      max: 1400
+      currency: EUR
+      per: month
+    src:
+      kind: extracted
+      source_ref: src-u087
+      date: 2026-10-09
+      url: https://www.kuleuven.be/english/life-at-ku-leuven/housing/money-matters/cost-of-living-in-belgium
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

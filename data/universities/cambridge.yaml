@@ -1,0 +1,52 @@
+# University of Cambridge. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: cambridge
+name: University of Cambridge
+values:
+  website:
+    v: https://www.undergraduate.study.cam.ac.uk/
+    src:
+      kind: extracted
+      source_ref: src-u008
+      date: 2026-10-09
+      url: https://www.undergraduate.study.cam.ac.uk/
+      verified: true
+  country:
+    v: uk
+    src:
+      kind: extracted
+      source_ref: src-u009
+      date: 2026-10-09
+      url: https://www.undergraduate.study.cam.ac.uk/
+      verified: true
+  strong_in:
+    v:
+      - mathematics
+      - computer science
+      - natural sciences
+      - engineering
+    src:
+      kind: extracted
+      source_ref: src-u010
+      date: 2026-10-09
+      url: https://www.undergraduate.study.cam.ac.uk/
+      verified: true
+  fee_status:
+    v: overseas
+    src:
+      kind: extracted
+      source_ref: src-u011
+      date: 2026-10-09
+      url: https://www.undergraduate.study.cam.ac.uk/international-students/international-entry-requirements
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  entry_bulgarian_diploma:
+    v: "Diploma za sredno obrazovanie: typical offer 5.8 overall and 6.0 in two relevant subjects; colleges may ask for more."
+    src:
+      kind: extracted
+      source_ref: src-u012
+      date: 2026-10-09
+      url: https://www.christs.cam.ac.uk/international-students/countries/bulgaria
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

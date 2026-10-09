@@ -1,0 +1,36 @@
+# Public universities in Denmark (e.g. DTU, Copenhagen). Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: denmark-public
+name: Public universities in Denmark (e.g. DTU, Copenhagen)
+values:
+  country:
+    v: dk
+    src:
+      kind: extracted
+      source_ref: src-u094
+      date: 2026-10-09
+      url: https://studyindenmark.dk/study-options/tuition-fees-and-scholarships
+      verified: true
+  fee_status:
+    v: free_eu
+    src:
+      kind: extracted
+      source_ref: src-u095
+      date: 2026-10-09
+      url: https://studyindenmark.dk/study-options/tuition-fees-and-scholarships
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  tuition:
+    v:
+      amount: 0
+      currency: EUR
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u096
+      date: 2026-10-09
+      url: https://studyindenmark.dk/study-options/tuition-fees-and-scholarships
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: No tuition for EU/EEA full-degree students.

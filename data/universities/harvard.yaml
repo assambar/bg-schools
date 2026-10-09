@@ -1,0 +1,66 @@
+# Harvard University. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: harvard
+name: Harvard University
+values:
+  country:
+    v: us
+    src:
+      kind: extracted
+      source_ref: src-u037
+      date: 2026-10-09
+      url: https://college.harvard.edu/admissions/apply/international-applicants
+      verified: true
+  fee_status:
+    v: international
+    src:
+      kind: extracted
+      source_ref: src-u038
+      date: 2026-10-09
+      url: https://college.harvard.edu/admissions/apply/international-applicants
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  cost_of_attendance:
+    v:
+      amount: 91634
+      currency: USD
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u039
+      date: 2026-10-09
+      url: https://registrar.fas.harvard.edu/tuition-and-fees
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: "2026/27: tuition $62,226, housing $14,250, food $8,942, fees."
+  sat_act:
+    v: required
+    src:
+      kind: extracted
+      source_ref: src-u040
+      date: 2026-10-09
+      url: https://college.harvard.edu/admissions/apply/application-requirements
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  need_blind_international:
+    v: true
+    src:
+      kind: extracted
+      source_ref: src-u041
+      date: 2026-10-09
+      url: https://college.harvard.edu/admissions/apply/international-applicants
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  aid_note:
+    v: Free tuition for family income up to $200,000; all billed costs covered up to $100,000.
+    src:
+      kind: extracted
+      source_ref: src-u042
+      date: 2026-10-09
+      url: https://news.harvard.edu/gazette/story/2025/03/harvard-expands-financial-aid/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

@@ -1,0 +1,36 @@
+# EPFL. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: epfl
+name: EPFL
+values:
+  country:
+    v: ch
+    src:
+      kind: extracted
+      source_ref: src-u066
+      date: 2026-10-09
+      url: https://www.epfl.ch/education/studies/en/rules-and-procedures/study-taxes/tuition-fee-other-fees/
+      verified: true
+  fee_status:
+    v: foreign_higher
+    src:
+      kind: extracted
+      source_ref: src-u067
+      date: 2026-10-09
+      url: https://www.epfl.ch/education/studies/en/rules-and-procedures/study-taxes/tuition-fee-other-fees/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  tuition:
+    v:
+      amount: 4380
+      currency: CHF
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u068
+      date: 2026-10-09
+      url: https://www.epfl.ch/education/studies/en/rules-and-procedures/study-taxes/tuition-fee-other-fees/
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: CHF 2,190 per semester for new foreign students since autumn 2025.

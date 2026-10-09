@@ -1,0 +1,74 @@
+# ETH Zurich. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: eth-zurich
+name: ETH Zurich
+values:
+  website:
+    v: https://ethz.ch/en/studies.html
+    src:
+      kind: extracted
+      source_ref: src-u059
+      date: 2026-10-09
+      url: https://ethz.ch/en/studies.html
+      verified: true
+  country:
+    v: ch
+    src:
+      kind: extracted
+      source_ref: src-u060
+      date: 2026-10-09
+      url: https://ethz.ch/students/en/studies/financial/tuition-fees.html
+      verified: true
+  strong_in:
+    v:
+      - mathematics
+      - computer science
+      - physics
+      - engineering
+    src:
+      kind: extracted
+      source_ref: src-u061
+      date: 2026-10-09
+      url: https://ethz.ch/en/studies.html
+      verified: true
+  fee_status:
+    v: foreign_higher
+    src:
+      kind: extracted
+      source_ref: src-u062
+      date: 2026-10-09
+      url: https://ethz.ch/students/en/studies/financial/tuition-fees.html
+      verified: true
+  tuition:
+    v:
+      amount: 4380
+      currency: CHF
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u063
+      date: 2026-10-09
+      url: https://ethz.ch/students/en/studies/financial/tuition-fees.html
+      verified: true
+    note: CHF 2,190 per semester, three times the CHF 730 fee, since autumn 2025.
+  cost_of_attendance:
+    v:
+      amount: 28100
+      currency: CHF
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u064
+      date: 2026-10-09
+      url: https://ethz.ch/content/dam/ethz/main/education/finanzielles/files-en/cost-of-living.pdf
+      verified: true
+    note: "ETH estimate for foreign students (group 2): compulsory fees CHF 4,528 plus living costs."
+  entry_bulgarian_diploma:
+    v: Academic-general diploma with a 70% average and required subjects, plus a Bulgarian university admission certificate in the chosen subject; otherwise the reduced ETH entrance exam.
+    src:
+      kind: extracted
+      source_ref: src-u065
+      date: 2026-10-09
+      url: https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere-qual/ETH-Zulassungsbedingungen-EN.pdf
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

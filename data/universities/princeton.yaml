@@ -1,0 +1,43 @@
+# Princeton University. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: princeton
+name: Princeton University
+values:
+  country:
+    v: us
+    src:
+      kind: extracted
+      source_ref: src-u043
+      date: 2026-10-09
+      url: https://admission.princeton.edu/apply/international-students
+      verified: true
+  sat_act:
+    v: optional
+    src:
+      kind: extracted
+      source_ref: src-u044
+      date: 2026-10-09
+      url: https://admission.princeton.edu/apply/standardized-testing
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: Test-optional for 2026/27; required for fall 2028 entry.
+  need_blind_international:
+    v: true
+    src:
+      kind: extracted
+      source_ref: src-u045
+      date: 2026-10-09
+      url: https://admission.princeton.edu/apply/international-students
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  meets_full_need:
+    v: true
+    src:
+      kind: extracted
+      source_ref: src-u046
+      date: 2026-10-09
+      url: https://admission.princeton.edu/apply/international-students
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.

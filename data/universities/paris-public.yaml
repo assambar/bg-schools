@@ -1,0 +1,36 @@
+# Public universities in France (e.g. Sorbonne, PSL). Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: paris-public
+name: Public universities in France (e.g. Sorbonne, PSL)
+values:
+  country:
+    v: fr
+    src:
+      kind: extracted
+      source_ref: src-u091
+      date: 2026-10-09
+      url: https://www.enseignementsup-recherche.gouv.fr/sites/default/files/2026-06/montant-des-droits-de-scolarit-au-titre-de-l-ann-e-universitaire-2026-2027---tablissements-publics-relevant-du-ministre-charg-de-l-enseignement-superi-40672.pdf
+      verified: true
+  fee_status:
+    v: eu_home
+    src:
+      kind: extracted
+      source_ref: src-u092
+      date: 2026-10-09
+      url: https://www.enseignementsup-recherche.gouv.fr/sites/default/files/2026-06/montant-des-droits-de-scolarit-au-titre-de-l-ann-e-universitaire-2026-2027---tablissements-publics-relevant-du-ministre-charg-de-l-enseignement-superi-40672.pdf
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  tuition:
+    v:
+      amount: 178
+      currency: EUR
+      per: year
+    src:
+      kind: extracted
+      source_ref: src-u093
+      date: 2026-10-09
+      url: https://www.enseignementsup-recherche.gouv.fr/sites/default/files/2026-06/montant-des-droits-de-scolarit-au-titre-de-l-ann-e-universitaire-2026-2027---tablissements-publics-relevant-du-ministre-charg-de-l-enseignement-superi-40672.pdf
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+    note: Licence (bachelor) 2026/27 for EU students; grandes écoles set their own fees.

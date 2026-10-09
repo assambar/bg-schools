@@ -1,0 +1,32 @@
+# University College London. Sample data for the universities domain; fees as published for 2026/27 (or 2026 entry).
+id: ucl
+name: University College London
+values:
+  country:
+    v: uk
+    src:
+      kind: extracted
+      source_ref: src-u019
+      date: 2026-10-09
+      url: https://www.ucl.ac.uk/study/student-finances/tuition-fees/fee-schedules/fee-schedules-2026-2027/undergraduate-fees-2026-2027
+      verified: true
+  fee_status:
+    v: overseas
+    src:
+      kind: extracted
+      source_ref: src-u020
+      date: 2026-10-09
+      url: https://www.ucl.ac.uk/study/student-finances/tuition-fees/fee-schedules/fee-schedules-2026-2027/undergraduate-fees-2026-2027
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
+  fee_rules:
+    v: Programme-specific overseas fees for 2026/27 entrants; amount not recorded here.
+    src:
+      kind: extracted
+      source_ref: src-u021
+      date: 2026-10-09
+      url: https://www.ucl.ac.uk/study/student-finances/tuition-fees/fee-schedules/fee-schedules-2026-2027/undergraduate-fees-2026-2027
+      verified: false
+      check: unconfirmed
+      note: Taken from a search summary of the official page; open the page to confirm.
