@@ -3,6 +3,7 @@ import schools from 'virtual:schools';
 import { h } from './dom.ts';
 import { t } from './lib/i18n.ts';
 import './state.ts';
+import { renderCriteria } from './views/criteria.ts';
 import { renderDetail } from './views/detail.ts';
 import { renderEditor } from './views/editor.ts';
 import { renderHeader } from './views/header.ts';
@@ -16,6 +17,7 @@ const top = document.getElementById('top')!;
 //   #/school/<id>   detail
 //   #/new           add a school
 //   #/edit/<id>     edit a school's YAML
+//   #/criteria[/<set>+<set>...]   rank schools by criteria sets
 function route(): void {
   document.title = t('app.title');
   top.replaceChildren(renderHeader(route));
@@ -27,6 +29,7 @@ function route(): void {
   if (page === 'new') view = renderEditor(undefined, schools);
   else if (page === 'edit') view = school ? renderEditor(school, schools) : notFound();
   else if (page === 'school') view = school ? renderDetail(school) : notFound();
+  else if (page === 'criteria') view = renderCriteria(schools, id ? id.split('+') : [], route);
   else view = renderList(schools);
   app.replaceChildren(view);
 }

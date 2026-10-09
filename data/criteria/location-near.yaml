@@ -1,0 +1,7 @@
+# Near a chosen place: only schools with a site in your neighbourhoods. The list is
+# chosen in the browser (Criteria page) and stored there only; it is empty here on purpose.
+# Distance rules ({ within_km: { km: 5 } }) are supported, but no site has coordinates yet.
+id: location-near
+kind: location
+require:
+  - { neighborhood: { in: [], editable: true } }

@@ -1,0 +1,15 @@
+# Basics for the chosen school year and group (header). Absent values are unknown:
+# a school stays in the list, marked "unverified", until the value is known.
+id: basics
+kind: basics
+require:
+  - { dim: ages_accepted, covers: context }      # takes children of the chosen group's age
+prefer:
+  - { dim: full_day, is: true, weight: 2 }
+  - { dim: license_type, has: mon, weight: 2 }   # counts for the compulsory preschool years
+  - { dim: continuity.own_primary, exists: true, weight: 2 }
+  - { dim: after_hours_care, exists: true }
+  - { dim: kitchen, is: on_site }
+  - { dim: english_per_week, gte: 2 }
+  - { dim: support.psychologist, exists: true }
+  - { dim: support.speech_therapist, exists: true }

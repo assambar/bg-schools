@@ -5,7 +5,8 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { basename, join, relative } from 'node:path';
 import { parseDocument } from 'yaml';
 import type { Catalog } from '../src/lib/catalog.ts';
-import { buildSchoolSchema } from '../src/lib/schema-gen.ts';
+import { checkCriteria, type CriteriaSet } from '../src/lib/criteria.ts';
+import { buildCriteriaSchema, buildSchoolSchema } from '../src/lib/schema-gen.ts';
 import { checkSchool, type School } from '../src/lib/school.ts';
 import { createAjv, loadCatalog } from './schema.ts';
 
@@ -75,4 +76,36 @@ export function checkFiles(files: DataFile[], catalog: Catalog = loadCatalog().c
 
 export function checkDataDir(dir: string): CheckResult {
   return checkFiles(readDataDir(dir));
+}
+
+/** Checks data/criteria/*.yaml: schema, id = file name, and rules that fit the catalog. */
+export function checkCriteriaFiles(files: DataFile[], catalog: Catalog = loadCatalog().catalog): { sets: CriteriaSet[]; errors: string[] } {
+  const validate = createAjv().compile(buildCriteriaSchema());
+  const errors: string[] = [];
+  const sets: CriteriaSet[] = [];
+  for (const file of files) {
+    const doc = parseDocument(file.content, { prettyErrors: true, uniqueKeys: true });
+    if (doc.errors.length > 0) {
+      for (const e of doc.errors) errors.push(`${file.path}: invalid YAML: ${e.message}`);
+      continue;
+    }
+    const data = doc.toJS();
+    if (!validate(data)) {
+      for (const e of validate.errors ?? []) errors.push(`${file.path}: ${e.instancePath || '(root)'} ${e.message}`);
+      continue;
+    }
+    const set = data as CriteriaSet;
+    if (set.id !== basename(file.path, '.yaml')) {
+      errors.push(`${file.path}: id "${set.id}" must match the file name`);
+      continue;
+    }
+    const problems = checkCriteria(set, catalog);
+    for (const p of problems) errors.push(`${file.path}: ${p}`);
+    if (problems.length === 0) sets.push(set);
+  }
+  return { sets, errors };
+}
+
+export function checkCriteriaDir(dir: string): { sets: CriteriaSet[]; errors: string[] } {
+  return checkCriteriaFiles(readDataDir(dir));
 }

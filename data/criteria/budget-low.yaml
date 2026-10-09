@@ -1,0 +1,10 @@
+# Sample budget levels, not anyone's real budget. Money is compared per year in EUR:
+# monthly fees × months (12 unless the value says otherwise), BGN at 1.95583.
+id: budget-low
+kind: budget
+require:
+  - { dim: tuition, lte: { amount: 6000, currency: EUR, per: year } }   # about €500 a month
+prefer:
+  - { dim: fee.meals, where: { included: true }, weight: 2 }
+  - { dim: fee.activities, where: { included: true } }
+  - { dim: state_compensation, is: true }

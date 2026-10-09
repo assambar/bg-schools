@@ -1,0 +1,7 @@
+# Further away is fine: every school stays, schools in your neighbourhoods rank higher,
+# and a school bus helps.
+id: location-wider
+kind: location
+prefer:
+  - { neighborhood: { in: [], editable: true }, weight: 3 }
+  - { dim: transport, is: true }

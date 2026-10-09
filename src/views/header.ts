@@ -36,7 +36,7 @@ export function renderHeader(rerender: () => void): HTMLElement {
     'header',
     {},
     h('a', { href: '#/', class: 'brand' }, t('app.title')),
-    h('nav', {}, h('a', { href: '#/' }, t('nav.schools')), h('a', { href: '#/new' }, t('nav.add'))),
+    h('nav', {}, h('a', { href: '#/' }, t('nav.schools')), h('a', { href: '#/criteria' }, t('nav.criteria')), h('a', { href: '#/new' }, t('nav.add'))),
     h('div', { class: 'controls' }, h('span', { class: 'hint' }, t('context.label')), year, grade, lang),
   );
 }

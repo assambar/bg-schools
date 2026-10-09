@@ -193,7 +193,10 @@ export function catalogLabelKeys(cat: Catalog): string[] {
   for (const d of cat.dimensions) keys.add(`dim.${d.id}`);
   for (const [set, values] of Object.entries(cat.valueSets)) for (const v of values) keys.add(`enum.${set}.${v}`);
   for (const g of cat.grades) keys.add(`grade.${g.id}`);
-  for (const n of cat.neighborhoods) keys.add(`neighborhood.${n.id}`);
+  for (const n of cat.neighborhoods) {
+    keys.add(`neighborhood.${n.id}`);
+    if (n.district) keys.add(`district.${n.district}`);
+  }
   for (const k of SOURCE_KINDS) keys.add(`kind.${k}`);
   for (const c of CHECK_FLAGS) keys.add(`check.${c}`);
   for (const m of Object.keys(cat.methods)) keys.add(`method.${m}`);

@@ -1,8 +1,7 @@
 // Turns stored values into display text in the current language.
 import type { Dimension } from './catalog.ts';
 import { getLang, t } from './i18n.ts';
-
-interface Money { amount?: number; min?: number; max?: number; currency: string; per: string; months?: number }
+import type { Money } from './school.ts';
 
 const num = (n: number) => n.toLocaleString(getLang() === 'bg' ? 'bg-BG' : 'en-GB');
 const yesNo = (b: unknown) => t(b ? 'value.yes' : 'value.no');

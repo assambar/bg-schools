@@ -75,6 +75,26 @@ The 24 files in `data/schools` are sample data (`ref: sample-2026-10`), imported
 
 Missing values are unknown, not "no". Free-text notes are in English for now.
 
+## Criteria sets
+
+[`data/criteria/*.yaml`](data/criteria) rank schools on the Criteria page (`#/criteria`, or `#/criteria/basics+budget-low+location-near` to share a combination):
+
+```yaml
+id: budget-low
+kind: budget                     # basics | budget | location | custom
+require:                         # hard: a known value that fails excludes the school
+  - { dim: tuition, lte: { amount: 6000, currency: EUR, per: year } }
+prefer:                          # soft: scored, optional weight (default 1)
+  - { dim: fee.meals, where: { included: true }, weight: 2 }
+```
+
+- Operators: `is`, `in`, `has` (lists), `gte` / `lte` (numbers or money), `exists`, `where` (fields of an object value), `covers: context` (an age range covers the chosen group). Location: `neighborhood: { in: [...], editable: true }` and `within_km: { km }`.
+- Unknown values never exclude: the school stays and is marked **unverified**. The same happens if a hard rule rests on a flagged, unverified or other-year value.
+- Score = soft points met ÷ soft points with a known value; coverage = known ÷ all. The ranking puts confirmed schools first, then sorts by score × coverage.
+- Money is compared per year in EUR: monthly × `months` (default 12); BGN at 1.95583.
+- Defaults: `basics`; `budget-low` / `budget-medium` / `budget-high` (sample caps of €6,000 / €9,000 / €25,000 a year); `location-near` (only your neighbourhoods), `location-wider` (near ones rank higher), `anywhere`. Your neighbourhood list is chosen on the page and kept in the browser only. No site has coordinates yet, so distance rules have nothing to work with.
+- Labels: `criteria.set.<id>` in each dictionary. `npm run validate` checks the files against the catalog.
+
 ## Adding things
 
 - **A dimension:** add it to `dimensions.yaml` (or to a `families` list) and add `dim.<id>` (plus any new `enum.<set>.<value>`) to every file in `src/i18n/`. Tests fail if a label is missing.
