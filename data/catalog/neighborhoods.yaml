@@ -1,4 +1,4 @@
-# Neighbourhoods a site can be in. Labels live in src/i18n/<lang>.json (neighborhood.<id>).
+# Neighbourhoods a site can be in. Labels live in domains/schools/i18n/<lang>.json (neighborhood.<id>).
 # `district` is the administrative district (район) for grouping. Boundaries and
 # coordinates come later with the map.
 city: sofia

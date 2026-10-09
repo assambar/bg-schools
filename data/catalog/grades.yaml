@@ -1,4 +1,4 @@
-# Grade ladder per education system. Labels live in src/i18n/<lang>.json (grade.<id>).
+# Grade ladder per education system. Labels live in domains/schools/i18n/<lang>.json (grade.<id>).
 # `age` is the age the child turns in the calendar year the school year starts.
 systems:
   bg:

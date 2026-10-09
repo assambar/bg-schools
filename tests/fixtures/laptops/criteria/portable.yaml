@@ -1,0 +1,7 @@
+id: portable
+kind: basics
+require:
+  - { dim: weight_kg, lte: 1.5 }
+prefer:
+  - { dim: ports, has: hdmi }
+  - { dim: warranty, exists: true }

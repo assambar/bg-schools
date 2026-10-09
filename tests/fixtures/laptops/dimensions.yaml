@@ -1,0 +1,17 @@
+groups: [hardware, cost]
+retrieval_methods:
+  spec_sheet: { automatable: true, steps: [Open the maker's spec sheet.] }
+value_sets:
+  port: [usb_c, hdmi, sd]
+records:
+  warranty:
+    presence: offered
+    fields:
+      offered: { type: bool, required: true, labels: [value.yes, value.no] }
+      years: { type: int, format: laptops.years }
+      price: { type: money }
+dimensions:
+  - { id: weight_kg, group: hardware, type: number, unit: kg, retrieval: { methods: [spec_sheet], cadence: once, automatable: true, steps: [Weight in kg.] } }
+  - { id: ports, group: hardware, type: multi_enum, values: port, retrieval: { methods: [spec_sheet], cadence: once, automatable: true, steps: [List the ports.] } }
+  - { id: price, group: cost, type: money, scopable: [market], retrieval: { methods: [spec_sheet], cadence: monthly, automatable: true, steps: [Price per market.] } }
+  - { id: warranty, group: cost, type: warranty, retrieval: { methods: [spec_sheet], cadence: yearly, automatable: true, steps: [Warranty terms.] } }

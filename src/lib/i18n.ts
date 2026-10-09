@@ -1,12 +1,19 @@
-// String dictionaries: one JSON file per language in src/i18n/. Adding a language =
-// adding a file with the same keys (tests check completeness). Missing keys fall back
-// to English, then to the key itself.
+// String dictionaries: generic UI strings in src/i18n/<lang>.json, plus the domain's own
+// strings and labels (domains/<name>/i18n/<lang>.json) added with addDictionaries(). Adding
+// a language = adding a file with the same keys in both places (tests check completeness).
+// Missing keys fall back to English, then to the key itself.
 const modules = import.meta.glob<Record<string, string>>('../i18n/*.json', { eager: true, import: 'default' });
 
 export const dictionaries: Record<string, Record<string, string>> = {};
 for (const [path, dict] of Object.entries(modules)) dictionaries[path.replace(/^.*\/|\.json$/g, '')] = dict;
 
-export const LANGS = Object.keys(dictionaries).sort();
+export const LANGS: string[] = Object.keys(dictionaries).sort();
+
+/** Adds (or overrides) keys per language, e.g. the domain's dictionaries. */
+export function addDictionaries(extra: Record<string, Record<string, string>>): void {
+  for (const [lang, dict] of Object.entries(extra)) dictionaries[lang] = { ...(dictionaries[lang] ?? {}), ...dict };
+  LANGS.splice(0, LANGS.length, ...Object.keys(dictionaries).sort());
+}
 export const DEFAULT_LANG = 'bg';
 
 let current = DEFAULT_LANG;

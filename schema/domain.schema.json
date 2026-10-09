@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Domain config",
+  "description": "domains/<name>/domain.yaml: one kind of thing to compare and choose between. Cross-file rules are checked in src/lib/domain.ts (checkDomain).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "entity",
+    "paths",
+    "scopes",
+    "display",
+    "criteria",
+    "storage_prefix"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route",
+        "id_pattern"
+      ],
+      "properties": {
+        "route": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "id_pattern": {
+          "type": "string"
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "catalog",
+        "entities",
+        "criteria",
+        "i18n"
+      ],
+      "properties": {
+        "catalog": {
+          "type": "string"
+        },
+        "overlays": {
+          "type": "string"
+        },
+        "entities": {
+          "type": "string"
+        },
+        "criteria": {
+          "type": "string"
+        },
+        "i18n": {
+          "type": "string"
+        }
+      }
+    },
+    "scopes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "consecutive": {
+            "type": "boolean"
+          },
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9_-]+$"
+            }
+          },
+          "values_from": {
+            "type": "string",
+            "pattern": "^[^#]+#[a-z0-9_.]+$"
+          },
+          "list": {
+            "type": "boolean"
+          },
+          "measure": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "ref": {
+            "enum": [
+              "sites"
+            ]
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "default"
+            ],
+            "properties": {
+              "default": {
+                "type": "string"
+              }
+            }
+          },
+          "fit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "exact",
+              "fallback",
+              "fallback_unscoped"
+            ],
+            "properties": {
+              "exact": {
+                "type": "number"
+              },
+              "fallback": {
+                "type": "number"
+              },
+              "fallback_unscoped": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "locations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "areas_from",
+        "area_label"
+      ],
+      "properties": {
+        "areas_from": {
+          "type": "string",
+          "pattern": "^[^#]+#[a-z0-9_.]+$"
+        },
+        "group_key": {
+          "type": "string"
+        },
+        "area_label": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "group_label": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        }
+      }
+    },
+    "display": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "list_columns",
+        "new_template"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "sort_locale": {
+          "type": "string"
+        },
+        "list_columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dim"
+            ],
+            "properties": {
+              "dim": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "editor_fields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "new_template": {
+          "type": "string",
+          "pattern": "\\S"
+        }
+      }
+    },
+    "money": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "currencies",
+        "base"
+      ],
+      "properties": {
+        "currencies": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          }
+        },
+        "base": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "rates": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        }
+      }
+    },
+    "criteria": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kinds",
+        "default_selection",
+        "controls"
+      ],
+      "properties": {
+        "kinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*$"
+          }
+        },
+        "default_selection": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          }
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "type"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "toggle",
+                  "select"
+                ]
+              },
+              "label": {
+                "type": "string"
+              },
+              "none": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "repo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "branch"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[^/\\s]+/[^/\\s]+$"
+        },
+        "branch": {
+          "type": "string"
+        }
+      }
+    },
+    "storage_prefix": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+$"
+    }
+  }
+}

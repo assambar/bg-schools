@@ -1,26 +1,21 @@
-# Dimension catalog: the single list of facts the app knows how to store per school.
+# Dimension catalog of the schools domain (see domains/schools/domain.yaml): the single list
+# of facts the app knows how to store per school.
 # Adding a dimension is a data-only change: add an entry here and its labels to every
-# dictionary in src/i18n/. The school schema is generated from this file at build time.
+# dictionary in domains/schools/i18n/. The entity schema is generated from the domain config and this file at build time.
 #
 # Fields per dimension:
 #   id         unique; dotted ids (activity.swimming) come from `families`
 #   group      one of `groups` (the detail view shows values grouped by these)
-#   type       value type, see README "Value types"
+#   type       a generic value type (see README "Value types") or a record type from `records`
 #   values     value set name for enum / multi_enum (see `value_sets`)
 #   unit       display unit (optional)
-#   scopable   which scope keys a value may carry: year, grade, site
+#   scopable   which scope axes a value may carry (domain.yaml `scopes`): year, grade, site
 #   filter     true if criteria sets may use it (default true)
 #   retrieval  how to fetch or refresh the value: { methods, cadence, automatable, steps }
 #              `methods` refer to `retrieval_methods` below; `steps` are dimension-specific.
 #              A school file may override or extend this per dimension (`retrieval:` key).
 
 groups: [identity, admissions, cost, languages, programme, activities, facilities, practical, support, continuity, reputation]
-
-default_context: { year: 2027/2028, grade: pg2 }
-
-# Dimensions the add/edit page shows as form fields above the YAML
-# (enum: radio buttons, multi_enum: checkboxes, bool: one checkbox).
-editor_fields: [levels]
 
 retrieval_methods:
   website:
@@ -67,6 +62,51 @@ value_sets:
   pedagogy: [play, project, academic, montessori, waldorf, nature]
   kitchen: [on_site, external_caterer, parents_bring]
   diet: [allergy, vegetarian, vegan, religious]
+  location: [on_site, off_site, both]
+
+# Structured value types: a record is an object with typed fields (bool, int, number, text,
+# time_range, enum + values, money). A dimension uses one with `type: <record name>`.
+# Display: fields in this order, joined with " · ". A bool shows labels[0] when true and
+# labels[1] (if given) when false; `format` is an i18n key filled with {v} and the other
+# fields; `hidden` fields only feed other formats. `presence` names the field that the
+# criteria operator `exists` reads (false = confirmed absent).
+records:
+  offering:
+    presence: offered
+    fields:
+      offered: { type: bool, required: true, labels: [value.yes, value.no] }
+      location: { type: enum, values: location }
+      included: { type: bool, labels: [value.included, value.extra] }
+      frequency: { type: text }
+      partner: { type: text }
+      from_age: { type: int, format: value.from_age }
+  service:
+    presence: available
+    fields:
+      available: { type: bool, required: true, labels: [value.available, value.not_available] }
+      included: { type: bool, labels: [value.included, value.extra] }
+      hours: { type: time_range }
+      frequency: { type: text }
+      price: { type: money }
+  fee_item:
+    fields:
+      included: { type: bool, required: true, labels: [value.included, value.extra] }
+      price: { type: money }
+  link:
+    presence: exists
+    fields:
+      exists: { type: bool, required: true, labels: [value.yes, value.no] }
+      name: { type: text }
+      grades: { type: text, format: value.grades }
+      same_campus: { type: bool, labels: [value.same_campus] }
+      curriculum: { type: text }
+      tuition: { type: money }
+  rating:
+    fields:
+      score: { type: number, required: true, format: value.score }
+      max: { type: number, required: true, min: 1, hidden: true }
+      count: { type: int, format: value.reviews }
+      site: { type: text }
 
 families:
   - prefix: activity

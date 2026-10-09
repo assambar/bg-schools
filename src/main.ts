@@ -1,37 +1,45 @@
 import './style.css';
-import schools from 'virtual:schools';
+import data from 'virtual:domain';
+import entities from 'virtual:entities';
+import criteria from 'virtual:criteria';
+import validate from 'virtual:entity-validator';
+import { app, initApp } from './app.ts';
 import { h } from './dom.ts';
+import { buildDomain, mergeRetrieval } from './lib/domain.ts';
 import { t } from './lib/i18n.ts';
-import './state.ts';
 import { renderCriteria } from './views/criteria.ts';
 import { renderDetail } from './views/detail.ts';
 import { renderEditor } from './views/editor.ts';
 import { renderHeader } from './views/header.ts';
 import { renderList } from './views/list.ts';
 
-const app = document.getElementById('app')!;
+const domain = buildDomain(data.files);
+for (const overlay of data.overlays) mergeRetrieval(domain, overlay); // checked at build time
+initApp({ domain, entities, criteria, validate, i18n: data.i18n });
+
+const main = document.getElementById('app')!;
 const top = document.getElementById('top')!;
 
 // Hash routing (GitHub Pages has no server-side rewrites):
 //   #/              list
-//   #/school/<id>   detail
-//   #/new           add a school
-//   #/edit/<id>     edit a school's YAML
-//   #/criteria[/<set>+<set>...]   rank schools by criteria sets
+//   #/<route>/<id>  detail (route from the domain config, e.g. school)
+//   #/new           add an entity
+//   #/edit/<id>     edit an entity's YAML
+//   #/criteria[/<set>+<set>...]   rank entities by criteria sets
 function route(): void {
   document.title = t('app.title');
   top.replaceChildren(renderHeader(route));
   const [page, rawId] = location.hash.replace(/^#\/?/, '').split('/');
   const id = rawId ? decodeURIComponent(rawId) : '';
-  const school = schools.find((s) => s.id === id);
+  const entity = app().entities.find((s) => s.id === id);
   const notFound = () => h('p', {}, t('detail.not_found', { id }), ' ', h('a', { href: '#/' }, t('detail.back')));
   let view: HTMLElement;
-  if (page === 'new') view = renderEditor(undefined, schools);
-  else if (page === 'edit') view = school ? renderEditor(school, schools) : notFound();
-  else if (page === 'school') view = school ? renderDetail(school) : notFound();
-  else if (page === 'criteria') view = renderCriteria(schools, id ? id.split('+') : [], route);
-  else view = renderList(schools);
-  app.replaceChildren(view);
+  if (page === 'new') view = renderEditor(undefined, entities);
+  else if (page === 'edit') view = entity ? renderEditor(entity, entities) : notFound();
+  else if (page === app().domain.config.entity.route) view = entity ? renderDetail(entity) : notFound();
+  else if (page === 'criteria') view = renderCriteria(entities, id ? id.split('+') : [], route);
+  else view = renderList(entities);
+  main.replaceChildren(view);
 }
 
 window.addEventListener('hashchange', () => {

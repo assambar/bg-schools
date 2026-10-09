@@ -1,0 +1,9 @@
+id: brick-15
+name: Brick 15
+defaults:
+  src: { kind: imported, ref: sample-test, date: 2026-10-09 }
+values:
+  weight_kg: { v: 2.4, src: { source_ref: src-l11 } }
+  ports: { v: [ usb_c, hdmi, sd ], src: { source_ref: src-l12 } }
+  price: { v: { amount: 800, currency: EUR, per: once }, scope: { market: eu }, src: { source_ref: src-l13 } }
+  warranty: { v: { offered: false }, src: { source_ref: src-l14 } }

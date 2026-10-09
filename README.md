@@ -6,12 +6,39 @@ Compare private schools and kindergartens, built as a static GitHub Pages app wi
 
 ## How it works
 
-- **Catalog:** [`data/catalog/dimensions.yaml`](data/catalog/dimensions.yaml) lists every fact the app knows (about 100 *dimensions* in 11 areas), each with a value type, optional scope and **retrieval instructions** (how to fetch or refresh it). [`grades.yaml`](data/catalog/grades.yaml) is the grade ladder, [`neighborhoods.yaml`](data/catalog/neighborhoods.yaml) the places a site can be in.
+The app is generic: it compares and helps choose between *entities* of any kind, described by a **domain**. Schools are the first (and shipped) domain; everything school-specific lives in [`domains/schools/`](domains/schools) and the data files it points to.
+
+- **Domain config:** [`domains/schools/domain.yaml`](domains/schools/domain.yaml) names the catalog, data and criteria directories, the scope axes, locations, display hints, money, criteria page controls and the repository. Checked by [`schema/domain.schema.json`](schema/domain.schema.json) plus cross-file rules in [`src/lib/domain.ts`](src/lib/domain.ts).
+- **Catalog:** [`data/catalog/dimensions.yaml`](data/catalog/dimensions.yaml) lists every fact the app knows (about 100 *dimensions* in 11 groups), each with a value type, optional scope and **retrieval instructions** (how to fetch or refresh it), plus the record types and value sets they use. [`grades.yaml`](data/catalog/grades.yaml) holds the values of the `grade` scope axis, [`neighborhoods.yaml`](data/catalog/neighborhoods.yaml) the areas a site can be in.
 - **Schools:** one YAML file per school in [`data/schools/`](data/schools), named `<id>.yaml`. Values sit under `values:`, keyed by dimension id. A missing value means *unknown*; an explicit `false` means *confirmed no*.
-- **Schema:** generated from the catalog at build time ([`src/lib/schema-gen.ts`](src/lib/schema-gen.ts)), so a new dimension is a data-only change. The catalog itself is checked by [`schema/catalog.schema.json`](schema/catalog.schema.json).
-- **App:** Vite + TypeScript, no framework, no runtime requests. List, school detail (values grouped by area, each with a source badge and an expandable "How to update this"), and a YAML editor that validates live. Dimensions listed in the catalog's `editor_fields` also get form fields above the YAML (checkboxes for `multi_enum`, radio buttons for `enum`); `levels` (nursery, kindergarten, preschool, primary, lower/upper secondary) is one, so a school can offer several levels at once.
-- **Languages:** UI and catalog labels come from [`src/i18n/`](src/i18n) (`bg.json`, `en.json`). Default is the saved choice, then the browser language, then Bulgarian; `?lang=en` in the URL also works.
+- **Schema:** the JSON Schemas for entity files and criteria sets are generated from the domain at build time ([`src/lib/schema-gen.ts`](src/lib/schema-gen.ts)), so a new dimension is a data-only change. The catalog itself is checked by [`schema/catalog.schema.json`](schema/catalog.schema.json).
+- **App:** Vite + TypeScript, no framework, no runtime requests. List, detail (values grouped by area, each with a source badge and an expandable "How to update this"), criteria ranking, and a YAML editor that validates live. Dimensions listed in the domain's `display.editor_fields` also get form fields above the YAML (checkboxes for `multi_enum`, radio buttons for `enum`); for schools that is `levels` (nursery, kindergarten, preschool, primary, lower/upper secondary), so a school can offer several levels at once. All views read the domain; no view has school-specific code.
+- **Languages:** generic UI strings are in [`src/i18n/`](src/i18n), the domain's strings and labels in [`domains/schools/i18n/`](domains/schools/i18n) (`bg.json`, `en.json` in both). Default is the saved choice, then the browser language, then Bulgarian; `?lang=en` in the URL also works.
 - **CI:** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs the hygiene check, validation, tests and build on every pull request; pushes to `main` deploy to GitHub Pages.
+
+## Generic model
+
+```yaml
+# domains/<name>/domain.yaml
+id: schools
+entity: { route: school, id_pattern: '^[a-z0-9]+(-[a-z0-9]+)*$' }   # detail page #/school/<id>
+paths: { catalog, overlays?, entities, criteria, i18n }             # repository-relative
+scopes:                          # named scope axes; a dimension lists the ones it accepts (scopable)
+  - { id: year, pattern: '^[0-9]{4}/[0-9]{4}$', consecutive: true, context: { default: 2027/2028 }, fit: { exact: 2, fallback: 0.5, fallback_unscoped: 0.5 } }
+  - { id: grade, values_from: data/catalog/grades.yaml#systems.bg, list: true, measure: age, context: { default: pg2 }, fit: { … } }
+  - { id: site, ref: sites }
+locations?: { areas_from: …#neighborhoods, group_key: district, area_label: neighborhood, group_label: district }
+display: { title: name, subtitle?: name_en, sort_locale?, list_columns: [{ dim, label? }], editor_fields?: [levels], new_template }
+money?: { currencies: [EUR, BGN], base: EUR, rates: { BGN: 1.95583 } }
+criteria: { kinds: [...], default_selection: [...], controls: [{ kind, type: toggle|select, label?, none? }] }
+repo?: { name: owner/repo, branch: main }
+storage_prefix: bg-schools       # browser-only state keys
+```
+
+- **Dimension types** (catalog): `bool`, `int`, `number`, `text`, `text_list`, `url`, `date`, `date_list`, `enum` / `multi_enum` (+ `values: <value set>`), `range`, `time_range`, `money`, or a **record type** declared in the catalog's `records:` (typed fields `bool | int | number | text | time_range | enum | money`, display `labels` / `format` / `hidden`, and a `presence` field used by `exists`). Schools declare `offering`, `service`, `fee_item`, `link` and `rating`.
+- **Value record** (entity file): `{ v, src?, scope?, note? }`, or a list of them. `src` is the provenance `{ kind, source_ref, date, url?, ref?, by?, verified?, check?, note? }` (`defaults.src` fills gaps); `scope` maps scope-axis ids to values.
+- **Criteria set:** `{ id, kind, require?: [rule], prefer?: [rule] }`, rules over dimension ids (`is`, `in`, `has`, `gte`/`lte`, `exists`, `where`, `covers: context`, `weight`) plus, with `locations`, area and distance rules. Unknown values never exclude; ranking uses score × coverage.
+- **Another domain** is a new `domains/<name>/` (config, catalog, i18n) and its data; build it with `DOMAIN_DIR=domains/<name> npm run build`. [`tests/fixtures/laptops/`](tests/fixtures/laptops) is a tiny test-only example that is validated and rendered by the same code in the tests and never shipped.
 
 ## School file
 
@@ -53,11 +80,11 @@ The app shows the entry that fits the chosen year and group best (exact scope, t
 
 ### Scope
 
-`scope: { year: 2027/2028, grade: pg2, site: main }`, all optional. Each dimension declares which keys it accepts (`scopable`); CI rejects others. `grade` may be a list (`[pg1, pg2]`).
+`scope: { year: 2027/2028, grade: pg2, site: main }`, all optional; the axes come from the domain config. Each dimension declares which axes it accepts (`scopable`); CI rejects others. `grade` may be a list (`[pg1, pg2]`).
 
 ### Value types
 
-`bool`, `int`, `number`, `text`, `text_list`, `url`, `date`, `date_list`, `enum` / `multi_enum` (values from a catalog `value_sets` entry), `range` (`{min, max}`), `time_range` (`08:00-18:30`), `money` (`{amount | min+max, currency: EUR|BGN, per: month|year|once, months?}`), `fee_item` (`{included, price?}`), `rating` (`{score, max, count?, site?}`), `offering` (`{offered, location?: on_site|off_site|both, included?, frequency?, partner?, from_age?}`), `service` (`{available, included?, hours?, frequency?, price?}`), `link` (`{exists, name?, grades?, same_campus?, curriculum?, tuition?}`).
+`bool`, `int`, `number`, `text`, `text_list`, `url`, `date`, `date_list`, `enum` / `multi_enum` (values from a catalog `value_sets` entry), `range` (`{min, max}`), `time_range` (`08:00-18:30`), `money` (`{amount | min+max, currency: EUR|BGN, per: month|year|once, months?}`), and the schools domain's record types: `fee_item` (`{included, price?}`), `rating` (`{score, max, count?, site?}`), `offering` (`{offered, location?: on_site|off_site|both, included?, frequency?, partner?, from_age?}`), `service` (`{available, included?, hours?, frequency?, price?}`), `link` (`{exists, name?, grades?, same_campus?, curriculum?, tuition?}`).
 
 ### Retrieval instructions
 
@@ -93,12 +120,12 @@ prefer:                          # soft: scored, optional weight (default 1)
 - Score = soft points met ÷ soft points with a known value; coverage = known ÷ all. The ranking puts confirmed schools first, then sorts by score × coverage.
 - Money is compared per year in EUR: monthly × `months` (default 12); BGN at 1.95583.
 - Defaults: `basics`; `budget-low` / `budget-medium` / `budget-high` (sample caps of €6,000 / €9,000 / €25,000 a year); `location-near` (only your neighbourhoods), `location-wider` (near ones rank higher), `anywhere`. Your neighbourhood list is chosen on the page and kept in the browser only. No site has coordinates yet, so distance rules have nothing to work with.
-- Labels: `criteria.set.<id>` in each dictionary. `npm run validate` checks the files against the catalog.
+- Labels: `criteria.set.<id>` in each domain dictionary. Kinds and page controls come from `criteria` in the domain config. `npm run validate` checks the files against the catalog.
 
 ## Adding things
 
-- **A dimension:** add it to `dimensions.yaml` (or to a `families` list) and add `dim.<id>` (plus any new `enum.<set>.<value>`) to every file in `src/i18n/`. Tests fail if a label is missing.
-- **A language:** copy `src/i18n/en.json` to `<code>.json` and translate it. It appears in the language menu automatically.
+- **A dimension:** add it to `dimensions.yaml` (or to a `families` list) and add `dim.<id>` (plus any new `enum.<set>.<value>`) to every file in `domains/schools/i18n/`. Tests fail if a label is missing.
+- **A language:** copy `src/i18n/en.json` and `domains/schools/i18n/en.json` to `<code>.json` and translate them. It appears in the language menu automatically.
 
 ## Repository hygiene
 
@@ -111,7 +138,7 @@ Requires Node 22.18+ (CI uses Node 24).
 ```sh
 npm ci
 npm run dev        # http://localhost:5173/bg-schools/
-npm run validate   # catalog + data/schools/*.yaml
+npm run validate   # domain config, catalog, data/schools/*.yaml, criteria
 npm run hygiene
 npm test
 npm run build      # output in dist/

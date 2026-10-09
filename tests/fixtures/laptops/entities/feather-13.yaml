@@ -1,0 +1,11 @@
+id: feather-13
+name: Feather 13
+defaults:
+  src: { kind: imported, ref: sample-test, date: 2026-10-09 }
+values:
+  weight_kg: { v: 1.1, src: { kind: extracted, source_ref: src-l01, url: https://example.com/feather-13/specs, verified: true } }
+  ports: { v: [ usb_c ], src: { source_ref: src-l02 } }
+  price:
+    - { v: { amount: 1200, currency: EUR, per: once }, scope: { market: eu }, src: { source_ref: src-l03 } }
+    - { v: { amount: 1100, currency: USD, per: once }, scope: { market: us }, src: { source_ref: src-l04 } }
+  warranty: { v: { offered: true, years: 2 }, src: { source_ref: src-l05 } }

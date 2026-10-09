@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { catalogLabelKeys } from '../src/lib/catalog.ts';
+import { readFileSync } from 'node:fs';
+import { domainLabelKeys } from '../src/lib/domain.ts';
 import { formatValue } from '../src/lib/format.ts';
 import { detectLang, dictionaries, LANGS, setLang, t } from '../src/lib/i18n.ts';
-import { loadCatalog } from '../scripts/schema.ts';
+import { setup } from './helpers.ts';
 
-const { catalog } = loadCatalog();
+const { dom: catalog, i18n } = setup();
+const core = (lang: string) => JSON.parse(readFileSync(`src/i18n/${lang}.json`, 'utf8')) as Record<string, string>;
 
 describe('dictionaries', () => {
   it('has English and Bulgarian with identical keys', () => {
@@ -13,9 +15,17 @@ describe('dictionaries', () => {
     for (const lang of LANGS) expect(Object.keys(dictionaries[lang]).sort(), lang).toEqual(en);
   });
 
-  it('labels every catalog group, dimension, enum value, grade and neighbourhood in every language', () => {
+  it('keeps generic UI strings and domain strings apart, with the same keys in every language', () => {
     for (const lang of LANGS) {
-      const missing = catalogLabelKeys(catalog).filter((k) => !(k in dictionaries[lang]));
+      expect(Object.keys(core(lang)).sort(), lang).toEqual(Object.keys(core('en')).sort());
+      expect(Object.keys(i18n[lang]).sort(), lang).toEqual(Object.keys(i18n.en).sort());
+      expect(Object.keys(core(lang)).filter((k) => k in i18n[lang]), lang).toEqual([]);
+    }
+  });
+
+  it('labels every domain group, dimension, enum value, scope value and area in every language', () => {
+    for (const lang of LANGS) {
+      const missing = domainLabelKeys(catalog).filter((k) => !(k in dictionaries[lang]));
       expect(missing, lang).toEqual([]);
     }
   });
@@ -45,10 +55,10 @@ describe('t() and language detection', () => {
     const offering = catalog.byId.get('activity.swimming')!;
     const tuition = catalog.byId.get('tuition')!;
     setLang('en');
-    expect(formatValue(offering, { offered: true, location: 'off_site', included: false })).toBe('Yes · off site · extra cost');
-    expect(formatValue(tuition, { min: 500, max: 580, currency: 'EUR', per: 'month' })).toBe('€500–580 / month');
+    expect(formatValue(catalog, offering, { offered: true, location: 'off_site', included: false })).toBe('Yes · off site · extra cost');
+    expect(formatValue(catalog, tuition, { min: 500, max: 580, currency: 'EUR', per: 'month' })).toBe('€500–580 / month');
     setLang('bg');
-    expect(formatValue(offering, { offered: true, location: 'on_site', included: true })).toBe('Да · на място · включено');
-    expect(formatValue(tuition, { amount: 400, currency: 'BGN', per: 'month' })).toBe('400 лв. / месец');
+    expect(formatValue(catalog, offering, { offered: true, location: 'on_site', included: true })).toBe('Да · на място · включено');
+    expect(formatValue(catalog, tuition, { amount: 400, currency: 'BGN', per: 'month' })).toBe('400 лв. / месец');
   });
 });

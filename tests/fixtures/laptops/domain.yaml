@@ -1,0 +1,37 @@
+# Test-only second domain: proves the generic app works for things other than schools.
+# Used by tests/generic.test.ts; never built into the site.
+id: laptops
+entity:
+  route: laptop
+  id_pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+paths:
+  catalog: tests/fixtures/laptops/dimensions.yaml
+  entities: tests/fixtures/laptops/entities
+  criteria: tests/fixtures/laptops/criteria
+  i18n: tests/fixtures/laptops/i18n
+scopes:
+  - id: market
+    values: [eu, us]
+    context: { default: eu }
+    fit: { exact: 1, fallback: 0, fallback_unscoped: 0 }
+display:
+  title: name
+  list_columns:
+    - { dim: price }
+    - { dim: weight_kg }
+  editor_fields: [ports]
+  new_template: |
+    id: new-laptop
+    name: New laptop
+    values: {}
+money:
+  currencies: [EUR, USD]
+  base: EUR
+  rates: { USD: 1.1 }
+criteria:
+  kinds: [basics, budget]
+  default_selection: [portable]
+  controls:
+    - { kind: basics, type: toggle }
+    - { kind: budget, type: select, label: criteria.budget, none: true }
+storage_prefix: laptops-test

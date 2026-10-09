@@ -1,11 +1,9 @@
-// Criteria sets: hard rules (`require`) exclude a school only when the value is known and
-// fails; unknown values keep the school but mark it "unverified". Soft rules (`prefer`)
+// Criteria sets (generic): hard rules (`require`) exclude an entity only when the value is
+// known and fails; unknown values keep the entity but mark it "unverified". Soft rules (`prefer`)
 // score it: score = weight of passed rules / weight of rules with a known value, and
 // coverage = weight known / weight of all soft rules. Ranking uses score × coverage.
-import type { Catalog } from './catalog.ts';
-import { pickEntry, type Context, type Money, type School } from './school.ts';
-
-export const BGN_PER_EUR = 1.95583;
+import { contextAxes, isRecordType, type Context, type Domain } from './domain.ts';
+import { pickEntry, type Money, type Entity } from './entity.ts';
 
 export interface Rule {
   dim?: string;
@@ -22,10 +20,10 @@ export interface Rule {
   weight?: number;
 }
 
-export const SET_KINDS = ['basics', 'budget', 'location', 'custom'] as const;
 export interface CriteriaSet {
   id: string;
-  kind: (typeof SET_KINDS)[number];
+  /** One of the domain config's `criteria.kinds`. */
+  kind: string;
   require?: Rule[];
   prefer?: Rule[];
 }
@@ -40,8 +38,8 @@ export interface RuleResult {
   unverified: boolean;
   reason?: 'missing' | 'range' | 'no_coordinates' | 'no_area';
 }
-export interface SchoolResult {
-  school: School;
+export interface EntityResult {
+  entity: Entity;
   excluded: boolean;
   /** A hard rule is unknown or rests on an unverified value. */
   unverified: boolean;
@@ -57,10 +55,13 @@ export interface EvalOptions {
   place?: [number, number];
 }
 
-/** Annual amount in EUR as a range (monthly × months, default 12; BGN at the fixed rate). */
-export function annualEur(m: Money): { min: number; max: number } {
+/**
+ * Annual amount in the domain's base currency as a range (monthly × months, default 12;
+ * other currencies at the fixed `money.rates`, units per 1 base).
+ */
+export function annualBase(dom: Domain, m: Money): { min: number; max: number } {
   const factor = m.per === 'month' ? (m.months ?? 12) : 1;
-  const rate = m.currency === 'BGN' ? 1 / BGN_PER_EUR : 1;
+  const rate = 1 / (dom.config.money?.rates?.[m.currency] ?? 1);
   const lo = m.amount ?? m.min!;
   const hi = m.amount ?? m.max!;
   return { min: lo * factor * rate, max: hi * factor * rate };
@@ -70,12 +71,12 @@ const isMoney = (x: unknown): x is Money => typeof x === 'object' && x !== null 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 const combine = (outcomes: Outcome[]): Outcome => (outcomes.includes('fail') ? 'fail' : outcomes.includes('unknown') ? 'unknown' : 'pass');
 
-function compare(v: unknown, bound: number | Money, op: 'lte' | 'gte'): { outcome: Outcome; reason?: 'range' } {
+function compare(dom: Domain, v: unknown, bound: number | Money, op: 'lte' | 'gte'): { outcome: Outcome; reason?: 'range' } {
   let lo: number, hi: number, b: number;
   if (isMoney(bound)) {
     if (!isMoney(v)) return { outcome: 'unknown' };
-    ({ min: lo, max: hi } = annualEur(v));
-    b = annualEur(bound).max;
+    ({ min: lo, max: hi } = annualBase(dom, v));
+    b = annualBase(dom, bound).max;
   } else {
     if (typeof v !== 'number') return { outcome: 'unknown' };
     lo = hi = v;
@@ -86,10 +87,13 @@ function compare(v: unknown, bound: number | Money, op: 'lte' | 'gte'): { outcom
   return lo >= b - eps ? { outcome: 'pass' } : hi < b - eps ? { outcome: 'fail' } : { outcome: 'unknown', reason: 'range' };
 }
 
-/** Age the child has in the context grade (see grades.yaml). */
-function contextAge(cat: Catalog, ctx: Context): number | undefined {
-  const g = cat.grades.find((x) => x.id === ctx.grade);
-  return g?.age ?? g?.age_min;
+/** The context's measure (e.g. age) from the context axis that declares `measure`. */
+function contextMeasure(dom: Domain, ctx: Context): number | undefined {
+  const axis = contextAxes(dom).find((a) => a.measure);
+  if (!axis) return undefined;
+  const item = dom.scopeValues[axis.id]?.find((x) => x.id === ctx[axis.id]);
+  const m = item?.[axis.measure!] ?? item?.[`${axis.measure}_min`];
+  return typeof m === 'number' ? m : undefined;
 }
 
 function km(a: [number, number], b: [number, number]): number {
@@ -101,29 +105,30 @@ function km(a: [number, number], b: [number, number]): number {
 }
 
 /** Evaluates one rule; null when the rule doesn't apply (an empty editable neighbourhood list). */
-export function evalRule(s: School, rule: Rule, cat: Catalog, opts: EvalOptions, hard: boolean): RuleResult | null {
+export function evalRule(s: Entity, rule: Rule, dom: Domain, opts: EvalOptions, hard: boolean): RuleResult | null {
   const base = { rule, hard, weight: rule.weight ?? 1 };
   if (rule.neighborhood) {
     const list = rule.neighborhood.editable && opts.near ? opts.near : rule.neighborhood.in;
     if (list.length === 0) return null;
-    const sites = s.sites.filter((x) => x.neighborhood !== undefined);
+    const sites = (s.sites ?? []).filter((x) => x.neighborhood !== undefined);
     if (sites.length === 0) return { ...base, outcome: 'unknown', unverified: false, reason: 'no_area' };
     const matching = sites.filter((x) => ([] as string[]).concat(x.neighborhood!).some((n) => list.includes(n)));
     return { ...base, outcome: matching.length ? 'pass' : 'fail', unverified: matching.length > 0 && matching.every((x) => x.src?.verified !== true) };
   }
   if (rule.within_km) {
-    const geos = s.sites.flatMap((x) => (x.geo ? [x.geo] : []));
+    const geos = (s.sites ?? []).flatMap((x) => (x.geo ? [x.geo] : []));
     if (!opts.place || geos.length === 0) return { ...base, outcome: 'unknown', unverified: false, reason: 'no_coordinates' };
     return { ...base, outcome: geos.some((g) => km(g, opts.place!) <= rule.within_km!.km) ? 'pass' : 'fail', unverified: false };
   }
-  const picked = pickEntry(s, rule.dim!, opts.ctx);
+  const picked = pickEntry(dom, s, rule.dim!, opts.ctx);
   if (!picked) return { ...base, outcome: 'unknown', unverified: false, reason: 'missing' };
   const v = picked.entry.v;
   const o = (typeof v === 'object' && v !== null ? v : {}) as Record<string, unknown>;
   const outcomes: Outcome[] = [];
   let reason: RuleResult['reason'];
   if (rule.exists !== undefined) {
-    const present = !(o.offered === false || o.available === false || o.exists === false || v === false);
+    const presence = dom.records[dom.byId.get(rule.dim!)?.type ?? '']?.presence;
+    const present = !(v === false || (presence !== undefined && o[presence] === false));
     outcomes.push(present === rule.exists ? 'pass' : 'fail');
   }
   if (rule.is !== undefined) outcomes.push(same(v, rule.is) ? 'pass' : 'fail');
@@ -137,12 +142,12 @@ export function evalRule(s: School, rule: Rule, cat: Catalog, opts: EvalOptions,
   }
   for (const op of ['lte', 'gte'] as const) {
     if (rule[op] === undefined) continue;
-    const r = compare(v, rule[op]!, op);
+    const r = compare(dom, v, rule[op]!, op);
     outcomes.push(r.outcome);
     reason ??= r.reason;
   }
   if (rule.covers === 'context') {
-    const age = contextAge(cat, opts.ctx);
+    const age = contextMeasure(dom, opts.ctx);
     outcomes.push(age === undefined ? 'unknown' : (o.min as number) <= age && age <= (o.max as number) ? 'pass' : 'fail');
   }
   const outcome = combine(outcomes);
@@ -150,11 +155,11 @@ export function evalRule(s: School, rule: Rule, cat: Catalog, opts: EvalOptions,
   return { ...base, outcome, unverified, ...(reason && outcome === 'unknown' ? { reason } : {}) };
 }
 
-export function evaluate(s: School, sets: readonly CriteriaSet[], cat: Catalog, opts: EvalOptions): SchoolResult {
+export function evaluate(s: Entity, sets: readonly CriteriaSet[], dom: Domain, opts: EvalOptions): EntityResult {
   const results: RuleResult[] = [];
   for (const set of sets) {
-    for (const r of set.require ?? []) { const x = evalRule(s, r, cat, opts, true); if (x) results.push(x); }
-    for (const r of set.prefer ?? []) { const x = evalRule(s, r, cat, opts, false); if (x) results.push(x); }
+    for (const r of set.require ?? []) { const x = evalRule(s, r, dom, opts, true); if (x) results.push(x); }
+    for (const r of set.prefer ?? []) { const x = evalRule(s, r, dom, opts, false); if (x) results.push(x); }
   }
   const hard = results.filter((r) => r.hard);
   const soft = results.filter((r) => !r.hard);
@@ -162,7 +167,7 @@ export function evaluate(s: School, sets: readonly CriteriaSet[], cat: Catalog, 
   const known = soft.filter((r) => r.outcome !== 'unknown').reduce((n, r) => n + r.weight, 0);
   const passed = soft.filter((r) => r.outcome === 'pass').reduce((n, r) => n + r.weight, 0);
   return {
-    school: s,
+    entity: s,
     excluded: hard.some((r) => r.outcome === 'fail'),
     unverified: hard.some((r) => r.outcome === 'unknown' || r.unverified),
     score: known > 0 ? passed / known : null,
@@ -172,42 +177,41 @@ export function evaluate(s: School, sets: readonly CriteriaSet[], cat: Catalog, 
 }
 
 /**
- * Ranked: kept schools first (fully confirmed before unverified), then by points earned out of
+ * Ranked: kept entities first (fully confirmed before unverified), then by points earned out of
  * all soft-rule points (score × coverage, so unknown counts as 0), then score, then name.
  */
-export function rank(schools: readonly School[], sets: readonly CriteriaSet[], cat: Catalog, opts: EvalOptions): SchoolResult[] {
-  return schools
-    .map((s) => evaluate(s, sets, cat, opts))
+export function rank(entities: readonly Entity[], sets: readonly CriteriaSet[], dom: Domain, opts: EvalOptions): EntityResult[] {
+  return entities
+    .map((s) => evaluate(s, sets, dom, opts))
     .sort(
       (a, b) =>
         Number(a.excluded) - Number(b.excluded) ||
         Number(a.unverified) - Number(b.unverified) ||
         (b.score ?? 0) * b.coverage - (a.score ?? 0) * a.coverage ||
         (b.score ?? -1) - (a.score ?? -1) ||
-        a.school.name.localeCompare(b.school.name, 'bg'),
+        a.entity.name.localeCompare(b.entity.name, dom.config.display.sort_locale),
     );
 }
 
 /** Problems that make a criteria set meaningless against this catalog. */
-export function checkCriteria(set: CriteriaSet, cat: Catalog): string[] {
+export function checkCriteria(set: CriteriaSet, dom: Domain): string[] {
   const errors: string[] = [];
   const all = [...(set.require ?? []).map((r) => [r, 'require'] as const), ...(set.prefer ?? []).map((r) => [r, 'prefer'] as const)];
   all.forEach(([r, where], i) => {
     const at = `${where}[${i}]`;
     if (r.neighborhood) {
-      for (const n of r.neighborhood.in) if (!cat.neighborhoods.some((x) => x.id === n)) errors.push(`${at}: unknown neighbourhood "${n}"`);
+      for (const n of r.neighborhood.in) if (!dom.areas.some((x) => x.id === n)) errors.push(`${at}: unknown neighbourhood "${n}"`);
       return;
     }
     if (r.within_km) return;
-    const d = cat.byId.get(r.dim ?? '');
+    const d = dom.byId.get(r.dim ?? '');
     if (!d) { errors.push(`${at}: unknown dimension "${r.dim}"`); return; }
-    const objectTypes = ['offering', 'service', 'fee_item', 'link', 'rating', 'range', 'money'];
     if ((r.lte !== undefined || r.gte !== undefined) && !['int', 'number', 'money'].includes(d.type)) errors.push(`${at}: ${d.id}: lte/gte need a number or money dimension`);
     for (const op of ['lte', 'gte'] as const) if (r[op] !== undefined && (d.type === 'money') !== isMoney(r[op])) errors.push(`${at}: ${d.id}: ${op} must be ${d.type === 'money' ? 'money' : 'a number'}`);
     if (r.covers && d.type !== 'range') errors.push(`${at}: ${d.id}: covers needs a range dimension`);
-    if (r.where && !objectTypes.includes(d.type)) errors.push(`${at}: ${d.id}: where needs an object value type`);
+    if (r.where && !(isRecordType(d) || d.type === 'range' || d.type === 'money')) errors.push(`${at}: ${d.id}: where needs an object value type`);
     if (r.has !== undefined && !['multi_enum', 'text_list'].includes(d.type)) errors.push(`${at}: ${d.id}: has needs a list dimension`);
-    const enumVals = d.values ? cat.valueSets[d.values] : undefined;
+    const enumVals = d.values ? dom.valueSets[d.values] : undefined;
     for (const x of [...([] as unknown[]).concat(r.has ?? []), ...(r.in ?? []), ...(r.is !== undefined && d.type === 'enum' ? [r.is] : [])]) {
       if (enumVals && !enumVals.includes(String(x))) errors.push(`${at}: ${d.id}: "${x}" is not in ${d.values}`);
     }

@@ -2,7 +2,7 @@
 // `editor_fields`). They read from and write into the YAML text, so the YAML stays
 // the single source of truth. Pure: no DOM.
 import { isMap, isSeq, parseDocument } from 'yaml';
-import type { Dimension } from './catalog.ts';
+import type { Dimension } from './domain.ts';
 
 export type FieldState =
   | { state: 'invalid' } // the YAML doesn't parse or has no values map

@@ -1,29 +1,34 @@
-// CLI: node scripts/validate.ts [dir]   (default: data/schools)
-// Checks the catalog, every school file, then the criteria sets. Exits 1 on any problem. Used by CI.
+// CLI: node scripts/validate.ts [domain-dir]   (default: domains/schools, or DOMAIN_DIR)
+// Checks the domain config and catalog, every entity file, then the criteria sets.
+// Exits 1 on any problem. Used by CI.
 import { checkCriteriaDir, checkDataDir } from './check-data.ts';
-import { loadCatalog } from './schema.ts';
+import { DEFAULT_DOMAIN_DIR, loadDomain, type LoadedDomain } from './load-domain.ts';
 
-const dir = process.argv[2] ?? 'data/schools';
+const dir = process.argv[2] ?? DEFAULT_DOMAIN_DIR;
+let loaded: LoadedDomain;
 try {
-  const { catalog } = loadCatalog();
-  console.log(`✓ catalog: ${catalog.dimensions.length} dimensions in ${catalog.groups.length} groups`);
+  loaded = loadDomain(dir);
+  const d = loaded.domain;
+  console.log(`✓ domain "${d.config.id}" (${dir}): ${d.dimensions.length} dimensions in ${d.groups.length} groups`);
 } catch (e) {
-  console.error(`✗ catalog problems:\n${(e as Error).message}`);
+  console.error(`✗ domain problems in ${dir}:\n${(e as Error).message}`);
   process.exit(1);
 }
-const { schools, errors } = checkDataDir(dir);
+const { domain } = loaded;
+const { paths } = domain.config;
+const { entities, errors } = checkDataDir(paths.entities, domain);
 if (errors.length > 0) {
-  console.error(`✗ ${errors.length} problem(s) in ${dir}:`);
+  console.error(`✗ ${errors.length} problem(s) in ${paths.entities}:`);
   for (const e of errors) console.error(`  ${e}`);
   process.exit(1);
 }
-const values = schools.reduce((n, s) => n + Object.values(s.values).flat().length, 0);
-console.log(`✓ ${schools.length} school file(s) in ${dir} are valid (${values} values)`);
+const values = entities.reduce((n, s) => n + Object.values(s.values).flat().length, 0);
+console.log(`✓ ${entities.length} file(s) in ${paths.entities} are valid (${values} values)`);
 
-const criteria = checkCriteriaDir('data/criteria');
+const criteria = checkCriteriaDir(paths.criteria, domain);
 if (criteria.errors.length > 0) {
-  console.error(`✗ ${criteria.errors.length} problem(s) in data/criteria:`);
+  console.error(`✗ ${criteria.errors.length} problem(s) in ${paths.criteria}:`);
   for (const e of criteria.errors) console.error(`  ${e}`);
   process.exit(1);
 }
-console.log(`✓ ${criteria.sets.length} criteria set(s) in data/criteria are valid`);
+console.log(`✓ ${criteria.sets.length} criteria set(s) in ${paths.criteria} are valid`);

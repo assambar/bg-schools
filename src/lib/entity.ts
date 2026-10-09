@@ -1,10 +1,8 @@
-// School file types and pure helpers (value resolution, cross-file checks, YAML output).
+// Entity file types (one YAML file per thing being compared) and pure helpers: value
+// resolution, cross-file checks, YAML output. Generic: everything domain-specific comes
+// from the Domain (config + catalog).
 import { Document, isMap, isScalar, isSeq, visit } from 'yaml';
-import { SCOPE_KEYS, type Catalog, type CheckFlag, type Retrieval, type SourceKind } from './catalog.ts';
-
-export const REPO = 'assambar/bg-schools';
-export const BRANCH = 'main';
-export const DATA_DIR = 'data/schools';
+import { contextAxes, type CheckFlag, type Context, type Domain, type Retrieval, type SourceKind } from './domain.ts';
 
 export interface Src {
   kind?: SourceKind;
@@ -18,11 +16,8 @@ export interface Src {
   note?: string;
 }
 
-export interface Scope {
-  year?: string;
-  grade?: string | string[];
-  site?: string;
-}
+/** Named scope axes (domain config `scopes`), e.g. { year: 2027/2028, grade: [pg1, pg2] }. */
+export type Scope = Record<string, string | string[]>;
 
 export interface Entry {
   v: unknown;
@@ -31,6 +26,7 @@ export interface Entry {
   note?: string;
 }
 
+/** A location of an entity (only in domains with `locations`). `neighborhood` holds area ids. */
 export interface Site {
   id: string;
   address?: string;
@@ -39,11 +35,11 @@ export interface Site {
   src?: Src;
 }
 
-export interface School {
+export interface Entity {
   id: string;
   name: string;
   name_en?: string;
-  sites: Site[];
+  sites?: Site[];
   defaults?: { src?: Src };
   values: Record<string, Entry | Entry[]>;
   retrieval?: Record<string, Retrieval & { replace?: boolean }>;
@@ -52,31 +48,34 @@ export interface School {
 /** A money value (see schema-gen): an amount or a min–max range. */
 export interface Money { amount?: number; min?: number; max?: number; currency: string; per: string; months?: number }
 
-export interface Context {
-  year: string;
-  grade: string;
-}
-
-export const entriesOf = (s: School, dim: string): Entry[] => {
+export const entriesOf = (s: Entity, dim: string): Entry[] => {
   const v = s.values[dim];
   return v === undefined ? [] : Array.isArray(v) ? v : [v];
 };
 
 /** A value's provenance with the file-level defaults applied. */
-export const resolveSrc = (s: School, e: Entry): Src => ({ ...(s.defaults?.src ?? {}), ...(e.src ?? {}) });
+export const resolveSrc = (s: Entity, e: Entry): Src => ({ ...(s.defaults?.src ?? {}), ...(e.src ?? {}) });
 
 const PRECEDENCE: SourceKind[] = ['visit', 'call', 'manual', 'user-edit', 'extracted', 'imported', 'derived'];
 
-/** How well an entry's scope fits the current context. Higher is better; -1 = other year. */
-export function scopeFit(scope: Scope | undefined, ctx: Context): number {
+/**
+ * How well an entry's scope fits the context, from each context axis's `fit` weights.
+ * Unscoped = 1; matching every context axis: 1 + `exact` per named axis; otherwise
+ * -3 + `fallback` / `fallback_unscoped` per axis that still matches (negative = "other").
+ */
+export function scopeFit(dom: Domain, scope: Scope | undefined, ctx: Context): number {
   if (!scope) return 1;
-  const grades = scope.grade === undefined ? undefined : ([] as string[]).concat(scope.grade);
-  const yearOk = !scope.year || scope.year === ctx.year;
-  const gradeOk = !grades || grades.includes(ctx.grade);
-  // Another year or grade: negative, but prefer the right grade from another year
-  // (e.g. last year's price for the same group) over the right year for another grade.
-  if (!yearOk || !gradeOk) return -3 + (gradeOk ? (grades ? 2 : 1) : 0) + (yearOk ? 0.5 : 0);
-  return 1 + (scope.year ? 2 : 0) + (grades ? 1 : 0);
+  let ok = true;
+  let exact = 1;
+  let fallback = -3;
+  for (const a of contextAxes(dom)) {
+    const v = scope[a.id];
+    const named = v !== undefined;
+    if (named && !([] as string[]).concat(v).includes(ctx[a.id])) { ok = false; continue; }
+    fallback += named ? a.fit!.fallback : a.fit!.fallback_unscoped;
+    if (named) exact += a.fit!.exact;
+  }
+  return ok ? exact : fallback;
 }
 
 export type Match = 'exact' | 'general' | 'other';
@@ -84,12 +83,11 @@ export type Match = 'exact' | 'general' | 'other';
 /**
  * The entry to show and filter on for a context: best scope fit first, then source
  * precedence (visit > call > manual > user-edit > extracted > imported > derived), then newest.
- * Entries for another year or grade are only used when nothing else exists ("other");
- * among those, the same grade from another year wins.
+ * Entries for another context (e.g. another year) are only used when nothing else exists ("other").
  */
-export function pickEntry(s: School, dim: string, ctx: Context): { entry: Entry; src: Src; match: Match } | undefined {
+export function pickEntry(dom: Domain, s: Entity, dim: string, ctx: Context): { entry: Entry; src: Src; match: Match } | undefined {
   const ranked = entriesOf(s, dim)
-    .map((entry) => ({ entry, src: resolveSrc(s, entry), fit: scopeFit(entry.scope, ctx) }))
+    .map((entry) => ({ entry, src: resolveSrc(s, entry), fit: scopeFit(dom, entry.scope, ctx) }))
     .sort(
       (a, b) =>
         b.fit - a.fit ||
@@ -103,23 +101,24 @@ export function pickEntry(s: School, dim: string, ctx: Context): { entry: Entry;
 }
 
 /** True if several entries with the same scope as the shown one disagree. */
-export function hasConflict(s: School, dim: string, ctx: Context): boolean {
-  const picked = pickEntry(s, dim, ctx);
+export function hasConflict(dom: Domain, s: Entity, dim: string, ctx: Context): boolean {
+  const picked = pickEntry(dom, s, dim, ctx);
   if (!picked) return false;
   const key = JSON.stringify(picked.entry.scope ?? {});
   const same = entriesOf(s, dim).filter((e) => JSON.stringify(e.scope ?? {}) === key);
   return new Set(same.map((e) => JSON.stringify(e.v))).size > 1;
 }
 
-export function neighborhoodsOf(s: School): string[] {
-  return [...new Set(s.sites.flatMap((site) => (site.neighborhood === undefined ? [] : ([] as string[]).concat(site.neighborhood))))];
+/** Area ids of all of an entity's sites. */
+export function areasOf(s: Entity): string[] {
+  return [...new Set((s.sites ?? []).flatMap((site) => (site.neighborhood === undefined ? [] : ([] as string[]).concat(site.neighborhood))))];
 }
 
 /** Cross-file rules the JSON Schema can't express. `refs` collects source_refs across files. */
-export function checkSchool(s: School, cat: Catalog, refs: Map<string, string> = new Map()): string[] {
+export function checkEntity(s: Entity, dom: Domain, refs: Map<string, string> = new Map()): string[] {
   const errors: string[] = [];
   const siteIds = new Set<string>();
-  for (const site of s.sites) {
+  for (const site of s.sites ?? []) {
     if (siteIds.has(site.id)) errors.push(`sites: duplicate site id "${site.id}"`);
     siteIds.add(site.id);
     if ((site.address || site.neighborhood || site.geo) && !site.src?.source_ref) errors.push(`sites/${site.id}: needs src.source_ref`);
@@ -130,20 +129,22 @@ export function checkSchool(s: School, cat: Catalog, refs: Map<string, string> =
     }
   }
   for (const [dimId, raw] of Object.entries(s.values)) {
-    const dim = cat.byId.get(dimId);
+    const dim = dom.byId.get(dimId);
     if (!dim) continue; // the schema already reports unknown dimensions
     const list = Array.isArray(raw) ? raw : [raw];
     list.forEach((e, i) => {
       const where = list.length > 1 ? `${dimId}[${i}]` : dimId;
-      for (const key of SCOPE_KEYS) {
-        if (e.scope?.[key] !== undefined && !(dim.scopable ?? []).includes(key)) {
-          errors.push(`${where}: "${dimId}" can't be scoped by ${key}`);
+      for (const axis of dom.config.scopes) {
+        const v = e.scope?.[axis.id];
+        if (v === undefined) continue;
+        if (!(dim.scopable ?? []).includes(axis.id)) errors.push(`${where}: "${dimId}" can't be scoped by ${axis.id}`);
+        for (const x of ([] as string[]).concat(v)) {
+          if (axis.ref === 'sites' && !siteIds.has(x)) errors.push(`${where}: unknown site "${x}"`);
+          if (axis.consecutive) {
+            const [a, b] = x.split('/').map(Number);
+            if (b !== a + 1) errors.push(`${where}: ${axis.id} must be consecutive years, e.g. 2027/2028`);
+          }
         }
-      }
-      if (e.scope?.site && !siteIds.has(e.scope.site)) errors.push(`${where}: unknown site "${e.scope.site}"`);
-      if (e.scope?.year) {
-        const [a, b] = e.scope.year.split('/').map(Number);
-        if (b !== a + 1) errors.push(`${where}: school year must be consecutive years, e.g. 2027/2028`);
       }
       const src = resolveSrc(s, e);
       if (!src.kind) errors.push(`${where}: provenance needs a kind (here or in defaults.src)`);
@@ -184,21 +185,21 @@ const orderEntry = (e: Entry): Entry => {
 };
 
 /** Canonical file layout: fixed key order, values in catalog order, so diffs stay small. */
-export function canonical(s: School, cat: Catalog): School {
-  const values: School['values'] = {};
-  const known = cat.dimensions.map((d) => d.id).filter((id) => id in s.values);
-  for (const id of [...known, ...Object.keys(s.values).filter((k) => !cat.byId.has(k))]) {
+export function canonical(s: Entity, dom: Domain): Entity {
+  const values: Entity['values'] = {};
+  const known = dom.dimensions.map((d) => d.id).filter((id) => id in s.values);
+  for (const id of [...known, ...Object.keys(s.values).filter((k) => !dom.byId.has(k))]) {
     const v = s.values[id];
     values[id] = Array.isArray(v) ? v.map(orderEntry) : orderEntry(v);
   }
-  const out = ordered({ ...s, values } as unknown as Record<string, unknown>, TOP_ORDER) as unknown as School;
+  const out = ordered({ ...s, values } as unknown as Record<string, unknown>, TOP_ORDER) as unknown as Entity;
   if (out.defaults?.src) out.defaults = { src: ordered(out.defaults.src as Record<string, unknown>, SRC_ORDER) as Src };
   return out;
 }
 
 /** YAML text: maps and lists that hold only scalars are written inline (`{ a: 1 }`). */
-export function toYaml(s: School, cat: Catalog): string {
-  const doc = new Document(canonical(s, cat));
+export function toYaml(s: Entity, dom: Domain): string {
+  const doc = new Document(canonical(s, dom));
   visit(doc, {
     Map(_key, node) {
       if (node.items.every((p) => isScalar(p.value))) node.flow = true;
@@ -218,18 +219,20 @@ export function toYaml(s: School, cat: Catalog): string {
   return doc.toString({ lineWidth: 0, flowCollectionPadding: true });
 }
 
-export function filePath(id: string): string {
-  return `${DATA_DIR}/${id}.yaml`;
+export function filePath(dom: Domain, id: string): string {
+  return `${dom.config.paths.entities}/${id}.yaml`;
 }
 
 /** GitHub's web editor with a new file prefilled (forks automatically without write access). */
-export function githubNewFileUrl(id: string, yaml: string): string {
-  return `https://github.com/${REPO}/new/${BRANCH}?filename=${encodeURIComponent(filePath(id))}&value=${encodeURIComponent(yaml)}`;
+export function githubNewFileUrl(dom: Domain, id: string, yaml: string): string | undefined {
+  const r = dom.config.repo;
+  return r && `https://github.com/${r.name}/new/${r.branch}?filename=${encodeURIComponent(filePath(dom, id))}&value=${encodeURIComponent(yaml)}`;
 }
 
 /** GitHub's editor for an existing file (can't be prefilled; paste the copied YAML). */
-export function githubEditFileUrl(id: string): string {
-  return `https://github.com/${REPO}/edit/${BRANCH}/${filePath(id)}`;
+export function githubEditFileUrl(dom: Domain, id: string): string | undefined {
+  const r = dom.config.repo;
+  return r && `https://github.com/${r.name}/edit/${r.branch}/${filePath(dom, id)}`;
 }
 
 /** "Maple Bear Sofia" -> "maple-bear-sofia". Non-Latin names need a manual id. */
@@ -249,12 +252,12 @@ export function slugify(text: string): string {
  * and a fresh source_ref. Unchanged values keep their provenance.
  */
 export function stampUserEdits(
-  before: School | undefined,
-  after: School,
+  before: Entity | undefined,
+  after: Entity,
   date: string,
   nonce: string = Date.now().toString(36),
-): School {
-  const values: School['values'] = {};
+): Entity {
+  const values: Entity['values'] = {};
   let n = 0;
   for (const [dim, raw] of Object.entries(after.values)) {
     const old = before ? JSON.stringify(entriesOfRaw(before.values[dim]).map((e) => [e.v, e.scope ?? null])) : '';
